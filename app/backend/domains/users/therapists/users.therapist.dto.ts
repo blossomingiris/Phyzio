@@ -1,11 +1,7 @@
-import {
-  EntityIdParam,
-  PaginationMeta,
-  PaginationQueryParams,
-} from "#app/domains/shared/dto/index.ts";
-import Type from "typebox";
+import { paginationMeta, paramId } from "#app/domains/shared/dto/index.ts";
+import Type, { Static } from "typebox";
 
-const SpecialitySchema = Type.Union([
+export const specialitySchema = Type.Union([
   Type.Literal("orthopedic"),
   Type.Literal("sports"),
   Type.Literal("neurology"),
@@ -17,42 +13,41 @@ const SpecialitySchema = Type.Union([
   Type.Literal("vestibular"),
 ]);
 
-const TimeSlotSchema = Type.Object({
+const timeSlotSchema = Type.Object({
   start: Type.String({ description: "Time in HH:MM format", example: "09:00" }),
   end: Type.String({ description: "Time in HH:MM format", example: "17:00" }),
 });
 
-const WorkingHoursSchema = Type.Object({
-  mon: Type.Optional(Type.Array(TimeSlotSchema)),
-  tue: Type.Optional(Type.Array(TimeSlotSchema)),
-  wed: Type.Optional(Type.Array(TimeSlotSchema)),
-  thu: Type.Optional(Type.Array(TimeSlotSchema)),
-  fri: Type.Optional(Type.Array(TimeSlotSchema)),
-  sat: Type.Optional(Type.Array(TimeSlotSchema)),
-  sun: Type.Optional(Type.Array(TimeSlotSchema)),
+const workingHoursSchema = Type.Object({
+  tue: Type.Optional(Type.Array(timeSlotSchema)),
+  wed: Type.Optional(Type.Array(timeSlotSchema)),
+  thu: Type.Optional(Type.Array(timeSlotSchema)),
+  fri: Type.Optional(Type.Array(timeSlotSchema)),
+  sat: Type.Optional(Type.Array(timeSlotSchema)),
+  sun: Type.Optional(Type.Array(timeSlotSchema)),
 });
 
-const TherapistResponse = Type.Object({
+const therapistResponse = Type.Object({
   id: Type.Integer(),
   userId: Type.Integer(),
   firstName: Type.String(),
   lastName: Type.String(),
   email: Type.String({ format: "email" }),
-  speciality: SpecialitySchema,
+  speciality: specialitySchema,
   phone: Type.String(),
-  workingHours: WorkingHoursSchema,
+  workingHours: workingHoursSchema,
   isActive: Type.Boolean(),
   deletedAt: Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
 });
 
-const TherapistListResponse = Type.Object({
-  data: Type.Array(TherapistResponse),
-  pagination: Type.Object(PaginationMeta),
+const therapistListResponse = Type.Object({
+  data: Type.Array(therapistResponse),
+  pagination: Type.Object(paginationMeta),
 });
 
-export const AdminCreateTherapistBody = Type.Object(
+export const adminCreateTherapistBody = Type.Object(
   {
     firstName: Type.String({ minLength: 1, maxLength: 255 }),
     lastName: Type.String({ minLength: 1, maxLength: 255 }),
@@ -63,57 +58,74 @@ export const AdminCreateTherapistBody = Type.Object(
       minLength: 8,
       pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
     }),
-    speciality: SpecialitySchema,
+    speciality: specialitySchema,
     phone: Type.String({ minLength: 1, maxLength: 50 }),
-    workingHours: WorkingHoursSchema,
+    workingHours: workingHoursSchema,
   },
   { additionalProperties: false },
 );
 
-export const AdminUpdateTherapistBody = Type.Partial(
+export const adminUpdateTherapistBody = Type.Partial(
   Type.Object(
     {
-      speciality: SpecialitySchema,
+      speciality: specialitySchema,
       phone: Type.String({ minLength: 1, maxLength: 50 }),
-      workingHours: WorkingHoursSchema,
+      workingHours: workingHoursSchema,
       isActive: Type.Boolean(),
     },
     { additionalProperties: false },
   ),
 );
 
+export const adminListTherapistsQuery = Type.Object(
+  {
+    page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
+    limit: Type.Optional(
+      Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
+    ),
+    name: Type.Optional(Type.String()),
+    speciality: Type.Optional(specialitySchema),
+    isActive: Type.Optional(Type.Boolean()),
+  },
+  { additionalProperties: false },
+);
+
 export const adminListTherapistsSchema = {
   tags: ["Therapists"],
   summary: "List all therapists",
-  querystring: PaginationQueryParams,
-  response: { 200: TherapistListResponse },
+  querystring: adminListTherapistsQuery,
+  response: { 200: therapistListResponse },
 };
 
 export const adminFindTherapistSchema = {
   tags: ["Therapists"],
   summary: "Get a therapist by ID",
-  params: EntityIdParam,
-  response: { 200: TherapistResponse },
+  params: paramId,
+  response: { 200: therapistResponse },
 };
 
 export const adminCreateTherapistSchema = {
   tags: ["Therapists"],
   summary: "Create a therapist",
-  body: AdminCreateTherapistBody,
-  response: { 201: TherapistResponse },
+  body: adminCreateTherapistBody,
+  response: { 201: therapistResponse },
 };
 
 export const adminUpdateTherapistSchema = {
   tags: ["Therapists"],
   summary: "Update therapist profile",
-  params: EntityIdParam,
-  body: AdminUpdateTherapistBody,
-  response: { 200: TherapistResponse },
+  params: paramId,
+  body: adminUpdateTherapistBody,
+  response: { 200: therapistResponse },
 };
 
 export const adminDeleteTherapistSchema = {
   tags: ["Therapists"],
   summary: "Delete a therapist",
-  params: EntityIdParam,
+  params: paramId,
   response: { 200: Type.Object({ success: Type.Boolean() }) },
 };
+
+export type AdminListTherapistsQuery = Static<typeof adminListTherapistsQuery>;
+export type AdminCreateTherapistBody = Static<typeof adminCreateTherapistBody>;
+export type AdminUpdateTherapistBody = Static<typeof adminUpdateTherapistBody>;

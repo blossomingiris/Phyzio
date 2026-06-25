@@ -1,10 +1,16 @@
-import initDrizzleClient from "#app/database/drizzle-client.ts";
+import initDrizzleClient, {
+  type DrizzleClient,
+} from "#app/database/drizzle-client.ts";
 import { type FastifyInstance } from "fastify";
+import fp from "fastify-plugin";
 
-export default async function drizzlePlugin(app: FastifyInstance) {
-  const db = initDrizzleClient();
-  app.decorate("drizzle", db);
+declare module "fastify" {
+  interface FastifyInstance {
+    drizzle: DrizzleClient;
+  }
 }
 
-//@ts-expect-error
-drizzlePlugin[Symbol.for("skip-override")] = true;
+export default fp(async function drizzlePlugin(app: FastifyInstance) {
+  const db = await initDrizzleClient();
+  app.decorate("drizzle", db);
+});

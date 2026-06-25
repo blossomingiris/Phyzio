@@ -1,11 +1,11 @@
-import Type from "typebox";
+import Type, { Static } from "typebox";
 
-export const EntityIdParam = Type.Object(
+export const paramId = Type.Object(
   { id: Type.Integer({ minimum: 1 }) },
   { additionalProperties: false },
 );
 
-export const PaginationQueryParams = Type.Object(
+export const paginationQueryParams = Type.Object(
   {
     page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
     limit: Type.Optional(
@@ -15,9 +15,12 @@ export const PaginationQueryParams = Type.Object(
   { additionalProperties: false },
 );
 
-export const PaginationMeta = {
+export const paginationMeta = {
   total: Type.Integer(),
   page: Type.Integer(),
   limit: Type.Integer(),
   totalPages: Type.Integer(),
 };
+
+export type ParamId = Static<typeof paramId>;
+export type Pagination = Static<typeof paginationQueryParams>;

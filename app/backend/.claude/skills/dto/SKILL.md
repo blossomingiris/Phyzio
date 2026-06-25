@@ -24,17 +24,35 @@ This file defines rules for how we design DTOs in this project.
 - **Route schema**: full schema used in `schema(...)`
   `{ body, params, querystring, response }`
 
-- **Schema part**: reusable fragment used inside route schemas
-
-- Build route schemas from schema parts only
+- **Schema part**: reusable fragment used inside route schemas.
+  - Used by **multiple domains** → `domains/shared/dto/index.ts` (e.g. `paramId`, `paginationQueryParams`, `paginationMeta`)
+  - Build route schemas from schema parts only
 
 ---
 
-## 3. Request types
+## 3. Type exports
 
-- Export `ValidatedRequest` only for route schemas
-- Never create types for schema parts
-- Never create types for response-only schemas
+### From DTO schemas — use value/type duality
+
+Export `Static<typeof Schema>` using the **same name** as the schema constant.
+TypeScript allows a `const` and a `type` to share a name; importers get both from one import.
+
+```ts
+export const userResponce= Type.Object({ ... });
+export type  UserResponce = Static<typeof userResponce>;
+```
+
+Export types for: body schemas, querystring schemas, params schemas.
+Never export types for response-only schemas — those are never used outside the DTO.
+
+### Keep implementation types out of DTOs
+
+**Rule:** a type belongs in the DTO only if it directly represents an HTTP request or response shape.
+Everything that exists to serve the implementation layer stays in that layer.
+
+Common cases where the type lives **in the service**, not the DTO:
+
+**Filter/query options** — internal parameters for `buildWhere` or query methods:
 
 ---
 
@@ -54,16 +72,6 @@ This file defines rules for how we design DTOs in this project.
 
 ---
 
-## 5. Reuse schemas
-
-- Reuse `entityIdParamsSchema` for all ID routes
-- Reuse `entityResponseSchema` for single and list:
-  - single: `entityResponseSchema`
-  - list: `Type.Array(entityResponseSchema)`
-- Use `Type.Partial(createEntitySchema.body)` for updates
-
----
-
 ### Use Pick, never Omit
 
 - Always use `Type.Pick` when deriving schemas
@@ -71,7 +79,7 @@ This file defines rules for how we design DTOs in this project.
 
 ---
 
-## 6. PII in responses
+## 5. PII in responses
 
 - Response DTO defines public API output
 - Never expose PII without Developer approval
@@ -79,7 +87,7 @@ This file defines rules for how we design DTOs in this project.
 
 ---
 
-## 7. Response shape
+## 6. Response shape
 
 - Always return objects
 - Never return primitives
@@ -91,7 +99,7 @@ Examples:
 
 ---
 
-## 8. Swagger / OpenAPI docs
+## 7. Swagger / OpenAPI docs
 
 TypeBox schema options flow directly into the generated OpenAPI spec and Swagger UI.
 Follow these rules to keep docs useful without cluttering the schemas.
@@ -117,10 +125,12 @@ export const adminCreateUserSchema = {
 Add `description` and/or `example` only when a field has a non-obvious constraint or format.
 
 **Do add:**
+
 - Fields with `pattern` (regex) — describe the rule in plain language
 - Fields where accepted values aren't clear from the name alone
 
 **Don't add:**
+
 - `firstName: Type.String()` — the name is self-explanatory
 - Enum literals — the allowed values already appear in the OpenAPI spec
 - Standard format fields like `email` or `date-time` — the format keyword documents itself
