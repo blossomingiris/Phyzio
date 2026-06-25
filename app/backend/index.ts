@@ -5,6 +5,7 @@ import { type TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import { APP_DOMAIN, APP_PORT, APP_PROTOCOL } from "#app/config/app.ts";
 import swaggerPlugin from "#app/plugins/docs/swagger.ts";
 import Fastify from "fastify";
+import { registerGlobalErrorHandler } from "./errors/registerGlobalErrorHandler.ts";
 
 const app = Fastify({
   logger: true,
@@ -15,6 +16,7 @@ const app = Fastify({
   },
 }).withTypeProvider<TypeBoxTypeProvider>();
 
+registerGlobalErrorHandler(app);
 app.register(swaggerPlugin);
 app.register(async (app) => {
   app.get(
