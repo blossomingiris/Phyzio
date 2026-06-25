@@ -14,16 +14,19 @@ const ClientCommunicationLiteral = Type.Union([
   Type.Literal("email"),
 ]);
 
-export const CreateClientBody = Type.Object({
-  therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
-  firstName: Type.String({ minLength: 1, maxLength: 255 }),
-  lastName: Type.String({ minLength: 1, maxLength: 255 }),
-  birthDate: Type.Optional(Type.String({ format: "date" })),
-  email: Type.Optional(Type.String({ format: "email", maxLength: 255 })),
-  origin: Type.Optional(ClientOriginLiteral),
-  preferredCommunication: Type.Optional(ClientCommunicationLiteral),
-  medicalNotes: Type.Optional(Type.String()),
-});
+export const CreateClientBody = Type.Object(
+  {
+    therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
+    firstName: Type.String({ minLength: 1, maxLength: 255 }),
+    lastName: Type.String({ minLength: 1, maxLength: 255 }),
+    birthDate: Type.Optional(Type.String({ format: "date" })),
+    email: Type.Optional(Type.String({ format: "email", maxLength: 255 })),
+    origin: Type.Optional(ClientOriginLiteral),
+    preferredCommunication: Type.Optional(ClientCommunicationLiteral),
+    medicalNotes: Type.Optional(Type.String()),
+  },
+  { additionalProperties: false },
+);
 
 export const UpdateClientBody = Type.Partial(CreateClientBody);
 
@@ -41,4 +44,6 @@ export const ClientResponse = Type.Object({
   ...TimestampFields,
 });
 
-export const ClientListResponse = Type.Array(ClientResponse);
+export const ClientListResponse = Type.Object({
+  data: Type.Array(ClientResponse),
+});

@@ -12,6 +12,7 @@ const app = Fastify({
   ajv: {
     customOptions: {
       allErrors: true,
+      removeAdditional: false,
     },
   },
 }).withTypeProvider<TypeBoxTypeProvider>();

@@ -88,3 +88,55 @@ Examples:
 
 - OK: `{ success: true }`
 - Wrong: `true`
+
+---
+
+## 8. Swagger / OpenAPI docs
+
+TypeBox schema options flow directly into the generated OpenAPI spec and Swagger UI.
+Follow these rules to keep docs useful without cluttering the schemas.
+
+### Route schemas — always add
+
+Add `tags` and `summary` to every route schema:
+
+```ts
+export const adminCreateUserSchema = {
+  tags: ["Users"],
+  summary: "Create a user",
+  body: AdminCreateUserBody,
+  response: { 201: UserResponse },
+};
+```
+
+- `tags`: groups the endpoint in Swagger UI sidebar. Use the entity name (e.g. `"Users"`, `"Clients"`).
+- `summary`: one short sentence, no period. Describes what the endpoint does.
+
+### Field-level — only when non-obvious
+
+Add `description` and/or `example` only when a field has a non-obvious constraint or format.
+
+**Do add:**
+- Fields with `pattern` (regex) — describe the rule in plain language
+- Fields where accepted values aren't clear from the name alone
+
+**Don't add:**
+- `firstName: Type.String()` — the name is self-explanatory
+- Enum literals — the allowed values already appear in the OpenAPI spec
+- Standard format fields like `email` or `date-time` — the format keyword documents itself
+
+### Example
+
+```ts
+password: Type.String({
+  description: "Min 8 chars with uppercase, lowercase, and digit",
+  example: "Secret123",
+  minLength: 8,
+  pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
+}),
+```
+
+### What not to add
+
+- `title` — do not set on schema parts. TypeBox uses it as the OpenAPI component name; setting it on inline schemas causes duplicate/conflicting component names.
+- `description` on response schemas — not rendered by Swagger UI in a useful way.
