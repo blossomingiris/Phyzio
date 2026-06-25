@@ -26,8 +26,14 @@
 - `<domain>.service.ts`
 - `<domain>.dto.ts`
 - `<domain>.controller.ts`
-- Controller variants: `<domain>.<variant>.controller.ts`
-  (e.g. `resource`, `public`, `admin`).
+
+- Controller variants:
+  `<domain>.<variant>.controller.ts`
+  (e.g. `resource`, `public`, `admin`)
+
+- Tests:
+  `<domain>.<behavior>.test.ts`
+  (e.g. `posts.access.test.ts`, `posts.create.test.ts`)
 
 ## Configuration
 
