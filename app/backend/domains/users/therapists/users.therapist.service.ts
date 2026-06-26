@@ -1,7 +1,7 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { therapists, users } from "#app/database/schemas.ts";
-import { Speciality } from "#app/database/types.ts";
-import { Pagination } from "#app/domains/shared/dto/index.ts";
+import { type Speciality } from "#app/database/types.ts";
+import { type Pagination } from "#app/domains/shared/dto/index.ts";
 import type {
   AdminCreateTherapistBody,
   AdminUpdateTherapistBody,
@@ -12,7 +12,7 @@ import { and, count, desc, eq, ilike, or } from "drizzle-orm";
 export interface TherapistFilters {
   id?: number;
   speciality?: Speciality;
-  name?: string;
+  search?: string;
   isActive?: boolean;
 }
 
@@ -140,10 +140,10 @@ export class TherapistsService {
       filters.isActive !== undefined
         ? eq(therapists.isActive, filters.isActive)
         : undefined,
-      filters.name !== undefined
+      filters.search !== undefined
         ? or(
-            ilike(users.firstName, `%${filters.name}%`),
-            ilike(users.lastName, `%${filters.name}%`),
+            ilike(users.firstName, `%${filters.search}%`),
+            ilike(users.lastName, `%${filters.search}%`),
           )
         : undefined,
     );

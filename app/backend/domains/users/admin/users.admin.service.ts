@@ -1,9 +1,9 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
-import { therapists, users } from "#app/database/schemas.ts";
-import { Speciality, User, UserRole } from "#app/database/types.ts";
-import { Pagination } from "#app/domains/shared/dto/index.ts";
+import { users } from "#app/database/schemas.ts";
+import type { User, UserRole } from "#app/database/types.ts";
+import { type Pagination } from "#app/domains/shared/dto/index.ts";
 import { NotFoundError } from "#app/errors/httpErrors.ts";
-import { and, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, count, desc, eq, ilike, or } from "drizzle-orm";
 
 type UpdateUser = Partial<Pick<User, "firstName" | "lastName" | "email">>;
 type CreateUser = Pick<
@@ -15,8 +15,7 @@ export interface UserFilters {
   id?: number;
   email?: string;
   role?: UserRole;
-  name?: string;
-  speciality?: Speciality;
+  search?: string;
 }
 
 export class UsersService {
@@ -104,19 +103,10 @@ export class UsersService {
       filters.id !== undefined ? eq(users.id, filters.id) : undefined,
       filters.email !== undefined ? eq(users.email, filters.email) : undefined,
       filters.role !== undefined ? eq(users.role, filters.role) : undefined,
-      filters.name !== undefined
+      filters.search !== undefined
         ? or(
-            ilike(users.firstName, `%${filters.name}%`),
-            ilike(users.lastName, `%${filters.name}%`),
-          )
-        : undefined,
-      filters.speciality !== undefined
-        ? inArray(
-            users.id,
-            this.db
-              .select({ id: therapists.userId })
-              .from(therapists)
-              .where(eq(therapists.speciality, filters.speciality)),
+            ilike(users.firstName, `%${filters.search}%`),
+            ilike(users.lastName, `%${filters.search}%`),
           )
         : undefined,
     );

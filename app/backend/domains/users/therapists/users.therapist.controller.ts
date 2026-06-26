@@ -1,4 +1,4 @@
-import { ParamId } from "#app/domains/shared/dto/index.ts";
+import { type ParamId } from "#app/domains/shared/dto/index.ts";
 import {
   adminCreateTherapistSchema,
   adminDeleteTherapistSchema,
@@ -19,8 +19,8 @@ export default async function therapistsAdminController(app: FastifyInstance) {
     "/",
     { schema: adminListTherapistsSchema },
     async (req) => {
-      const { page, limit, name, speciality, isActive } = req.query;
-      return service.all({ name, speciality, isActive }, { page, limit });
+      const { page, limit, search, speciality, isActive } = req.query;
+      return service.all({ search, speciality, isActive }, { page, limit });
     },
   );
 

@@ -53,6 +53,16 @@
   2. Never change the real `.env`.
   3. Tell Developer to add the variable to their `.env` and set the real value.
 
+## Type-only imports
+
+Always use the `type` keyword when importing TypeScript types or interfaces:
+
+```ts
+import Type, { type Static } from "typebox";
+```
+
+ESM loaders resolve imports at runtime and will error if a type-only export is treated as a value. The `type` keyword tells the compiler (and the runtime) that the import is erased at emit and never needs a real binding.
+
 ## Prefer Fastify plugins
 
 Phyzio is built on Fastify, so the Fastify plugin ecosystem is available.

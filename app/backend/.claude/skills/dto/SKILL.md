@@ -122,7 +122,8 @@ export const adminCreateUserSchema = {
 
 ### Field-level — only when non-obvious
 
-Add `description` and/or `example` only when a field has a non-obvious constraint or format.
+Add `description` only when a field has a non-obvious constraint or format.
+Keep descriptions short, simple, and human-readable.
 
 **Do add:**
 
@@ -140,11 +141,25 @@ Add `description` and/or `example` only when a field has a non-obvious constrain
 ```ts
 password: Type.String({
   description: "Min 8 chars with uppercase, lowercase, and digit",
-  example: "Secret123",
   minLength: 8,
   pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
 }),
 ```
+
+### Enums
+
+Never use `Type.Union([Type.Literal(...)])` for enum fields — it generates `anyOf` in JSON Schema and Swagger UI only renders the first option.
+
+Use `Type.Unsafe` with a plain `enum` array instead. If the enum is defined in Drizzle, pull values from `pgEnum.enumValues` to keep a single source of truth:
+
+```ts
+export const specialitySchema = Type.Unsafe<Speciality>({
+  type: "string",
+  enum: specialityEnum.enumValues,
+});
+```
+
+---
 
 ### What not to add
 

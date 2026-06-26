@@ -1,21 +1,16 @@
+import { specialityEnum } from "#app/database/schemas.ts";
 import { paginationMeta, paramId } from "#app/domains/shared/dto/index.ts";
-import Type, { Static } from "typebox";
+import type { Speciality } from "#app/database/types.ts";
+import Type, { type Static } from "typebox";
 
-export const specialitySchema = Type.Union([
-  Type.Literal("orthopedic"),
-  Type.Literal("sports"),
-  Type.Literal("neurology"),
-  Type.Literal("pediatric"),
-  Type.Literal("geriatric"),
-  Type.Literal("cardio_pulmonary"),
-  Type.Literal("pelvic_floor"),
-  Type.Literal("oncology"),
-  Type.Literal("vestibular"),
-]);
+export const specialitySchema = Type.Unsafe<Speciality>({
+  type: "string",
+  enum: specialityEnum.enumValues,
+});
 
 const timeSlotSchema = Type.Object({
-  start: Type.String({ description: "Time in HH:MM format", example: "09:00" }),
-  end: Type.String({ description: "Time in HH:MM format", example: "17:00" }),
+  start: Type.String({ description: "Time in HH:MM format" }),
+  end: Type.String({ description: "Time in HH:MM format" }),
 });
 
 const workingHoursSchema = Type.Object({
@@ -37,7 +32,7 @@ const therapistResponse = Type.Object({
   phone: Type.String(),
   workingHours: workingHoursSchema,
   isActive: Type.Boolean(),
-  deletedAt: Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
+  deletedAt: Type.Optional(Type.String({ format: "date-time" })),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
 });
@@ -54,7 +49,6 @@ export const adminCreateTherapistBody = Type.Object(
     email: Type.String({ format: "email", maxLength: 255 }),
     password: Type.String({
       description: "Min 8 chars with uppercase, lowercase, and digit",
-      example: "Secret123",
       minLength: 8,
       pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
     }),
@@ -83,7 +77,7 @@ export const adminListTherapistsQuery = Type.Object(
     limit: Type.Optional(
       Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
     ),
-    name: Type.Optional(Type.String()),
+    search: Type.Optional(Type.String({ description: "Partial match on first or last name" })),
     speciality: Type.Optional(specialitySchema),
     isActive: Type.Optional(Type.Boolean()),
   },

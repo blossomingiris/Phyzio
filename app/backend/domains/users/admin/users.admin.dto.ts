@@ -1,11 +1,12 @@
+import { userRoleEnum } from "#app/database/schemas.ts";
+import type { UserRole } from "#app/database/types.ts";
 import { paginationMeta, paramId } from "#app/domains/shared/dto/index.ts";
-import { specialitySchema } from "#app/domains/users/therapists/users.therapist.dto.ts";
-import Type, { Static } from "typebox";
+import Type, { type Static } from "typebox";
 
-const userRoleSchema = Type.Union([
-  Type.Literal("admin"),
-  Type.Literal("therapist"),
-]);
+const userRoleSchema = Type.Unsafe<UserRole>({
+  type: "string",
+  enum: userRoleEnum.enumValues,
+});
 
 const userResponse = Type.Object({
   id: Type.Integer(),
@@ -29,7 +30,6 @@ export const adminCreateUserBody = Type.Object(
     email: Type.String({ format: "email", maxLength: 255 }),
     password: Type.String({
       description: "Min 8 chars with uppercase, lowercase, and digit",
-      example: "Secret123",
       minLength: 8,
       pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
     }),
@@ -53,9 +53,8 @@ export const adminListUsersQuery = Type.Object(
     limit: Type.Optional(
       Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
     ),
-    name: Type.Optional(Type.String()),
+    search: Type.Optional(Type.String({ description: "Partial match on first or last name" })),
     role: Type.Optional(userRoleSchema),
-    speciality: Type.Optional(specialitySchema),
   },
   { additionalProperties: false },
 );

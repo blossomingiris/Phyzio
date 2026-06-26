@@ -1,4 +1,4 @@
-import Type, { Static } from "typebox";
+import Type, { type Static } from "typebox";
 
 export const paramId = Type.Object(
   { id: Type.Integer({ minimum: 1 }) },

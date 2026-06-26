@@ -1,14 +1,14 @@
-import { ParamId } from "#app/domains/shared/dto/index.ts";
+import { type ParamId } from "#app/domains/shared/dto/index.ts";
 import {
   adminCreateUserSchema,
   adminFindUserSchema,
   adminListUsersSchema,
   adminUpdateRoleSchema,
   adminUpdateUserSchema,
-  type AdminListUsersQuery,
   type AdminCreateUserBody,
-  type AdminUpdateUserBody,
+  type AdminListUsersQuery,
   type AdminUpdateRoleBody,
+  type AdminUpdateUserBody,
 } from "#app/domains/users/admin/users.admin.dto.ts";
 import { UsersService } from "#app/domains/users/admin/users.admin.service.ts";
 import type { FastifyInstance } from "fastify";
@@ -20,8 +20,8 @@ export default async function usersAdminController(app: FastifyInstance) {
     "/",
     { schema: adminListUsersSchema },
     async (req) => {
-      const { page, limit, name, role, speciality } = req.query;
-      return service.all({ name, role, speciality }, { page, limit });
+      const { page, limit, search, role } = req.query;
+      return service.all({ search, role }, { page, limit });
     },
   );
 

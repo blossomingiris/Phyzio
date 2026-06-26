@@ -3,9 +3,10 @@ import "dotenv/config";
 import { type TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 
 import { APP_DOMAIN, APP_PORT, APP_PROTOCOL } from "#app/config/app.ts";
-import swaggerPlugin from "#app/plugins/docs/swagger.ts";
 import Fastify from "fastify";
 import { registerGlobalErrorHandler } from "./errors/registerGlobalErrorHandler.ts";
+import routes from "./plugins/routes.plugin.ts";
+import swaggerPlugin from "./plugins/swagger.plugin.ts";
 
 const app = Fastify({
   logger: true,
@@ -19,21 +20,7 @@ const app = Fastify({
 
 registerGlobalErrorHandler(app);
 app.register(swaggerPlugin);
-app.register(async (app) => {
-  app.get(
-    "/posts",
-    {
-      schema: {
-        response: {
-          200: {},
-        },
-      },
-    },
-    async () => {
-      return [];
-    },
-  );
-});
+app.register(routes);
 
 await app.ready();
 
