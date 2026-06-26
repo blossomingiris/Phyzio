@@ -28,7 +28,7 @@ const timeSlotSchema = Type.Object({
   end: Type.String({ description: "Time in HH:MM format" }),
 });
 
-const workingHoursSchema = Type.Object({
+export const workingHoursSchema = Type.Object({
   mon: Type.Optional(Type.Array(timeSlotSchema)),
   tue: Type.Optional(Type.Array(timeSlotSchema)),
   wed: Type.Optional(Type.Array(timeSlotSchema)),
@@ -38,7 +38,7 @@ const workingHoursSchema = Type.Object({
   sun: Type.Optional(Type.Array(timeSlotSchema)),
 });
 
-const therapistResponse = Type.Object({
+export const therapistResponse = Type.Object({
   id: Type.Integer(),
   firstName: Type.String(),
   lastName: Type.String(),

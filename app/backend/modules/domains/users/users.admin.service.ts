@@ -109,6 +109,16 @@ export class UsersService {
     return user ?? null;
   }
 
+  async updatePassword(id: number, password: string) {
+    const [user] = await this.db
+      .update(users)
+      .set({ password, updatedAt: new Date() })
+      .where(eq(users.id, id))
+      .returning();
+
+    return user ?? null;
+  }
+
   async updateRole(id: number, role: UserRole) {
     const [user] = await this.db
       .update(users)

@@ -8,7 +8,7 @@ import {
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
-const userRoleSchema = Type.Unsafe<UserRole>({
+export const userRoleSchema = Type.Unsafe<UserRole>({
   type: "string",
   enum: userRoleEnum.enumValues,
 });
@@ -23,7 +23,7 @@ const userSortBySchema = Type.Optional(
   }),
 );
 
-const userResponse = Type.Object({
+export const userResponse = Type.Object({
   id: Type.Integer(),
   firstName: Type.String(),
   lastName: Type.String(),
