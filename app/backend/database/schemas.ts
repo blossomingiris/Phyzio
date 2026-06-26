@@ -126,6 +126,7 @@ export const clients = pgTable("clients", {
   firstName: varchar("first_name", { length: 255 }).notNull(),
   lastName: varchar("last_name", { length: 255 }).notNull(),
   birthDate: date("birth_date"),
+  phone: varchar("phone", { length: 50 }),
   email: varchar("email", { length: 255 }).unique(),
   origin: originEnum("origin"),
   preferredCommunication: communicationEnum("preferred_communication")

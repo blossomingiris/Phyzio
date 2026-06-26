@@ -1,3 +1,4 @@
+import { UsersService } from "#app/modules/domains/users/users.admin.service.ts";
 import {
   createUserSchema,
   findUserSchema,
@@ -8,8 +9,7 @@ import {
   type ListUsersQuery,
   type UpdateRoleBody,
   type UpdateUserBody,
-} from "#app/modules/domains/users/admin/users.admin.dto.ts";
-import { UsersService } from "#app/modules/domains/users/admin/users.admin.service.ts";
+} from "#app/modules/domains/users/users.admin.dto.ts";
 import { type ParamId } from "#app/modules/general/dto/index.ts";
 import type { FastifyInstance } from "fastify";
 

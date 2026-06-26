@@ -21,8 +21,6 @@ const userSortBySchema = Type.Optional(
   }),
 );
 
-export type UserSortBy = "createdAt" | "lastName" | "email";
-
 const userSortParamsSchema = sortParams(userSortBySchema);
 
 const userResponse = Type.Object({
@@ -116,6 +114,8 @@ export const updateRoleSchema = {
   body: updateRoleBody,
   response: { 200: userResponse },
 };
+
+export type UserSortBy = "createdAt" | "lastName" | "email";
 
 export type ListUsersQuery = Static<typeof listUsersQuery>;
 export type CreateUserBody = Static<typeof createUserBody>;

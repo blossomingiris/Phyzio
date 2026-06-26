@@ -1,3 +1,4 @@
+import { TherapistsService } from "#app/modules/domains/users/therapists.admin.service.ts";
 import {
   createTherapistSchema,
   deleteTherapistSchema,
@@ -7,8 +8,7 @@ import {
   type CreateTherapistBody,
   type ListTherapistsQuery,
   type UpdateTherapistBody,
-} from "#app/modules/domains/users/therapists/therapists.admin.dto.ts";
-import { TherapistsService } from "#app/modules/domains/users/therapists/therapists.admin.service.ts";
+} from "#app/modules/domains/users/therapists.admin.dto.ts";
 import { type ParamId } from "#app/modules/general/dto/index.ts";
 import type { FastifyInstance } from "fastify";
 

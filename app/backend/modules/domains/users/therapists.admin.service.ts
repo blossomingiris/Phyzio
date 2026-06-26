@@ -7,7 +7,7 @@ import type {
   TherapistSortBy,
   TherapistSortParams,
   UpdateTherapistBody,
-} from "#app/modules/domains/users/therapists/therapists.admin.dto.ts";
+} from "#app/modules/domains/users/therapists.admin.dto.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
 
@@ -19,8 +19,9 @@ type TherapistFilters = {
 };
 
 const THERAPIST_SORT_COLUMNS = {
-  createdAt: therapists.createdAt,
+  createdAt: users.createdAt,
   lastName: users.lastName,
+  email: users.email,
 } satisfies Record<TherapistSortBy, unknown>;
 
 const therapistSelect = {
@@ -33,7 +34,7 @@ const therapistSelect = {
   workingHours: therapists.workingHours,
   isActive: therapists.isActive,
   deletedAt: therapists.deletedAt,
-  createdAt: therapists.createdAt,
+  createdAt: users.createdAt,
   updatedAt: therapists.updatedAt,
 };
 

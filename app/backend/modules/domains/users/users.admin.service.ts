@@ -5,7 +5,7 @@ import { NotFoundError } from "#app/errors/httpErrors.ts";
 import type {
   UserSortBy,
   UserSortParams,
-} from "#app/modules/domains/users/admin/users.admin.dto.ts";
+} from "#app/modules/domains/users/users.admin.dto.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
 

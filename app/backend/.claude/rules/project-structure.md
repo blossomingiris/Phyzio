@@ -34,17 +34,13 @@
 ## Variants
 
 When a domain has endpoints for multiple access levels, split it into variants.
-Each variant gets its own controller, DTO, and service (only add what is needed):
+Each variant gets its own controller.
 
 ```
 users/
-  admin/
-    users.admin.controller.ts
-    users.admin.dto.ts
-    users.admin.service.ts
-  resource/
+    users.dto.ts
+    posts.admin.controller.ts
     users.resource.controller.ts
-    users.resource.dto.ts
 ```
 
 | Variant    | Who                                             | Typical routes                                 |

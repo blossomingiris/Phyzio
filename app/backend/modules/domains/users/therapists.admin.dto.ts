@@ -16,12 +16,10 @@ export const specialitySchema = Type.Unsafe<Speciality>({
 const therapistSortBySchema = Type.Optional(
   Type.Unsafe<TherapistSortBy>({
     type: "string",
-    enum: ["createdAt", "lastName"],
+    enum: ["createdAt", "lastName", "email"],
     default: "createdAt",
   }),
 );
-
-export type TherapistSortBy = "createdAt" | "lastName";
 
 const therapistSortParamsSchema = sortParams(therapistSortBySchema);
 
@@ -140,6 +138,8 @@ export const deleteTherapistSchema = {
   params: paramId,
   response: { 200: Type.Object({ success: Type.Boolean() }) },
 };
+
+export type TherapistSortBy = "createdAt" | "lastName" | "email";
 
 export type ListTherapistsQuery = Static<typeof listTherapistsQuery>;
 export type CreateTherapistBody = Static<typeof createTherapistBody>;
