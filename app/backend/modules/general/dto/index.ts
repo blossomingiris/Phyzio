@@ -1,4 +1,4 @@
-import Type, { type Static } from "typebox";
+import Type, { type Static, type TSchema } from "typebox";
 
 export const paramId = Type.Object(
   { id: Type.Integer({ minimum: 1 }) },
@@ -22,5 +22,26 @@ export const paginationMeta = {
   totalPages: Type.Integer(),
 };
 
+export const sortOrderSchema = Type.Optional(
+  Type.Unsafe<"asc" | "desc">({
+    type: "string",
+    enum: ["asc", "desc"],
+    default: "desc",
+    description: "Sort direction",
+  }),
+);
+
+export const sortParams = <T extends TSchema>(dataSchema: T) =>
+  Type.Object(
+    {
+      sortBy: dataSchema,
+      sortOrder: sortOrderSchema,
+    },
+    { additionalProperties: false },
+  );
+
 export type ParamId = Static<typeof paramId>;
 export type Pagination = Static<typeof paginationQueryParams>;
+export type SortParam<T extends TSchema> = Static<
+  ReturnType<typeof sortParams<T>>
+>;

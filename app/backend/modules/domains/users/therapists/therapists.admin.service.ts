@@ -1,24 +1,30 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { therapists, users } from "#app/database/schemas.ts";
 import { type Speciality } from "#app/database/types.ts";
-import { type Pagination } from "#app/domains/shared/dto/index.ts";
-import type {
-  AdminCreateTherapistBody,
-  AdminUpdateTherapistBody,
-} from "#app/domains/users/therapists/users.therapist.dto.ts";
 import { NotFoundError } from "#app/errors/httpErrors.ts";
-import { and, count, desc, eq, ilike, or } from "drizzle-orm";
+import type {
+  CreateTherapistBody,
+  TherapistSortBy,
+  TherapistSortParams,
+  UpdateTherapistBody,
+} from "#app/modules/domains/users/therapists/therapists.admin.dto.ts";
+import { type Pagination } from "#app/modules/general/dto/index.ts";
+import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
 
-export interface TherapistFilters {
+type TherapistFilters = {
   id?: number;
   speciality?: Speciality;
   search?: string;
   isActive?: boolean;
-}
+};
+
+const THERAPIST_SORT_COLUMNS = {
+  createdAt: therapists.createdAt,
+  lastName: users.lastName,
+} satisfies Record<TherapistSortBy, unknown>;
 
 const therapistSelect = {
-  id: therapists.id,
-  userId: therapists.userId,
+  id: users.id,
   firstName: users.firstName,
   lastName: users.lastName,
   email: users.email,
@@ -38,9 +44,16 @@ export class TherapistsService {
     this.db = db;
   }
 
-  async all(filters: TherapistFilters = {}, pagination: Pagination = {}) {
+  async all(
+    filters: TherapistFilters = {},
+    pagination: Pagination = {},
+    sort: TherapistSortParams = {},
+  ) {
     const page = pagination.page ?? 1;
     const limit = pagination.limit ?? 20;
+    const col = THERAPIST_SORT_COLUMNS[sort.sortBy ?? "createdAt"];
+    const orderExpr =
+      (sort.sortOrder ?? "desc") === "asc" ? asc(col) : desc(col);
     const where = this.buildWhere(filters);
 
     const [{ total }] = await this.db
@@ -54,7 +67,7 @@ export class TherapistsService {
       .from(therapists)
       .innerJoin(users, eq(therapists.userId, users.id))
       .where(where)
-      .orderBy(desc(therapists.createdAt))
+      .orderBy(orderExpr)
       .limit(limit)
       .offset((page - 1) * limit);
 
@@ -89,7 +102,7 @@ export class TherapistsService {
     return therapist;
   }
 
-  async create(data: AdminCreateTherapistBody) {
+  async create(data: CreateTherapistBody) {
     const {
       firstName,
       lastName,
@@ -111,15 +124,16 @@ export class TherapistsService {
         .values({ userId: user!.id, speciality, phone, workingHours })
         .returning();
 
-      return { ...therapist!, firstName, lastName, email };
+      const { userId, ...therapistRest } = therapist!;
+      return { id: userId, firstName, lastName, email, ...therapistRest };
     });
   }
 
-  async update(id: number, data: AdminUpdateTherapistBody) {
+  async update(id: number, data: UpdateTherapistBody) {
     await this.db
       .update(therapists)
       .set({ ...data, updatedAt: new Date() })
-      .where(eq(therapists.id, id));
+      .where(eq(therapists.userId, id));
 
     return this.findOrFail(id);
   }
@@ -128,12 +142,12 @@ export class TherapistsService {
     await this.db
       .update(therapists)
       .set({ deletedAt: new Date() })
-      .where(eq(therapists.id, id));
+      .where(eq(therapists.userId, id));
   }
 
   private buildWhere(filters: TherapistFilters) {
     return and(
-      filters.id !== undefined ? eq(therapists.id, filters.id) : undefined,
+      filters.id !== undefined ? eq(therapists.userId, filters.id) : undefined,
       filters.speciality !== undefined
         ? eq(therapists.speciality, filters.speciality)
         : undefined,

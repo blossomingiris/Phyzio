@@ -1,12 +1,29 @@
 import { userRoleEnum } from "#app/database/schemas.ts";
 import type { UserRole } from "#app/database/types.ts";
-import { paginationMeta, paramId } from "#app/domains/shared/dto/index.ts";
+import {
+  paginationMeta,
+  paramId,
+  sortOrderSchema,
+  sortParams,
+} from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
 const userRoleSchema = Type.Unsafe<UserRole>({
   type: "string",
   enum: userRoleEnum.enumValues,
 });
+
+const userSortBySchema = Type.Optional(
+  Type.Unsafe<UserSortBy>({
+    type: "string",
+    enum: ["createdAt", "lastName", "email"],
+    default: "createdAt",
+  }),
+);
+
+export type UserSortBy = "createdAt" | "lastName" | "email";
+
+const userSortParamsSchema = sortParams(userSortBySchema);
 
 const userResponse = Type.Object({
   id: Type.Integer(),
@@ -23,7 +40,7 @@ const userListResponse = Type.Object({
   pagination: Type.Object(paginationMeta),
 });
 
-export const adminCreateUserBody = Type.Object(
+export const createUserBody = Type.Object(
   {
     firstName: Type.String({ minLength: 1, maxLength: 255 }),
     lastName: Type.String({ minLength: 1, maxLength: 255 }),
@@ -38,65 +55,70 @@ export const adminCreateUserBody = Type.Object(
   { additionalProperties: false },
 );
 
-export const adminUpdateUserBody = Type.Partial(
-  Type.Pick(adminCreateUserBody, ["firstName", "lastName", "email"]),
+export const updateUserBody = Type.Partial(
+  Type.Pick(createUserBody, ["firstName", "lastName", "email"]),
 );
 
-export const adminUpdateRoleBody = Type.Object(
+export const updateRoleBody = Type.Object(
   { role: userRoleSchema },
   { additionalProperties: false },
 );
 
-export const adminListUsersQuery = Type.Object(
+export const listUsersQuery = Type.Object(
   {
     page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
     limit: Type.Optional(
       Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
     ),
-    search: Type.Optional(Type.String({ description: "Partial match on first or last name" })),
+    search: Type.Optional(
+      Type.String({ description: "Partial match on first or last name" }),
+    ),
     role: Type.Optional(userRoleSchema),
+    sortBy: userSortBySchema,
+    sortOrder: sortOrderSchema,
   },
   { additionalProperties: false },
 );
 
-export const adminListUsersSchema = {
+export const listUsersSchema = {
   tags: ["Users"],
   summary: "List all users",
-  querystring: adminListUsersQuery,
+  querystring: listUsersQuery,
   response: { 200: userListResponse },
 };
 
-export const adminFindUserSchema = {
+export const findUserSchema = {
   tags: ["Users"],
   summary: "Get a user by ID",
   params: paramId,
   response: { 200: userResponse },
 };
 
-export const adminCreateUserSchema = {
+export const createUserSchema = {
   tags: ["Users"],
   summary: "Create a user",
-  body: adminCreateUserBody,
+  body: createUserBody,
   response: { 201: userResponse },
 };
 
-export const adminUpdateUserSchema = {
+export const updateUserSchema = {
   tags: ["Users"],
   summary: "Update user profile",
   params: paramId,
-  body: adminUpdateUserBody,
+  body: updateUserBody,
   response: { 200: userResponse },
 };
 
-export const adminUpdateRoleSchema = {
+export const updateRoleSchema = {
   tags: ["Users"],
   summary: "Update user role",
   params: paramId,
-  body: adminUpdateRoleBody,
+  body: updateRoleBody,
   response: { 200: userResponse },
 };
 
-export type AdminListUsersQuery = Static<typeof adminListUsersQuery>;
-export type AdminCreateUserBody = Static<typeof adminCreateUserBody>;
-export type AdminUpdateUserBody = Static<typeof adminUpdateUserBody>;
-export type AdminUpdateRoleBody = Static<typeof adminUpdateRoleBody>;
+export type ListUsersQuery = Static<typeof listUsersQuery>;
+export type CreateUserBody = Static<typeof createUserBody>;
+export type UpdateUserBody = Static<typeof updateUserBody>;
+export type UpdateRoleBody = Static<typeof updateRoleBody>;
+export type UserSortParams = Static<typeof userSortParamsSchema>;

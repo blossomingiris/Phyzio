@@ -1,22 +1,31 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { users } from "#app/database/schemas.ts";
 import type { User, UserRole } from "#app/database/types.ts";
-import { type Pagination } from "#app/domains/shared/dto/index.ts";
 import { NotFoundError } from "#app/errors/httpErrors.ts";
-import { and, count, desc, eq, ilike, or } from "drizzle-orm";
+import type {
+  UserSortBy,
+  UserSortParams,
+} from "#app/modules/domains/users/admin/users.admin.dto.ts";
+import { type Pagination } from "#app/modules/general/dto/index.ts";
+import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
 
 type UpdateUser = Partial<Pick<User, "firstName" | "lastName" | "email">>;
 type CreateUser = Pick<
   User,
   "firstName" | "lastName" | "email" | "role" | "password"
 >;
-
-export interface UserFilters {
+type UserFilters = {
   id?: number;
   email?: string;
   role?: UserRole;
   search?: string;
-}
+};
+
+const USER_SORT_COLUMNS = {
+  createdAt: users.createdAt,
+  lastName: users.lastName,
+  email: users.email,
+} satisfies Record<UserSortBy, unknown>;
 
 export class UsersService {
   private db: DrizzleClient;
@@ -25,9 +34,16 @@ export class UsersService {
     this.db = db;
   }
 
-  async all(filters: UserFilters = {}, pagination: Pagination = {}) {
+  async all(
+    filters: UserFilters = {},
+    pagination: Pagination = {},
+    sort: UserSortParams = {},
+  ) {
     const page = pagination.page ?? 1;
     const limit = pagination.limit ?? 20;
+    const col = USER_SORT_COLUMNS[sort.sortBy ?? "createdAt"];
+    const orderExpr =
+      (sort.sortOrder ?? "desc") === "asc" ? asc(col) : desc(col);
     const where = this.buildWhere(filters);
 
     const [{ total }] = await this.db
@@ -39,7 +55,7 @@ export class UsersService {
       .select()
       .from(users)
       .where(where)
-      .orderBy(desc(users.createdAt))
+      .orderBy(orderExpr)
       .limit(limit)
       .offset((page - 1) * limit);
 

@@ -1,12 +1,29 @@
 import { specialityEnum } from "#app/database/schemas.ts";
-import { paginationMeta, paramId } from "#app/domains/shared/dto/index.ts";
 import type { Speciality } from "#app/database/types.ts";
+import {
+  paginationMeta,
+  paramId,
+  sortOrderSchema,
+  sortParams,
+} from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
 export const specialitySchema = Type.Unsafe<Speciality>({
   type: "string",
   enum: specialityEnum.enumValues,
 });
+
+const therapistSortBySchema = Type.Optional(
+  Type.Unsafe<TherapistSortBy>({
+    type: "string",
+    enum: ["createdAt", "lastName"],
+    default: "createdAt",
+  }),
+);
+
+export type TherapistSortBy = "createdAt" | "lastName";
+
+const therapistSortParamsSchema = sortParams(therapistSortBySchema);
 
 const timeSlotSchema = Type.Object({
   start: Type.String({ description: "Time in HH:MM format" }),
@@ -42,7 +59,7 @@ const therapistListResponse = Type.Object({
   pagination: Type.Object(paginationMeta),
 });
 
-export const adminCreateTherapistBody = Type.Object(
+export const createTherapistBody = Type.Object(
   {
     firstName: Type.String({ minLength: 1, maxLength: 255 }),
     lastName: Type.String({ minLength: 1, maxLength: 255 }),
@@ -59,7 +76,7 @@ export const adminCreateTherapistBody = Type.Object(
   { additionalProperties: false },
 );
 
-export const adminUpdateTherapistBody = Type.Partial(
+export const updateTherapistBody = Type.Partial(
   Type.Object(
     {
       speciality: specialitySchema,
@@ -71,55 +88,60 @@ export const adminUpdateTherapistBody = Type.Partial(
   ),
 );
 
-export const adminListTherapistsQuery = Type.Object(
+export const listTherapistsQuery = Type.Object(
   {
     page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
     limit: Type.Optional(
       Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
     ),
-    search: Type.Optional(Type.String({ description: "Partial match on first or last name" })),
+    search: Type.Optional(
+      Type.String({ description: "Partial match on first or last name" }),
+    ),
     speciality: Type.Optional(specialitySchema),
     isActive: Type.Optional(Type.Boolean()),
+    sortBy: therapistSortBySchema,
+    sortOrder: sortOrderSchema,
   },
   { additionalProperties: false },
 );
 
-export const adminListTherapistsSchema = {
+export const listTherapistsSchema = {
   tags: ["Therapists"],
   summary: "List all therapists",
-  querystring: adminListTherapistsQuery,
+  querystring: listTherapistsQuery,
   response: { 200: therapistListResponse },
 };
 
-export const adminFindTherapistSchema = {
+export const findTherapistSchema = {
   tags: ["Therapists"],
   summary: "Get a therapist by ID",
   params: paramId,
   response: { 200: therapistResponse },
 };
 
-export const adminCreateTherapistSchema = {
+export const createTherapistSchema = {
   tags: ["Therapists"],
   summary: "Create a therapist",
-  body: adminCreateTherapistBody,
+  body: createTherapistBody,
   response: { 201: therapistResponse },
 };
 
-export const adminUpdateTherapistSchema = {
+export const updateTherapistSchema = {
   tags: ["Therapists"],
   summary: "Update therapist profile",
   params: paramId,
-  body: adminUpdateTherapistBody,
+  body: updateTherapistBody,
   response: { 200: therapistResponse },
 };
 
-export const adminDeleteTherapistSchema = {
+export const deleteTherapistSchema = {
   tags: ["Therapists"],
   summary: "Delete a therapist",
   params: paramId,
   response: { 200: Type.Object({ success: Type.Boolean() }) },
 };
 
-export type AdminListTherapistsQuery = Static<typeof adminListTherapistsQuery>;
-export type AdminCreateTherapistBody = Static<typeof adminCreateTherapistBody>;
-export type AdminUpdateTherapistBody = Static<typeof adminUpdateTherapistBody>;
+export type ListTherapistsQuery = Static<typeof listTherapistsQuery>;
+export type CreateTherapistBody = Static<typeof createTherapistBody>;
+export type UpdateTherapistBody = Static<typeof updateTherapistBody>;
+export type TherapistSortParams = Static<typeof therapistSortParamsSchema>;

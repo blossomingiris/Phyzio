@@ -27,13 +27,34 @@
 - `<domain>.dto.ts`
 - `<domain>.controller.ts`
 
-- Controller variants:
-  `<domain>.<variant>.controller.ts`
-  (e.g. `resource`, `public`, `admin`)
-
 - Tests:
   `<domain>.<behavior>.test.ts`
   (e.g. `posts.access.test.ts`, `posts.create.test.ts`)
+
+## Variants
+
+When a domain has endpoints for multiple access levels, split it into variants.
+Each variant gets its own controller, DTO, and service (only add what is needed):
+
+```
+users/
+  admin/
+    users.admin.controller.ts
+    users.admin.dto.ts
+    users.admin.service.ts
+  resource/
+    users.resource.controller.ts
+    users.resource.dto.ts
+```
+
+| Variant    | Who                                             | Typical routes                                 |
+| ---------- | ----------------------------------------------- | ---------------------------------------------- |
+| `public`   | Anyone, no auth                                 | login, registration, public listings           |
+| `resource` | Any authenticated user acting on their own data | `GET /me`, `PATCH /me/password`                |
+| `admin`    | Admin users only                                | CRUD over other users, role changes, deletions |
+
+Use a variant only when the domain genuinely has multiple access levels.
+A domain with a single access level uses plain `<domain>.controller.ts` etc. with no variant suffix.
 
 ## Configuration
 

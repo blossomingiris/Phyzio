@@ -102,9 +102,8 @@ export const users = pgTable("users", {
 });
 
 export const therapists = pgTable("therapists", {
-  id: serial("id").primaryKey(),
   userId: integer("user_id")
-    .unique()
+    .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
   speciality: specialityEnum("speciality").notNull(),
   phone: varchar("phone", { length: 50 }).notNull(),
@@ -121,7 +120,7 @@ export const therapists = pgTable("therapists", {
 
 export const clients = pgTable("clients", {
   id: serial("id").primaryKey(),
-  therapistId: integer("therapist_id").references(() => therapists.id, {
+  therapistId: integer("therapist_id").references(() => therapists.userId, {
     onDelete: "set null",
   }),
   firstName: varchar("first_name", { length: 255 }).notNull(),
@@ -179,7 +178,7 @@ export const treatmentPlans = pgTable(
     id: serial("id").primaryKey(),
     therapistId: integer("therapist_id")
       .notNull()
-      .references(() => therapists.id, { onDelete: "restrict" }),
+      .references(() => therapists.userId, { onDelete: "restrict" }),
     clientId: integer("client_id")
       .notNull()
       .references(() => clients.id, { onDelete: "restrict" }),
@@ -235,7 +234,7 @@ export const appointments = pgTable(
   "appointments",
   {
     id: serial("id").primaryKey(),
-    therapistId: integer("therapist_id").references(() => therapists.id, {
+    therapistId: integer("therapist_id").references(() => therapists.userId, {
       onDelete: "restrict",
     }),
     clientId: integer("client_id").references(() => clients.id, {
@@ -285,7 +284,7 @@ export const therapistsRelations = relations(therapists, ({ one, many }) => ({
 export const clientsRelations = relations(clients, ({ one, many }) => ({
   therapist: one(therapists, {
     fields: [clients.therapistId],
-    references: [therapists.id],
+    references: [therapists.userId],
   }),
   treatmentPlans: many(treatmentPlans),
   appointments: many(appointments),
@@ -301,7 +300,7 @@ export const treatmentPlansRelations = relations(
   ({ one, many }) => ({
     therapist: one(therapists, {
       fields: [treatmentPlans.therapistId],
-      references: [therapists.id],
+      references: [therapists.userId],
     }),
     client: one(clients, {
       fields: [treatmentPlans.clientId],
@@ -328,7 +327,7 @@ export const treatmentPlanItemsRelations = relations(
 export const appointmentsRelations = relations(appointments, ({ one }) => ({
   therapist: one(therapists, {
     fields: [appointments.therapistId],
-    references: [therapists.id],
+    references: [therapists.userId],
   }),
   client: one(clients, {
     fields: [appointments.clientId],
