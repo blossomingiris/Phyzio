@@ -31,7 +31,7 @@ export const sortOrderSchema = Type.Optional(
   }),
 );
 
-export const sortParams = <T extends TSchema>(dataSchema: T) =>
+export const sortParamsSchema = <T extends TSchema>(dataSchema: T) =>
   Type.Object(
     {
       sortBy: dataSchema,
@@ -42,6 +42,3 @@ export const sortParams = <T extends TSchema>(dataSchema: T) =>
 
 export type ParamId = Static<typeof paramId>;
 export type Pagination = Static<typeof paginationQueryParams>;
-export type SortParam<T extends TSchema> = Static<
-  ReturnType<typeof sortParams<T>>
->;

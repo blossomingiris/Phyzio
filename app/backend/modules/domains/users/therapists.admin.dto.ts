@@ -4,9 +4,11 @@ import {
   paginationMeta,
   paramId,
   sortOrderSchema,
-  sortParams,
+  sortParamsSchema,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
+
+export type TherapistSortBy = "createdAt" | "lastName" | "email";
 
 export const specialitySchema = Type.Unsafe<Speciality>({
   type: "string",
@@ -21,14 +23,13 @@ const therapistSortBySchema = Type.Optional(
   }),
 );
 
-const therapistSortParamsSchema = sortParams(therapistSortBySchema);
-
 const timeSlotSchema = Type.Object({
   start: Type.String({ description: "Time in HH:MM format" }),
   end: Type.String({ description: "Time in HH:MM format" }),
 });
 
 const workingHoursSchema = Type.Object({
+  mon: Type.Optional(Type.Array(timeSlotSchema)),
   tue: Type.Optional(Type.Array(timeSlotSchema)),
   wed: Type.Optional(Type.Array(timeSlotSchema)),
   thu: Type.Optional(Type.Array(timeSlotSchema)),
@@ -39,7 +40,6 @@ const workingHoursSchema = Type.Object({
 
 const therapistResponse = Type.Object({
   id: Type.Integer(),
-  userId: Type.Integer(),
   firstName: Type.String(),
   lastName: Type.String(),
   email: Type.String({ format: "email" }),
@@ -139,9 +139,8 @@ export const deleteTherapistSchema = {
   response: { 200: Type.Object({ success: Type.Boolean() }) },
 };
 
-export type TherapistSortBy = "createdAt" | "lastName" | "email";
-
 export type ListTherapistsQuery = Static<typeof listTherapistsQuery>;
 export type CreateTherapistBody = Static<typeof createTherapistBody>;
 export type UpdateTherapistBody = Static<typeof updateTherapistBody>;
+const therapistSortParamsSchema = sortParamsSchema(therapistSortBySchema);
 export type TherapistSortParams = Static<typeof therapistSortParamsSchema>;

@@ -50,6 +50,7 @@ export default async function therapistsAdminController(app: FastifyInstance) {
     "/:id",
     { schema: updateTherapistSchema },
     async (req) => {
+      await service.findOrFail(req.params.id);
       return service.update(req.params.id, req.body);
     },
   );
@@ -58,6 +59,7 @@ export default async function therapistsAdminController(app: FastifyInstance) {
     "/:id",
     { schema: deleteTherapistSchema },
     async (req) => {
+      await service.findOrFail(req.params.id);
       await service.destroy(req.params.id);
       return { success: true };
     },

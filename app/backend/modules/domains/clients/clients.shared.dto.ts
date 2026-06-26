@@ -8,8 +8,11 @@ import type {
   ClientOrigin,
   Speciality,
 } from "#app/database/types.ts";
-import { paginationMeta } from "#app/modules/general/dto/index.ts";
-import Type from "typebox";
+import {
+  paginationMeta,
+  sortParamsSchema,
+} from "#app/modules/general/dto/index.ts";
+import Type, { type Static } from "typebox";
 
 export const originSchema = Type.Unsafe<ClientOrigin>({
   type: "string",
@@ -47,7 +50,7 @@ export const clientResponse = Type.Object({
   origin: Type.Union([originSchema, Type.Null()]),
   preferredCommunication: communicationSchema,
   medicalNotes: Type.Union([Type.String(), Type.Null()]),
-  deletedAt: Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
+  deletedAt: Type.Optional(Type.String({ format: "date-time" })),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
 });
@@ -80,3 +83,6 @@ export const clientBaseBody = Type.Object(
   },
   { additionalProperties: false },
 );
+
+const clientSortParamsSchema = sortParamsSchema(clientSortBySchema);
+export type ClientSortParams = Static<typeof clientSortParamsSchema>;

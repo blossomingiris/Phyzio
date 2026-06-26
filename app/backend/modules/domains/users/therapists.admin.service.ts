@@ -1,7 +1,7 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { therapists, users } from "#app/database/schemas.ts";
 import { type Speciality } from "#app/database/types.ts";
-import { NotFoundError } from "#app/errors/httpErrors.ts";
+import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import type {
   CreateTherapistBody,
   TherapistSortBy,
@@ -114,20 +114,25 @@ export class TherapistsService {
       workingHours,
     } = data;
 
-    return this.db.transaction(async (tx) => {
-      const [user] = await tx
-        .insert(users)
-        .values({ firstName, lastName, email, password, role: "therapist" })
-        .returning();
+    try {
+      return await this.db.transaction(async (tx) => {
+        const [user] = await tx
+          .insert(users)
+          .values({ firstName, lastName, email, password, role: "therapist" })
+          .returning();
 
-      const [therapist] = await tx
-        .insert(therapists)
-        .values({ userId: user!.id, speciality, phone, workingHours })
-        .returning();
+        const [therapist] = await tx
+          .insert(therapists)
+          .values({ userId: user!.id, speciality, phone, workingHours })
+          .returning();
 
-      const { userId, ...therapistRest } = therapist!;
-      return { id: userId, firstName, lastName, email, ...therapistRest };
-    });
+        const { userId, ...therapistRest } = therapist!;
+        return { id: userId, firstName, lastName, email, ...therapistRest };
+      });
+    } catch (e: any) {
+      if (e?.code === "23505") throw new ConflictError("Email already in use");
+      throw e;
+    }
   }
 
   async update(id: number, data: UpdateTherapistBody) {
@@ -136,7 +141,7 @@ export class TherapistsService {
       .set({ ...data, updatedAt: new Date() })
       .where(eq(therapists.userId, id));
 
-    return this.findOrFail(id);
+    return this.one({ id });
   }
 
   async destroy(id: number) {

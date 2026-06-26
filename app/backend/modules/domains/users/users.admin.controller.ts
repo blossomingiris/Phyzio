@@ -50,6 +50,7 @@ export default async function usersAdminController(app: FastifyInstance) {
     "/:id",
     { schema: updateUserSchema },
     async (req) => {
+      await service.findOrFail(req.params.id);
       return service.update(req.params.id, req.body);
     },
   );
@@ -58,6 +59,7 @@ export default async function usersAdminController(app: FastifyInstance) {
     "/:id/role",
     { schema: updateRoleSchema },
     async (req) => {
+      await service.findOrFail(req.params.id);
       return service.updateRole(req.params.id, req.body.role);
     },
   );

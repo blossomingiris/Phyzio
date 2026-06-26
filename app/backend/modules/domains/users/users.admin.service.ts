@@ -1,7 +1,7 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { users } from "#app/database/schemas.ts";
 import type { User, UserRole } from "#app/database/types.ts";
-import { NotFoundError } from "#app/errors/httpErrors.ts";
+import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import type {
   UserSortBy,
   UserSortParams,
@@ -90,8 +90,13 @@ export class UsersService {
   }
 
   async create(data: CreateUser) {
-    const [user] = await this.db.insert(users).values(data).returning();
-    return user!;
+    try {
+      const [user] = await this.db.insert(users).values(data).returning();
+      return user!;
+    } catch (e: any) {
+      if (e?.code === "23505") throw new ConflictError("Email already in use");
+      throw e;
+    }
   }
 
   async update(id: number, data: UpdateUser) {
@@ -101,7 +106,7 @@ export class UsersService {
       .where(eq(users.id, id))
       .returning();
 
-    return user!;
+    return user ?? null;
   }
 
   async updateRole(id: number, role: UserRole) {
@@ -111,7 +116,7 @@ export class UsersService {
       .where(eq(users.id, id))
       .returning();
 
-    return user!;
+    return user ?? null;
   }
 
   private buildWhere(filters: UserFilters) {

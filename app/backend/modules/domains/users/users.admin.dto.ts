@@ -4,7 +4,7 @@ import {
   paginationMeta,
   paramId,
   sortOrderSchema,
-  sortParams,
+  sortParamsSchema,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -13,6 +13,8 @@ const userRoleSchema = Type.Unsafe<UserRole>({
   enum: userRoleEnum.enumValues,
 });
 
+export type UserSortBy = "createdAt" | "lastName" | "email";
+
 const userSortBySchema = Type.Optional(
   Type.Unsafe<UserSortBy>({
     type: "string",
@@ -20,8 +22,6 @@ const userSortBySchema = Type.Optional(
     default: "createdAt",
   }),
 );
-
-const userSortParamsSchema = sortParams(userSortBySchema);
 
 const userResponse = Type.Object({
   id: Type.Integer(),
@@ -115,10 +115,9 @@ export const updateRoleSchema = {
   response: { 200: userResponse },
 };
 
-export type UserSortBy = "createdAt" | "lastName" | "email";
-
 export type ListUsersQuery = Static<typeof listUsersQuery>;
 export type CreateUserBody = Static<typeof createUserBody>;
 export type UpdateUserBody = Static<typeof updateUserBody>;
 export type UpdateRoleBody = Static<typeof updateRoleBody>;
+const userSortParamsSchema = sortParamsSchema(userSortBySchema);
 export type UserSortParams = Static<typeof userSortParamsSchema>;
