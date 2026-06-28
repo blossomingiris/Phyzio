@@ -44,7 +44,7 @@ therapists
 
 clients
 ├── treatment_plans               one-to-many
-└── appointments                  one-to-many  (client_id nullable)
+└── appointments                  one-to-many
 
 treatment_plans
 └── treatment_plan_items          one-to-many
@@ -121,18 +121,18 @@ treatments  (service catalog)
 | Column             | Type        | Constraints                  | Enum values                              |
 | ------------------ | ----------- | ---------------------------- | ---------------------------------------- |
 | id                 | serial      | PK                           |                                          |
-| therapist_id       | integer     | NOT NULL, FK → therapists.id |                                          |
-| client_id          | integer     | NOT NULL, FK → clients.id    |                                          |
-| primary_diagnostic | text        | NOT NULL                     |                                          |
-| clinical_goals     | text        | NOT NULL                     |                                          |
-| contraindications  | text        | NULL                         |                                          |
-| status               | plan_status enum              | NOT NULL DEFAULT 'open' | open, in_progress, paused, completed, cancelled |
-| cancellation_reason  | plan_cancellation_reason enum | NULL                    | client_request, client_unreachable, therapist_referral, other |
-| cancellation_note    | text                          | NULL                    |                                                               |
-| start_date         | timestamptz | NOT NULL                     |                                          |
-| end_date           | timestamptz | NULL                         |                                          |
-| created_at         | timestamptz | NOT NULL DEFAULT now()       |                                          |
-| updated_at         | timestamptz | NOT NULL DEFAULT now()       |                                          |
+| therapist_id        | integer                       | NOT NULL, FK → therapists.user_id | |
+| client_id           | integer                       | NOT NULL, FK → clients.id         | |
+| primary_diagnostic  | text                          | NOT NULL                          | |
+| clinical_goals      | text                          | NOT NULL                          | |
+| contraindications   | text                          | NULL                              | |
+| status              | plan_status enum              | NOT NULL DEFAULT 'open'           | open, in_progress, paused, completed, cancelled |
+| cancellation_reason | plan_cancellation_reason enum | NULL                              | client_request, client_unreachable, therapist_referral, other |
+| cancellation_note   | text                          | NULL                              | |
+| start_date          | timestamptz                   | NOT NULL                          | |
+| end_date            | timestamptz                   | NULL                              | |
+| created_at          | timestamptz                   | NOT NULL DEFAULT now()            | |
+| updated_at          | timestamptz                   | NOT NULL DEFAULT now()            | |
 
 ### `treatment_plan_items` (one row per chosen service)
 
@@ -151,7 +151,7 @@ treatments  (service catalog)
 | Column       | Type        | Constraints                  | Enum values                                                    |
 | ------------ | ----------- | ---------------------------- | -------------------------------------------------------------- |
 | id           | serial      | PK                           |                                                                |
-| therapist_id | integer     | NULL, FK → therapists.id     |                                                                |
+| therapist_id | integer     | NULL, FK → therapists.user_id |                                                                |
 | client_id    | integer     | NOT NULL, FK → clients.id    |                                                                |
 | treatment_id | integer     | NULL, FK → treatments.id     |                                                                |
 | started_at   | timestamptz | NOT NULL                     |                                                                |
