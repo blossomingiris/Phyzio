@@ -116,8 +116,12 @@ export class ClientsService {
   }
 
   async create(data: CreateClientBody) {
+    const normalized =
+      data.email !== undefined
+        ? { ...data, email: data.email.toLowerCase() }
+        : data;
     try {
-      const [row] = await this.db.insert(clients).values(data).returning();
+      const [row] = await this.db.insert(clients).values(normalized).returning();
       return (await this.one({ id: row!.id }))!;
     } catch (e: any) {
       if (e?.code === "23505") throw new ConflictError("Email already in use");
@@ -126,17 +130,21 @@ export class ClientsService {
   }
 
   async update(id: number, data: UpdateClientBody) {
-    if (data.email !== undefined) {
+    const normalized =
+      data.email !== undefined
+        ? { ...data, email: data.email.toLowerCase() }
+        : data;
+    if (normalized.email !== undefined) {
       const [conflict] = await this.db
         .select({ id: clients.id })
         .from(clients)
-        .where(and(eq(clients.email, data.email), not(eq(clients.id, id))));
+        .where(and(eq(clients.email, normalized.email), not(eq(clients.id, id))));
       if (conflict) throw new ConflictError("Email already in use");
     }
 
     await this.db
       .update(clients)
-      .set({ ...data, updatedAt: new Date() })
+      .set({ ...normalized, updatedAt: new Date() })
       .where(eq(clients.id, id));
 
     return this.one({ id });

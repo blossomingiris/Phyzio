@@ -91,7 +91,10 @@ export class UsersService {
 
   async create(data: CreateUser) {
     try {
-      const [user] = await this.db.insert(users).values(data).returning();
+      const [user] = await this.db
+        .insert(users)
+        .values({ ...data, email: data.email.toLowerCase() })
+        .returning();
       return user!;
     } catch (e: any) {
       if (e?.code === "23505") throw new ConflictError("Email already in use");
@@ -100,9 +103,13 @@ export class UsersService {
   }
 
   async update(id: number, data: UpdateUser) {
+    const normalized =
+      data.email !== undefined
+        ? { ...data, email: data.email.toLowerCase() }
+        : data;
     const [user] = await this.db
       .update(users)
-      .set({ ...data, updatedAt: new Date() })
+      .set({ ...normalized, updatedAt: new Date() })
       .where(eq(users.id, id))
       .returning();
 

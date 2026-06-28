@@ -1,4 +1,4 @@
-# Database Tables Design
+# Database Design
 
 ## Contents
 
