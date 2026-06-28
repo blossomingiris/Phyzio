@@ -1,4 +1,5 @@
 import { paramId, sortOrderSchema } from "#app/modules/general/dto/index.ts";
+import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
 
 import {
@@ -7,8 +8,8 @@ import {
   appointmentResponse,
   appointmentSortBySchema,
   appointmentStatusSchema,
-  cancelledTransitionSchema,
-  nonCancelledTransitionSchema,
+  cancelledStatusSchema,
+  nonCancelledStatusSchema,
 } from "#app/modules/domains/appointments/appointments.shared.dto.ts";
 
 export const listAppointmentsQuery = Type.Object(
@@ -45,10 +46,10 @@ export const createAppointmentBody = Type.Object(
 
 export const updateAppointmentBody = Type.Partial(createAppointmentBody);
 
-export const transitionAppointmentBody = Type.Union(
-  [cancelledTransitionSchema, nonCancelledTransitionSchema],
-  { discriminator: { propertyName: "status" } },
-);
+export const updateAppointmentStatusBody = discriminatedUnion("status", [
+  cancelledStatusSchema,
+  nonCancelledStatusSchema,
+]);
 
 export const listAppointmentsSchema = {
   tags: ["Appointments"],
@@ -86,15 +87,15 @@ export const deleteAppointmentSchema = {
   response: { 200: Type.Object({ success: Type.Boolean() }) },
 };
 
-export const transitionAppointmentSchema = {
+export const updateAppointmentStatusSchema = {
   tags: ["Appointments"],
   summary: "Change appointment status",
   params: paramId,
-  body: transitionAppointmentBody,
+  body: updateAppointmentStatusBody,
   response: { 200: appointmentResponse },
 };
 
 export type ListAppointmentsQuery = Static<typeof listAppointmentsQuery>;
 export type CreateAppointmentBody = Static<typeof createAppointmentBody>;
 export type UpdateAppointmentBody = Static<typeof updateAppointmentBody>;
-export type TransitionAppointmentBody = Static<typeof transitionAppointmentBody>;
+export type UpdateAppointmentStatusBody = Static<typeof updateAppointmentStatusBody>;

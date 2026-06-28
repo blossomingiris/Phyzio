@@ -86,7 +86,7 @@ export const appointmentBaseBody = Type.Object(
   { additionalProperties: false },
 );
 
-export const cancelledTransitionSchema = Type.Object(
+export const cancelledStatusSchema = Type.Object(
   {
     status: Type.Literal("cancelled"),
     cancellationReason: cancellationReasonSchema,
@@ -97,7 +97,7 @@ export const cancelledTransitionSchema = Type.Object(
   { additionalProperties: false },
 );
 
-export const nonCancelledTransitionSchema = Type.Object(
+export const nonCancelledStatusSchema = Type.Object(
   {
     status: Type.Unsafe<Exclude<AppointmentStatus, "cancelled">>({
       type: "string",
