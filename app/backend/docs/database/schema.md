@@ -1,15 +1,32 @@
----
-name: database-design
-description: Authoritative database schema reference, eg. tables, columns, relationships, FK delete behavior, enums, CHECK constraints, and planned indexes. Use this whenever adding or changing database tables, editing app/database/schemas.ts, writing Drizzle relations, generating/reviewing migrations, or seeding the database.
+# Database Tables Design
+
+## Contents
+
+- [Conventions](#conventions)
+- [Relationships map](#relationships-map)
+- [Tables](#tables)
+  - [users](#users)
+  - [therapists](#therapists)
+  - [clients](#clients)
+  - [treatments](#treatments)
+  - [treatment_plans](#treatment_plans)
+  - [treatment_plan_items](#treatment_plan_items)
+  - [appointments](#appointments)
+- [FK delete behavior](#fk-delete-behavior-ondelete)
+- [CHECK constraints](#check-constraints)
+- [Notes](#notes)
+- [Best practices](#best-practices)
+- [Workflow when changing the schema](#workflow-when-changing-the-schema)
+
 ---
 
-# Database Design
+## Conventions
 
 > Conventions for all tables:
 
 - column names are `snake_case`
 - enum tags are `snake_case`
-- all `id` are `serial`
+- most tables use a `serial` PK named `id`; exception: `therapists` uses `user_id` as PK
 - all timestamps are `timestamptz NOT NULL DEFAULT now()`
 
 ---
@@ -17,15 +34,24 @@ description: Authoritative database schema reference, eg. tables, columns, relat
 ## Relationships map
 
 ```
-users           (1) ──< (0..1) therapists            therapists.user_id → users.id
-therapists      (1) ──< (many) clients               clients.therapist_id → therapists.id   (nullable = assigned)
-clients         (1) ──< (many) treatment_plans       treatment_plans.client_id
-therapists      (1) ──< (many) treatment_plans       treatment_plans.therapist_id
-treatment_plans (1) ──< (many) treatment_plan_items  treatment_plan_items.treatment_plan_id
-treatments      (1) ──< (many) treatment_plan_items  treatment_plan_items.treatment_id      (service catalog)
-clients         (1) ──< (many) appointments          appointments.client_id
-therapists      (1) ──< (many) appointments          appointments.therapist_id
-treatments      (0..1) ──< (many) appointments       appointments.treatment_id              (nullable delivery link)
+users
+└── therapists                    one-to-zero-or-one
+
+therapists
+├── clients                       one-to-many  (therapist_id nullable — client can be unassigned)
+├── treatment_plans               one-to-many
+└── appointments                  one-to-many  (therapist_id nullable)
+
+clients
+├── treatment_plans               one-to-many
+└── appointments                  one-to-many  (client_id nullable)
+
+treatment_plans
+└── treatment_plan_items          one-to-many
+
+treatments  (service catalog)
+├── treatment_plan_items          one-to-many
+└── appointments                  one-to-many  (treatment_id nullable)
 ```
 
 ---
@@ -49,8 +75,7 @@ treatments      (0..1) ──< (many) appointments       appointments.treatment_
 
 | Column        | Type            | Constraints                                                                                         | Enum values                                                                                               |
 | ------------- | --------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| id            | serial          | PK                                                                                                  |                                                                                                           |
-| user_id       | integer         | NULL, UNIQUE, FK → users.id                                                                         |                                                                                                           |
+| user_id       | integer         | PK, FK → users.id                                                                                   |                                                                                                           |
 | speciality    | speciality enum | NOT NULL                                                                                            | orthopedic, sports, neurology, pediatric, geriatric, cardio_pulmonary, pelvic_floor, oncology, vestibular |
 | phone         | varchar(50)     | NOT NULL                                                                                            |                                                                                                           |
 | working_hours | jsonb           | NOT NULL — typed `$type<WorkingHours>()`; shape `{ "mon": [{"start":"09:00","end":"17:00"}], ... }` |                                                                                                           |
@@ -64,10 +89,11 @@ treatments      (0..1) ──< (many) appointments       appointments.treatment_
 | Column                  | Type               | Constraints                                   | Enum values               |
 | ----------------------- | ------------------ | --------------------------------------------- | ------------------------- |
 | id                      | serial             | PK                                            |                           |
-| therapist_id            | integer            | NULL, FK → therapists.id (assigned therapist) |                           |
+| therapist_id            | integer            | NULL, FK → therapists.user_id (assigned therapist) |                      |
 | first_name              | varchar(255)       | NOT NULL                                      |                           |
 | last_name               | varchar(255)       | NOT NULL                                      |                           |
 | birth_date              | date               | NULL                                          |                           |
+| phone                   | varchar(50)        | NULL                                          |                           |
 | email                   | varchar(255)       | NULL, UNIQUE (case-insensitive)               |                           |
 | origin                  | origin enum        | NULL                                          | whats_up, phone, walk_in, other |
 | preferred_communication | communication enum | NOT NULL DEFAULT 'email'                      | whats_up, phone, email    |
@@ -100,7 +126,9 @@ treatments      (0..1) ──< (many) appointments       appointments.treatment_
 | primary_diagnostic | text        | NOT NULL                     |                                          |
 | clinical_goals     | text        | NOT NULL                     |                                          |
 | contraindications  | text        | NULL                         |                                          |
-| status             | status enum | NOT NULL DEFAULT 'open'      | open, in_progress, completed, cancelled  |
+| status               | plan_status enum              | NOT NULL DEFAULT 'open' | open, in_progress, paused, completed, cancelled |
+| cancellation_reason  | plan_cancellation_reason enum | NULL                    | client_request, client_unreachable, therapist_referral, other |
+| cancellation_note    | text                          | NULL                    |                                                               |
 | start_date         | timestamptz | NOT NULL                     |                                          |
 | end_date           | timestamptz | NULL                         |                                          |
 | created_at         | timestamptz | NOT NULL DEFAULT now()       |                                          |
@@ -124,13 +152,15 @@ treatments      (0..1) ──< (many) appointments       appointments.treatment_
 | ------------ | ----------- | ---------------------------- | -------------------------------------------------------------- |
 | id           | serial      | PK                           |                                                                |
 | therapist_id | integer     | NULL, FK → therapists.id     |                                                                |
-| client_id    | integer     | NULL, FK → clients.id        |                                                                |
+| client_id    | integer     | NOT NULL, FK → clients.id    |                                                                |
 | treatment_id | integer     | NULL, FK → treatments.id     |                                                                |
 | started_at   | timestamptz | NOT NULL                     |                                                                |
 | ended_at     | timestamptz | NOT NULL                     |                                                                |
 | notes        | text        | NULL                         |                                                                |
-| status       | status enum | NOT NULL DEFAULT 'requested' | requested, scheduled, confirmed, completed, no_show, cancelled |
-| created_at   | timestamptz | NOT NULL DEFAULT now()       |                                                                |
+| status                | appointment_status enum  | NOT NULL DEFAULT 'requested' | requested, scheduled, confirmed, completed, no_show, cancelled |
+| cancellation_reason   | cancellation_reason enum | NULL                         | client_request, client_unreachable, therapist_unavailable, other |
+| cancellation_note     | text                     | NULL                         |                                                                |
+| created_at            | timestamptz              | NOT NULL DEFAULT now()       |                                                                |
 | updated_at   | timestamptz | NOT NULL DEFAULT now()       |                                                                |
 
 ---
@@ -177,7 +207,7 @@ Rule of thumb: **CASCADE toward an owner parent, RESTRICT/SET NULL toward a shar
 
 ## Notes
 
-- `appointments.therapist_id` and `client_id` are **intentionally nullable** — an appointment can exist as a request (`status = 'requested'`) before a therapist/client is assigned.
+- `appointments.therapist_id` is **intentionally nullable** — an appointment can exist as a request (`status = 'requested'`) before a therapist is assigned. `client_id` is NOT NULL — a client is always required.
 - A client may have **many** treatment plans (`treatment_plans.client_id` is not unique). A plan has many services via `treatment_plan_items`; the same service appears at most once per plan (its `UNIQUE`).
 - `therapists` is a profile-extension of `users` (a therapist is a user with `role = 'therapist'`). -`treatments` is a reusable **service catalog** holding the pricing used to quote offers before a plan exists.
 

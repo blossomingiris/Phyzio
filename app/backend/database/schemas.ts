@@ -71,8 +71,16 @@ export const categoryEnum = pgEnum("category", [
 export const planStatusEnum = pgEnum("plan_status", [
   "open",
   "in_progress",
+  "paused",
   "completed",
   "cancelled",
+]);
+
+export const planCancellationReasonEnum = pgEnum("plan_cancellation_reason", [
+  "client_request",
+  "client_unreachable",
+  "therapist_referral",
+  "other",
 ]);
 
 export const appointmentStatusEnum = pgEnum("appointment_status", [
@@ -82,6 +90,13 @@ export const appointmentStatusEnum = pgEnum("appointment_status", [
   "completed",
   "no_show",
   "cancelled",
+]);
+
+export const cancellationReasonEnum = pgEnum("cancellation_reason", [
+  "client_request",
+  "client_unreachable",
+  "therapist_unavailable",
+  "other",
 ]);
 
 // --- Tables ---
@@ -187,6 +202,8 @@ export const treatmentPlans = pgTable(
     clinicalGoals: text("clinical_goals").notNull(),
     contraindications: text("contraindications"),
     status: planStatusEnum("status").notNull().default("open"),
+    cancellationReason: planCancellationReasonEnum("cancellation_reason"),
+    cancellationNote: text("cancellation_note"),
     startDate: timestamp("start_date", { withTimezone: true }).notNull(),
     endDate: timestamp("end_date", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
@@ -238,9 +255,11 @@ export const appointments = pgTable(
     therapistId: integer("therapist_id").references(() => therapists.userId, {
       onDelete: "restrict",
     }),
-    clientId: integer("client_id").references(() => clients.id, {
-      onDelete: "restrict",
-    }),
+    clientId: integer("client_id")
+      .notNull()
+      .references(() => clients.id, {
+        onDelete: "restrict",
+      }),
     treatmentId: integer("treatment_id").references(() => treatments.id, {
       onDelete: "set null",
     }),
@@ -248,6 +267,8 @@ export const appointments = pgTable(
     endedAt: timestamp("ended_at", { withTimezone: true }).notNull(),
     notes: text("notes"),
     status: appointmentStatusEnum("status").notNull().default("requested"),
+    cancellationReason: cancellationReasonEnum("cancellation_reason"),
+    cancellationNote: text("cancellation_note"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
