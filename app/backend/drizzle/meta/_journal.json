@@ -15,6 +15,13 @@
       "when": 1782465693788,
       "tag": "0001_vengeful_jackpot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782638062017,
+      "tag": "0002_spotty_scorpion",
+      "breakpoints": true
     }
   ]
 }

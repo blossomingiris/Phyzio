@@ -60,16 +60,6 @@ A domain with a single access level uses plain `<domain>.controller.ts` etc. wit
 - **Only `src/config/*` may access `process.env`.**
 - Import config constants everywhere else. Never read `process.env` directly.
 
-## Environment files
-
-- Never read the real `.env`. It contains real secrets.
-- `.env.example` is the source of truth for environment variables.
-- Keep `.env.example` up to date with placeholder values only.
-- When adding a new variable:
-  1. Add it to `.env.example`.
-  2. Never change the real `.env`.
-  3. Tell Developer to add the variable to their `.env` and set the real value.
-
 ## Type-only imports
 
 Always use the `type` keyword when importing TypeScript types or interfaces:
