@@ -28,21 +28,21 @@ export const listMyClientsQuery = Type.Object(
 export const updateMyClientBody = Type.Partial(clientBaseBody);
 
 export const listMyClientsSchema = {
-  tags: ["Clients"],
+  tags: ["Me"],
   summary: "List my clients",
   querystring: listMyClientsQuery,
   response: { 200: clientListResponse },
 };
 
 export const findMyClientSchema = {
-  tags: ["Clients"],
+  tags: ["Me"],
   summary: "Get one of my clients by ID",
   params: paramId,
   response: { 200: clientResponse },
 };
 
 export const updateMyClientSchema = {
-  tags: ["Clients"],
+  tags: ["Me"],
   summary: "Update one of my clients",
   params: paramId,
   body: updateMyClientBody,
