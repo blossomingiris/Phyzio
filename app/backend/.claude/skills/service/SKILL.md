@@ -34,3 +34,30 @@ await this.db.update(users).set({ ...normalized, updatedAt: new Date() });
 ```
 
 Apply this pattern to every service that writes `email` to the database.
+
+---
+
+## 2. findOrFail
+
+Define a `findOrFail` method on every service that fetches a single entity by id.
+It wraps the internal `one` lookup and throws `NotFoundError` when the row is absent,
+so controllers never have to handle the null case themselves.
+
+```ts
+// service
+async findOrFail(id: number) {
+  const user = await this.one({ id });
+  if (!user) throw new NotFoundError("User not found");
+  return user;
+}
+```
+
+Use `findOrFail` in controllers whenever the route must 404 if the resource does
+not exist — which is the case for every GET-by-id, PATCH, and DELETE route.
+
+```ts
+// controller
+const user = await this.usersService.findOrFail(params.id);
+```
+
+Never call `one` from a controller — the null-check would have to be repeated in every route that fetches a single entity. `findOrFail` owns that check once so controllers always receive a guaranteed non-null value.
