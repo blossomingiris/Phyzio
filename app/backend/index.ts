@@ -14,6 +14,7 @@ const app = Fastify({
     customOptions: {
       allErrors: true,
       removeAdditional: false,
+      discriminator: true,
     },
   },
 }).withTypeProvider<TypeBoxTypeProvider>();

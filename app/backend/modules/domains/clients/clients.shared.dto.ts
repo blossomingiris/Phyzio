@@ -1,16 +1,9 @@
-import {
-  communicationEnum,
-  originEnum,
-  specialityEnum,
-} from "#app/database/schemas.ts";
-import type {
-  ClientCommunication,
-  ClientOrigin,
-  Speciality,
-} from "#app/database/types.ts";
+import { communicationEnum, originEnum } from "#app/database/schemas.ts";
+import type { ClientCommunication, ClientOrigin } from "#app/database/types.ts";
 import {
   paginationMeta,
   sortParamsSchema,
+  therapistSummarySchema,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -24,20 +17,6 @@ export const communicationSchema = Type.Unsafe<ClientCommunication>({
   enum: communicationEnum.enumValues,
 });
 
-const specialitySchema = Type.Unsafe<Speciality>({
-  type: "string",
-  enum: specialityEnum.enumValues,
-});
-
-export const therapistSummarySchema = Type.Object({
-  id: Type.Integer(),
-  firstName: Type.String(),
-  lastName: Type.String(),
-  speciality: specialitySchema,
-  phone: Type.String(),
-  email: Type.String({ format: "email" }),
-  isActive: Type.Boolean(),
-});
 
 export const clientResponse = Type.Object({
   id: Type.Integer(),
