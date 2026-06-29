@@ -45,8 +45,6 @@ export const clientBaseBody = Type.Object(
     birthDate: Type.Optional(Type.String({ format: "date" })),
     phone: Type.Optional(Type.String({ minLength: 1, maxLength: 50 })),
     email: Type.Optional(Type.String({ format: "email", maxLength: 255 })),
-    origin: Type.Optional(originSchema),
-    preferredCommunication: Type.Optional(communicationSchema),
     medicalNotes: Type.Optional(Type.String()),
   },
   { additionalProperties: false },

@@ -10,6 +10,8 @@ import {
   clientBaseBody,
   clientBaseResponse,
   clientSortBySchema,
+  communicationSchema,
+  originSchema,
 } from "#app/modules/domains/clients/clients.shared.dto.ts";
 
 export const clientResponse = Type.Object({
@@ -44,6 +46,8 @@ export const listClientsQuery = Type.Object(
 export const createClientBody = Type.Object(
   {
     ...clientBaseBody.properties,
+    origin: Type.Optional(originSchema),
+    preferredCommunication: Type.Optional(communicationSchema),
     therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
   },
   { additionalProperties: false },
