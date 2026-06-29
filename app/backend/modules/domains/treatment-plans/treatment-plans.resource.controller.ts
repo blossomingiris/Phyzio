@@ -84,7 +84,8 @@ export default async function treatmentPlansResourceController(app: FastifyInsta
       // TODO: replace with req.user.therapistId once auth is wired up
       const therapistId: number = (req as any).user?.therapistId;
       await service.findOrFail(req.params.id, { therapistId });
-      return service.removeItem(req.params.id, req.params.itemId);
+      await service.removeItem(req.params.id, req.params.itemId);
+      return { success: true };
     },
   );
 }

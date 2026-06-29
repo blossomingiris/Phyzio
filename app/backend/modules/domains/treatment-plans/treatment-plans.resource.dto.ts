@@ -1,16 +1,16 @@
 import {
   clientSummarySchema,
-  paramId,
   paginationMeta,
+  paramId,
   sortOrderSchema,
 } from "#app/modules/general/dto/index.ts";
+import Type, { type Static } from "typebox";
 import {
   planCancellationReasonSchema,
   planSortBySchema,
   planStatusSchema,
   treatmentPlanItemResponse,
 } from "./treatment-plans.shared.dto.ts";
-import Type, { type Static } from "typebox";
 
 export const treatmentPlanResourceResponse = Type.Object({
   id: Type.Integer(),
@@ -43,8 +43,6 @@ export const treatmentPlanResourceListResponse = Type.Object({
   pagination: Type.Object(paginationMeta),
 });
 
-// ─── Request bodies ───────────────────────────────────────────────────────────
-
 export const createTreatmentPlanBody = Type.Object(
   {
     clientId: Type.Integer({ minimum: 1 }),
@@ -63,7 +61,6 @@ export const createTreatmentPlanBody = Type.Object(
   },
   { additionalProperties: false },
 );
-export type CreateTreatmentPlanBody = Static<typeof createTreatmentPlanBody>;
 
 export const updateTreatmentPlanBody = Type.Object(
   {
@@ -80,13 +77,11 @@ export const updateTreatmentPlanBody = Type.Object(
   },
   { additionalProperties: false },
 );
-export type UpdateTreatmentPlanBody = Static<typeof updateTreatmentPlanBody>;
 
 export const addTreatmentPlanItemBody = Type.Object(
   { treatmentId: Type.Integer({ minimum: 1 }) },
   { additionalProperties: false },
 );
-export type AddTreatmentPlanItemBody = Static<typeof addTreatmentPlanItemBody>;
 
 export const listTreatmentPlansQuery = Type.Object(
   {
@@ -101,7 +96,6 @@ export const listTreatmentPlansQuery = Type.Object(
   },
   { additionalProperties: false },
 );
-export type ListTreatmentPlansQuery = Static<typeof listTreatmentPlansQuery>;
 
 const treatmentPlanItemParams = Type.Object(
   {
@@ -112,28 +106,28 @@ const treatmentPlanItemParams = Type.Object(
 );
 
 export const listTreatmentPlansSchema = {
-  tags: ["Treatment Plans"],
+  tags: ["Me"],
   summary: "List my treatment plans",
   querystring: listTreatmentPlansQuery,
   response: { 200: treatmentPlanResourceListResponse },
 };
 
 export const findTreatmentPlanSchema = {
-  tags: ["Treatment Plans"],
+  tags: ["Me"],
   summary: "Get a treatment plan by ID",
   params: paramId,
   response: { 200: treatmentPlanResourceResponse },
 };
 
 export const createTreatmentPlanSchema = {
-  tags: ["Treatment Plans"],
+  tags: ["Me"],
   summary: "Create a treatment plan",
   body: createTreatmentPlanBody,
   response: { 201: treatmentPlanResourceResponse },
 };
 
 export const updateTreatmentPlanSchema = {
-  tags: ["Treatment Plans"],
+  tags: ["Me"],
   summary: "Update a treatment plan",
   params: paramId,
   body: updateTreatmentPlanBody,
@@ -141,7 +135,7 @@ export const updateTreatmentPlanSchema = {
 };
 
 export const addTreatmentPlanItemSchema = {
-  tags: ["Treatment Plans"],
+  tags: ["Me"],
   summary: "Add a treatment to a plan",
   params: paramId,
   body: addTreatmentPlanItemBody,
@@ -149,8 +143,13 @@ export const addTreatmentPlanItemSchema = {
 };
 
 export const deleteTreatmentPlanItemSchema = {
-  tags: ["Treatment Plans"],
+  tags: ["Me"],
   summary: "Remove a treatment from a plan",
   params: treatmentPlanItemParams,
-  response: { 200: treatmentPlanResourceResponse },
+  response: { 200: Type.Object({ success: Type.Boolean() }) },
 };
+
+export type CreateTreatmentPlanBody = Static<typeof createTreatmentPlanBody>;
+export type ListTreatmentPlansQuery = Static<typeof listTreatmentPlansQuery>;
+export type AddTreatmentPlanItemBody = Static<typeof addTreatmentPlanItemBody>;
+export type UpdateTreatmentPlanBody = Static<typeof updateTreatmentPlanBody>;
