@@ -1,7 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
-  check,
   date,
   integer,
   jsonb,
@@ -180,12 +179,6 @@ export const treatments = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [
-    check("price_per_unit_non_negative", sql`${table.pricePerUnit} >= 0`),
-    check("quantity_positive", sql`${table.quantity} > 0`),
-    check("total_amount_non_negative", sql`${table.totalAmount} >= 0`),
-    check("duration_minutes_positive", sql`${table.durationMinutes} > 0`),
-  ],
 );
 
 export const treatmentPlans = pgTable(
@@ -213,12 +206,7 @@ export const treatmentPlans = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [
-    check(
-      "end_date_after_start",
-      sql`${table.endDate} IS NULL OR ${table.endDate} >= ${table.startDate}`,
-    ),
-  ],
+  () => [],
 );
 
 export const treatmentPlanItems = pgTable(
@@ -241,10 +229,6 @@ export const treatmentPlanItems = pgTable(
   },
   (table) => [
     unique("uq_plan_treatment").on(table.treatmentPlanId, table.treatmentId),
-    check(
-      "quantity_completed_non_negative",
-      sql`${table.quantityCompleted} >= 0`,
-    ),
   ],
 );
 
@@ -276,12 +260,7 @@ export const appointments = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (table) => [
-    check(
-      "ended_at_after_started_at",
-      sql`${table.endedAt} > ${table.startedAt}`,
-    ),
-  ],
+  () => [],
 );
 
 // --- Relations ---

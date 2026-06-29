@@ -30,6 +30,8 @@ Every endpoint must be fully documented before or alongside implementation. Type
 
 **Database**: After editing `database/schemas.ts`, run `db:generate` then `db:migrate`.
 
+**Validation strategy (MVP)**: The API layer (TypeBox schemas) is the single trusted validation layer. No `check()` constraints are defined in the database schema. If this project graduates beyond MVP, add DB-level constraints as a second line of defence.
+
 **API docs**: Swagger UI at `http://localhost:{PORT}/docs`. For a route to appear in the docs, it must include TypeBox schemas in its route options AND the controller must be registered in `plugins/routes.plugin.ts`.
 
 ## Environment files
