@@ -10,9 +10,7 @@ import type {
 } from "#app/database/types.ts";
 import {
   clientSummarySchema,
-  paginationMeta,
   sortParamsSchema,
-  therapistSummarySchema,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -41,9 +39,8 @@ export const treatmentSummarySchema = Type.Object({
   isActive: Type.Boolean(),
 });
 
-export const appointmentResponse = Type.Object({
+export const appointmentBaseResponse = Type.Object({
   id: Type.Integer(),
-  therapist: Type.Union([therapistSummarySchema, Type.Null()]),
   client: clientSummarySchema,
   treatment: Type.Union([treatmentSummarySchema, Type.Null()]),
   startedAt: Type.String({ format: "date-time" }),
@@ -54,11 +51,6 @@ export const appointmentResponse = Type.Object({
   cancellationNote: Type.Union([Type.String(), Type.Null()]),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
-});
-
-export const appointmentListResponse = Type.Object({
-  data: Type.Array(appointmentResponse),
-  pagination: Type.Object(paginationMeta),
 });
 
 export type AppointmentSortBy = "startedAt" | "createdAt";

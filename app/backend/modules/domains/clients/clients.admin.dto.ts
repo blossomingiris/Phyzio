@@ -1,12 +1,27 @@
-import { paramId, sortOrderSchema } from "#app/modules/general/dto/index.ts";
+import {
+  paramId,
+  paginationMeta,
+  sortOrderSchema,
+  therapistSummarySchema,
+} from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
 import {
   clientBaseBody,
-  clientListResponse,
-  clientResponse,
+  clientBaseResponse,
   clientSortBySchema,
 } from "#app/modules/domains/clients/clients.shared.dto.ts";
+
+export const clientResponse = Type.Object({
+  ...clientBaseResponse.properties,
+  therapist: Type.Union([therapistSummarySchema, Type.Null()]),
+  deletedAt: Type.Optional(Type.String({ format: "date-time" })),
+});
+
+export const clientListResponse = Type.Object({
+  data: Type.Array(clientResponse),
+  pagination: Type.Object(paginationMeta),
+});
 
 export const listClientsQuery = Type.Object(
   {

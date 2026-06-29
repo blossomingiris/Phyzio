@@ -1,10 +1,6 @@
 import { communicationEnum, originEnum } from "#app/database/schemas.ts";
 import type { ClientCommunication, ClientOrigin } from "#app/database/types.ts";
-import {
-  paginationMeta,
-  sortParamsSchema,
-  therapistSummarySchema,
-} from "#app/modules/general/dto/index.ts";
+import { sortParamsSchema } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
 export const originSchema = Type.Unsafe<ClientOrigin>({
@@ -18,9 +14,8 @@ export const communicationSchema = Type.Unsafe<ClientCommunication>({
 });
 
 
-export const clientResponse = Type.Object({
+export const clientBaseResponse = Type.Object({
   id: Type.Integer(),
-  therapist: Type.Union([therapistSummarySchema, Type.Null()]),
   firstName: Type.String(),
   lastName: Type.String(),
   birthDate: Type.Union([Type.String({ format: "date" }), Type.Null()]),
@@ -29,14 +24,8 @@ export const clientResponse = Type.Object({
   origin: Type.Union([originSchema, Type.Null()]),
   preferredCommunication: communicationSchema,
   medicalNotes: Type.Union([Type.String(), Type.Null()]),
-  deletedAt: Type.Optional(Type.String({ format: "date-time" })),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
-});
-
-export const clientListResponse = Type.Object({
-  data: Type.Array(clientResponse),
-  pagination: Type.Object(paginationMeta),
 });
 
 export type ClientSortBy = "createdAt" | "lastName";

@@ -1,14 +1,22 @@
-import { paramId, sortOrderSchema } from "#app/modules/general/dto/index.ts";
+import {
+  paramId,
+  paginationMeta,
+  sortOrderSchema,
+} from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
 
 import {
-  appointmentListResponse,
-  appointmentResponse,
+  appointmentBaseResponse,
   appointmentSortBySchema,
   appointmentStatusSchema,
   cancelledStatusSchema,
 } from "#app/modules/domains/appointments/appointments.shared.dto.ts";
+
+export const myAppointmentListResponse = Type.Object({
+  data: Type.Array(appointmentBaseResponse),
+  pagination: Type.Object(paginationMeta),
+});
 
 export const listMyAppointmentsQuery = Type.Object(
   {
@@ -40,14 +48,14 @@ export const listMyAppointmentsSchema = {
   tags: ["Me"],
   summary: "List my appointments",
   querystring: listMyAppointmentsQuery,
-  response: { 200: appointmentListResponse },
+  response: { 200: myAppointmentListResponse },
 };
 
 export const findMyAppointmentSchema = {
   tags: ["Me"],
   summary: "Get my appointment by ID",
   params: paramId,
-  response: { 200: appointmentResponse },
+  response: { 200: appointmentBaseResponse },
 };
 
 export const updateMyAppointmentStatusSchema = {
@@ -55,7 +63,7 @@ export const updateMyAppointmentStatusSchema = {
   summary: "Change status of my appointment",
   params: paramId,
   body: updateMyAppointmentStatusBody,
-  response: { 200: appointmentResponse },
+  response: { 200: appointmentBaseResponse },
 };
 
 export type ListMyAppointmentsQuery = Static<typeof listMyAppointmentsQuery>;

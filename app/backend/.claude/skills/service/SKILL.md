@@ -61,3 +61,38 @@ const user = await this.usersService.findOrFail(params.id);
 ```
 
 Never call `one` from a controller — the null-check would have to be repeated in every route that fetches a single entity. `findOrFail` owns that check once so controllers always receive a guaranteed non-null value.
+
+---
+
+## 3. Database error handling
+
+Catch database errors in the service layer and re-throw as meaningful domain errors.
+Never let raw database errors (Postgres error codes, driver internals) propagate to
+the global error handler — they produce unhelpful 500s and leak implementation details.
+
+Inspect the error, identify the cause, and throw with a clear message:
+
+```ts
+async destroy(id: number) {
+  try {
+    await this.db.delete(appointments).where(eq(appointments.id, id));
+  } catch (e: any) {
+    if (e?.code === "23503") {
+      throw new ConflictError(
+        `Cannot delete: referenced by table '${e.table}'`,
+      );
+    }
+    throw e;
+  }
+}
+```
+
+Common Postgres error codes to handle:
+
+| Code | Cause | Suggested error |
+|---|---|---|
+| `23503` | Foreign key violation (delete blocked by reference) | `ConflictError` |
+| `23505` | Unique constraint violation (duplicate value) | `ConflictError` |
+| `23514` | Check constraint violation | `BadRequestError` |
+
+Always re-throw unrecognised errors (`throw e`) so unexpected failures still surface.

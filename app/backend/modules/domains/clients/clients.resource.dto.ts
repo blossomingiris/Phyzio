@@ -1,12 +1,20 @@
-import { paramId, sortOrderSchema } from "#app/modules/general/dto/index.ts";
+import {
+  paramId,
+  paginationMeta,
+  sortOrderSchema,
+} from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
 import {
   clientBaseBody,
-  clientListResponse,
-  clientResponse,
+  clientBaseResponse,
   clientSortBySchema,
 } from "#app/modules/domains/clients/clients.shared.dto.ts";
+
+export const myClientListResponse = Type.Object({
+  data: Type.Array(clientBaseResponse),
+  pagination: Type.Object(paginationMeta),
+});
 
 export const listMyClientsQuery = Type.Object(
   {
@@ -31,14 +39,14 @@ export const listMyClientsSchema = {
   tags: ["Me"],
   summary: "List my clients",
   querystring: listMyClientsQuery,
-  response: { 200: clientListResponse },
+  response: { 200: myClientListResponse },
 };
 
 export const findMyClientSchema = {
   tags: ["Me"],
   summary: "Get one of my clients by ID",
   params: paramId,
-  response: { 200: clientResponse },
+  response: { 200: clientBaseResponse },
 };
 
 export const updateMyClientSchema = {
@@ -46,7 +54,7 @@ export const updateMyClientSchema = {
   summary: "Update one of my clients",
   params: paramId,
   body: updateMyClientBody,
-  response: { 200: clientResponse },
+  response: { 200: clientBaseResponse },
 };
 
 export type ListMyClientsQuery = Static<typeof listMyClientsQuery>;

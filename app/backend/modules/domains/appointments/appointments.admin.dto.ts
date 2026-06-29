@@ -1,16 +1,30 @@
-import { paramId, sortOrderSchema } from "#app/modules/general/dto/index.ts";
+import {
+  paramId,
+  paginationMeta,
+  sortOrderSchema,
+  therapistSummarySchema,
+} from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
 
 import {
   appointmentBaseBody,
-  appointmentListResponse,
-  appointmentResponse,
+  appointmentBaseResponse,
   appointmentSortBySchema,
   appointmentStatusSchema,
   cancelledStatusSchema,
   nonCancelledStatusSchema,
 } from "#app/modules/domains/appointments/appointments.shared.dto.ts";
+
+export const appointmentResponse = Type.Object({
+  ...appointmentBaseResponse.properties,
+  therapist: Type.Union([therapistSummarySchema, Type.Null()]),
+});
+
+export const appointmentListResponse = Type.Object({
+  data: Type.Array(appointmentResponse),
+  pagination: Type.Object(paginationMeta),
+});
 
 export const listAppointmentsQuery = Type.Object(
   {

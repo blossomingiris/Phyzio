@@ -38,8 +38,8 @@ Export `Static<typeof Schema>` using the **same name** as the schema constant.
 TypeScript allows a `const` and a `type` to share a name; importers get both from one import.
 
 ```ts
-export const userResponce= Type.Object({ ... });
-export type  UserResponce = Static<typeof userResponce>;
+export const userResponse = Type.Object({ ... });
+export type  UserResponse = Static<typeof userResponse>;
 ```
 
 Export types for: body schemas, querystring schemas, params schemas.
@@ -72,13 +72,6 @@ Common cases where the type lives **in the service**, not the DTO:
 
 ---
 
-### Use Pick, never Omit
-
-- Always use `Type.Pick` when deriving schemas
-- Never use `Type.Omit`
-
----
-
 ## 5. PII in responses
 
 - Response DTO defines public API output
@@ -99,69 +92,17 @@ Examples:
 
 ---
 
-## 7. Swagger / OpenAPI docs
+## 7. Antipatterns
 
-TypeBox schema options flow directly into the generated OpenAPI spec and Swagger UI.
-Follow these rules to keep docs useful without cluttering the schemas.
+### Use Pick, never Omit
 
-### Route schemas — always add
+- Always use `Type.Pick` when deriving schemas
+- Never use `Type.Omit`
 
-Add `tags` and `summary` to every route schema:
+### Me routes — do not echo the caller back in responses
 
-```ts
-export const adminCreateUserSchema = {
-  tags: ["Users"],
-  summary: "Create a user",
-  body: AdminCreateUserBody,
-  response: { 201: UserResponse },
-};
-```
+Resource (`/me/*`) routes are scoped to the authenticated user. Do not include
+that user's own profile in the response — the caller already knows who they are.
 
-- `tags`: groups the endpoint in Swagger UI sidebar. Use the entity name (e.g. `"Users"`, `"Clients"`).
-- `summary`: one short sentence, no period. Describes what the endpoint does.
-
-### Field-level — only when non-obvious
-
-Add `description` only when a field has a non-obvious constraint or format.
-Keep descriptions short, simple, and human-readable.
-
-**Do add:**
-
-- Fields with `pattern` (regex) — describe the rule in plain language
-- Fields where accepted values aren't clear from the name alone
-
-**Don't add:**
-
-- `firstName: Type.String()` — the name is self-explanatory
-- Enum literals — the allowed values already appear in the OpenAPI spec
-- Standard format fields like `email` or `date-time` — the format keyword documents itself
-
-### Example
-
-```ts
-password: Type.String({
-  description: "Min 8 chars with uppercase, lowercase, and digit",
-  minLength: 8,
-  pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
-}),
-```
-
-### Enums
-
-Never use `Type.Union([Type.Literal(...)])` for enum fields — it generates `anyOf` in JSON Schema and Swagger UI only renders the first option.
-
-Use `Type.Unsafe` with a plain `enum` array instead. If the enum is defined in Drizzle, pull values from `pgEnum.enumValues` to keep a single source of truth:
-
-```ts
-export const specialitySchema = Type.Unsafe<Speciality>({
-  type: "string",
-  enum: specialityEnum.enumValues,
-});
-```
-
----
-
-### What not to add
-
-- `title` — do not set on schema parts. TypeBox uses it as the OpenAPI component name; setting it on inline schemas causes duplicate/conflicting component names.
-- `description` on response schemas — not rendered by Swagger UI in a useful way.
+Example: `GET /me/appointments` omits the `therapist` field because the
+authenticated therapist is always the owner of those appointments.

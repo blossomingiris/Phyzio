@@ -1,8 +1,5 @@
 # Appointment Entity Lifecycle
 
-> **DRAFT** — No implementation yet. This document describes planned behavior
-> based on the schema and clinic workflow. Details may change during implementation.
-
 ## Overview
 
 An Appointment represents a scheduled session between a therapist and a client.
@@ -58,19 +55,41 @@ additionally requires a free-text note; the remaining values do not.
 | `therapist_unavailable` | Therapist cannot attend |
 | `other` | Anything else — a note is required |
 
-
 `cancellation_reason` and `cancellation_note` are null on all non-cancelled
 appointments and must be set when transitioning to `cancelled`.
+
+## Validation & Business Rules
+
+| Rule | Where enforced | Status |
+|---|---|---|
+| `ended_at > started_at` | DB CHECK constraint + service layer | ✅ Implemented |
+| Valid status transition | `VALID_TRANSITIONS` map in service | ✅ Implemented |
+| Cancellation reason required on cancel | AJV discriminated union (DTO) | ✅ Implemented |
+| Cancellation note required when reason is `other` | Service layer | ✅ Implemented |
+| Therapist double-booking prevention | Service layer (`checkTherapistOverlap`) | ✅ Implemented |
+| Client double-booking prevention | — | 🔲 Future |
+| Therapist working hours validation | — | 🔲 Future |
+| Appointment must be in the future on create | — | 🔲 Future |
+| Minimum appointment duration | — | 🔲 Out of scope (MVP) |
+
+### Overlap detection detail
+
+`checkTherapistOverlap` queries active appointments (status not in `cancelled`,
+`no_show`) for the same therapist where the time ranges intersect
+(`started_at < new.ended_at AND ended_at > new.started_at`).
+It runs on create (when `therapist_id` is set) and on update (when
+`therapist_id`, `started_at`, or `ended_at` changes). The appointment being
+updated is excluded from its own check.
 
 ## Notes
 
 - `treatment_id` links to the service catalog and is optional — it can be set at
   any point or left unset.
-- The appointment duration is derived from `started_at` / `ended_at`. `ended_at`
-  must be strictly after `started_at`.
-- Deleting a client that has appointments is blocked — historical records are
-  protected. Deleting a therapist is also blocked until appointments are reassigned
-  or cancelled.
+- The appointment duration is derived from `started_at` / `ended_at`.
+- Deleting a client or therapist that has appointments is blocked by FK RESTRICT
+  constraints — historical records are protected. The service returns a 409 with
+  the name of the referencing table.
+- Appointments themselves are hard-deleted (no `deleted_at` column).
 
 ## Data Model
 
