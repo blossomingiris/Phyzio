@@ -3,14 +3,12 @@ import {
   appointments,
   clients,
   therapists,
-  treatments,
   users,
 } from "#app/database/schemas.ts";
 import type {
   AppointmentStatus,
   CancellationReason,
   Speciality,
-  TreatmentCategory,
 } from "#app/database/types.ts";
 import { BadRequestError, ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
@@ -47,12 +45,6 @@ type AppointmentQueryRow = typeof appointments.$inferSelect & {
   therapistFirstName: string | null;
   therapistLastName: string | null;
   therapistEmail: string | null;
-  treatmentCategory: TreatmentCategory | null;
-  treatmentPricePerUnit: string | null;
-  treatmentQuantity: number | null;
-  treatmentTotalAmount: string | null;
-  treatmentDurationMinutes: number | null;
-  treatmentIsActive: boolean | null;
 };
 
 const VALID_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
@@ -73,7 +65,7 @@ const appointmentSelect = {
   id: appointments.id,
   therapistId: appointments.therapistId,
   clientId: appointments.clientId,
-  treatmentId: appointments.treatmentId,
+  treatmentPlanId: appointments.treatmentPlanId,
   startedAt: appointments.startedAt,
   endedAt: appointments.endedAt,
   notes: appointments.notes,
@@ -94,12 +86,6 @@ const appointmentSelect = {
   therapistFirstName: users.firstName,
   therapistLastName: users.lastName,
   therapistEmail: users.email,
-  treatmentCategory: treatments.category,
-  treatmentPricePerUnit: treatments.pricePerUnit,
-  treatmentQuantity: treatments.quantity,
-  treatmentTotalAmount: treatments.totalAmount,
-  treatmentDurationMinutes: treatments.durationMinutes,
-  treatmentIsActive: treatments.isActive,
 };
 
 export class AppointmentsService {
@@ -132,7 +118,6 @@ export class AppointmentsService {
       .innerJoin(clients, eq(appointments.clientId, clients.id))
       .leftJoin(therapists, eq(appointments.therapistId, therapists.userId))
       .leftJoin(users, eq(therapists.userId, users.id))
-      .leftJoin(treatments, eq(appointments.treatmentId, treatments.id))
       .where(where)
       .orderBy(orderExpr)
       .limit(limit)
@@ -156,7 +141,6 @@ export class AppointmentsService {
       .innerJoin(clients, eq(appointments.clientId, clients.id))
       .leftJoin(therapists, eq(appointments.therapistId, therapists.userId))
       .leftJoin(users, eq(therapists.userId, users.id))
-      .leftJoin(treatments, eq(appointments.treatmentId, treatments.id))
       .where(this.buildWhere(filters));
 
     return row ? this.mapRow(row as AppointmentQueryRow) : null;
@@ -182,7 +166,7 @@ export class AppointmentsService {
       .values({
         therapistId: data.therapistId,
         clientId: data.clientId,
-        treatmentId: data.treatmentId,
+        treatmentPlanId: data.treatmentPlanId,
         startedAt,
         endedAt,
         notes: data.notes,
@@ -226,7 +210,7 @@ export class AppointmentsService {
       .set({
         therapistId: data.therapistId,
         clientId: data.clientId,
-        treatmentId: data.treatmentId,
+        treatmentPlanId: data.treatmentPlanId,
         startedAt,
         endedAt,
         notes: data.notes,
@@ -335,12 +319,6 @@ export class AppointmentsService {
       therapistFirstName,
       therapistLastName,
       therapistEmail,
-      treatmentCategory,
-      treatmentPricePerUnit,
-      treatmentQuantity,
-      treatmentTotalAmount,
-      treatmentDurationMinutes,
-      treatmentIsActive,
       ...appointment
     } = row;
 
@@ -365,18 +343,6 @@ export class AppointmentsService {
               speciality: therapistSpeciality!,
               phone: therapistPhone!,
               isActive: therapistIsActive!,
-            }
-          : null,
-      treatment:
-        appointment.treatmentId !== null
-          ? {
-              id: appointment.treatmentId,
-              category: treatmentCategory!,
-              pricePerUnit: treatmentPricePerUnit!,
-              quantity: treatmentQuantity!,
-              totalAmount: treatmentTotalAmount,
-              durationMinutes: treatmentDurationMinutes!,
-              isActive: treatmentIsActive!,
             }
           : null,
     };

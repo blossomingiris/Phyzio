@@ -1,13 +1,8 @@
 import {
   appointmentStatusEnum,
   cancellationReasonEnum,
-  categoryEnum,
 } from "#app/database/schemas.ts";
-import type {
-  AppointmentStatus,
-  CancellationReason,
-  TreatmentCategory,
-} from "#app/database/types.ts";
+import type { AppointmentStatus, CancellationReason } from "#app/database/types.ts";
 import {
   clientSummarySchema,
   sortParamsSchema,
@@ -24,25 +19,10 @@ export const cancellationReasonSchema = Type.Unsafe<CancellationReason>({
   enum: cancellationReasonEnum.enumValues,
 });
 
-const treatmentCategorySchema = Type.Unsafe<TreatmentCategory>({
-  type: "string",
-  enum: categoryEnum.enumValues,
-});
-
-export const treatmentSummarySchema = Type.Object({
-  id: Type.Integer(),
-  category: treatmentCategorySchema,
-  pricePerUnit: Type.String({ description: "Decimal as string" }),
-  quantity: Type.Integer(),
-  totalAmount: Type.Union([Type.String(), Type.Null()]),
-  durationMinutes: Type.Integer(),
-  isActive: Type.Boolean(),
-});
-
 export const appointmentBaseResponse = Type.Object({
   id: Type.Integer(),
   client: clientSummarySchema,
-  treatment: Type.Union([treatmentSummarySchema, Type.Null()]),
+  treatmentPlanId: Type.Union([Type.Integer(), Type.Null()]),
   startedAt: Type.String({ format: "date-time" }),
   endedAt: Type.String({ format: "date-time" }),
   notes: Type.Union([Type.String(), Type.Null()]),
@@ -70,7 +50,7 @@ export const appointmentBaseBody = Type.Object(
   {
     therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
     clientId: Type.Integer({ minimum: 1 }),
-    treatmentId: Type.Optional(Type.Integer({ minimum: 1 })),
+    treatmentPlanId: Type.Optional(Type.Integer({ minimum: 1 })),
     startedAt: Type.String({ format: "date-time" }),
     endedAt: Type.String({ format: "date-time" }),
     notes: Type.Optional(Type.String()),
@@ -89,11 +69,21 @@ export const cancelledStatusSchema = Type.Object(
   { additionalProperties: false },
 );
 
+export const completedStatusSchema = Type.Object(
+  {
+    status: Type.Literal("completed"),
+    treatmentPlanItemId: Type.Optional(Type.Integer({ minimum: 1 })),
+  },
+  { additionalProperties: false },
+);
+
 export const nonCancelledStatusSchema = Type.Object(
   {
-    status: Type.Unsafe<Exclude<AppointmentStatus, "cancelled">>({
+    status: Type.Unsafe<Exclude<AppointmentStatus, "cancelled" | "completed">>({
       type: "string",
-      enum: appointmentStatusEnum.enumValues.filter((s) => s !== "cancelled"),
+      enum: appointmentStatusEnum.enumValues.filter(
+        (s) => s !== "cancelled" && s !== "completed",
+      ),
     }),
   },
   { additionalProperties: false },

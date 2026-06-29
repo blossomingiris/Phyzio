@@ -1,4 +1,5 @@
 import { type ParamId } from "#app/modules/general/dto/index.ts";
+import { TreatmentPlansService } from "#app/modules/domains/treatment-plans/treatment-plans.service.ts";
 import type { FastifyInstance } from "fastify";
 import {
   createAppointmentSchema,
@@ -16,6 +17,7 @@ import { AppointmentsService } from "./appointments.service.ts";
 
 export default async function appointmentsAdminController(app: FastifyInstance) {
   const service = new AppointmentsService(app.drizzle);
+  const planService = new TreatmentPlansService(app.drizzle);
 
   app.get<{ Querystring: ListAppointmentsQuery }>(
     "/",
@@ -62,7 +64,17 @@ export default async function appointmentsAdminController(app: FastifyInstance) 
     { schema: updateAppointmentStatusSchema },
     async (req) => {
       await service.findOrFail(req.params.id);
-      return service.updateStatus(req.params.id, req.body);
+      const appointment = await service.updateStatus(req.params.id, req.body);
+
+      if (req.body.status === "completed" && appointment.treatmentPlanId !== null) {
+        const planId = appointment.treatmentPlanId;
+        await planService.tryAdvanceToInProgress(planId);
+        if (req.body.treatmentPlanItemId !== undefined) {
+          await planService.creditItem(planId, req.body.treatmentPlanItemId);
+        }
+      }
+
+      return appointment;
     },
   );
 

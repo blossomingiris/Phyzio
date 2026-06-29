@@ -13,6 +13,7 @@ import {
   appointmentSortBySchema,
   appointmentStatusSchema,
   cancelledStatusSchema,
+  completedStatusSchema,
   nonCancelledStatusSchema,
 } from "#app/modules/domains/appointments/appointments.shared.dto.ts";
 
@@ -62,6 +63,7 @@ export const updateAppointmentBody = Type.Partial(createAppointmentBody);
 
 export const updateAppointmentStatusBody = discriminatedUnion("status", [
   cancelledStatusSchema,
+  completedStatusSchema,
   nonCancelledStatusSchema,
 ]);
 

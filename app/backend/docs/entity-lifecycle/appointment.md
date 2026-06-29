@@ -8,7 +8,8 @@ scheduling, confirmation, and a final outcome.
 
 `client_id` is required — an appointment always belongs to a known client.
 `therapist_id` is nullable; an appointment can be requested before a therapist
-is assigned. `treatment_id` is optional throughout.
+is assigned. `treatment_plan_id` is optional — an appointment can be linked to a
+treatment plan or booked as a standalone session.
 
 ## Status Transitions
 
@@ -83,8 +84,9 @@ updated is excluded from its own check.
 
 ## Notes
 
-- `treatment_id` links to the service catalog and is optional — it can be set at
-  any point or left unset.
+- `treatment_plan_id` links to a treatment plan and is optional. When set and the
+  appointment is completed, the plan advances automatically from `open` to
+  `in_progress` if it hasn't started yet.
 - The appointment duration is derived from `started_at` / `ended_at`.
 - Deleting a client or therapist that has appointments is blocked by FK RESTRICT
   constraints — historical records are protected. The service returns a 409 with

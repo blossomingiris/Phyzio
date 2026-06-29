@@ -244,9 +244,10 @@ export const appointments = pgTable(
       .references(() => clients.id, {
         onDelete: "restrict",
       }),
-    treatmentId: integer("treatment_id").references(() => treatments.id, {
-      onDelete: "set null",
-    }),
+    treatmentPlanId: integer("treatment_plan_id").references(
+      () => treatmentPlans.id,
+      { onDelete: "set null" },
+    ),
     startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
     endedAt: timestamp("ended_at", { withTimezone: true }).notNull(),
     notes: text("notes"),
@@ -293,7 +294,6 @@ export const clientsRelations = relations(clients, ({ one, many }) => ({
 
 export const treatmentsRelations = relations(treatments, ({ many }) => ({
   treatmentPlanItems: many(treatmentPlanItems),
-  appointments: many(appointments),
 }));
 
 export const treatmentPlansRelations = relations(
@@ -308,6 +308,7 @@ export const treatmentPlansRelations = relations(
       references: [clients.id],
     }),
     items: many(treatmentPlanItems),
+    appointments: many(appointments),
   }),
 );
 
@@ -334,8 +335,8 @@ export const appointmentsRelations = relations(appointments, ({ one }) => ({
     fields: [appointments.clientId],
     references: [clients.id],
   }),
-  treatment: one(treatments, {
-    fields: [appointments.treatmentId],
-    references: [treatments.id],
+  treatmentPlan: one(treatmentPlans, {
+    fields: [appointments.treatmentPlanId],
+    references: [treatmentPlans.id],
   }),
 }));

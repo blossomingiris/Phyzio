@@ -6,6 +6,8 @@ import clientsResourceController from "#app/modules/domains/clients/clients.reso
 import therapistsAdminController from "#app/modules/domains/users/therapists.admin.controller.ts";
 import usersAdminController from "#app/modules/domains/users/users.admin.controller.ts";
 import usersResourceController from "#app/modules/domains/users/users.resource.controller.ts";
+import treatmentPlansAdminController from "#app/modules/domains/treatment-plans/treatment-plans.admin.controller.ts";
+import treatmentPlansResourceController from "#app/modules/domains/treatment-plans/treatment-plans.resource.controller.ts";
 import type { FastifyInstance } from "fastify";
 
 export default async function routes(app: FastifyInstance) {
@@ -14,7 +16,9 @@ export default async function routes(app: FastifyInstance) {
   app.register(clientsAdminController, { prefix: "/clients" });
   app.register(appointmentsAdminController, { prefix: "/appointments" });
   app.register(treatmentsAdminController, { prefix: "/treatments" });
+  app.register(treatmentPlansAdminController, { prefix: "/treatment-plans" });
   app.register(usersResourceController, { prefix: "/me" });
   app.register(clientsResourceController, { prefix: "/me/clients" });
   app.register(appointmentsResourceController, { prefix: "/me/appointments" });
+  app.register(treatmentPlansResourceController, { prefix: "/me/treatment-plans" });
 }
