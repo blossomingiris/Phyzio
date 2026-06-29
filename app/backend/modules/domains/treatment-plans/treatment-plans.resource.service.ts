@@ -17,7 +17,7 @@ import type {
 } from "#app/database/types.ts";
 import { BadRequestError, ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import type {
   AddTreatmentPlanItemBody,
   CreateTreatmentPlanBody,
@@ -212,6 +212,8 @@ export class TreatmentPlansService {
   }
 
   async create(data: CreateTreatmentPlanBody, therapistId: number) {
+    await this.validateTreatmentItems(data.items.map((item) => item.treatmentId));
+
     let planId!: number;
 
     await this.db.transaction(async (tx) => {
@@ -510,6 +512,26 @@ export class TreatmentPlansService {
         isActive: treatmentIsActive,
       },
     };
+  }
+
+  private async validateTreatmentItems(itemIds: number[]) {
+    const uniqueIds = [...new Set(itemIds)];
+
+    const rows = await this.db
+      .select({ id: treatments.id, isActive: treatments.isActive })
+      .from(treatments)
+      .where(inArray(treatments.id, uniqueIds));
+
+    const foundIds = new Set(rows.map((r) => r.id));
+    const missingIds = uniqueIds.filter((id) => !foundIds.has(id));
+    if (missingIds.length > 0) {
+      throw new NotFoundError(`Treatments not found: ${missingIds.join(", ")}`);
+    }
+
+    const inactiveIds = rows.filter((r) => !r.isActive).map((r) => r.id);
+    if (inactiveIds.length > 0) {
+      throw new BadRequestError(`Treatments are inactive: ${inactiveIds.join(", ")}`, null);
+    }
   }
 
   private buildWhere(filters: TreatmentPlanFilters) {
