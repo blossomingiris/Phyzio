@@ -38,6 +38,8 @@ open ──> in_progress ──> completed
 | `completed` | All planned treatments have been delivered |
 | `cancelled` | Plan was abandoned before completion |
 
+`completed` and `cancelled` are terminal — no further transitions.
+
 ### Valid transitions
 
 | From | To | Who triggers |
@@ -49,8 +51,6 @@ open ──> in_progress ──> completed
 | `in_progress` | `cancelled` | Therapist or Admin |
 | `paused` | `in_progress` | Therapist |
 | `paused` | `cancelled` | Therapist or Admin |
-
-`completed` and `cancelled` are terminal — no further transitions.
 
 ## Cancellation
 
@@ -80,20 +80,14 @@ The target quantity (how many sessions are planned) comes from `treatments.quant
 in the catalog. Progress is `quantity_completed / treatments.quantity`.
 
 The same treatment can appear at most once per plan — adding it twice is rejected.
+Items can be added or removed on any plan that has not reached a terminal state.
+An item cannot be removed once any sessions have been delivered (`quantity_completed > 0`).
 
-Items are created alongside or after the plan. Items can be added or removed on
-any plan that has not yet reached a terminal state (`completed` or `cancelled`).
-An item cannot be removed once any sessions have been delivered
-(`quantity_completed > 0`) — removing it would silently destroy delivery history.
+When all items reach their target quantity, the system automatically advances the
+plan to `completed`. Adding a new item before that point resets the condition.
 
-When the last item's `quantity_completed` reaches its target, the system
-automatically advances the plan to `completed`. Adding a new item to the plan
-before that point resets the condition.
-Deleting a plan removes all its items. A catalog treatment referenced by an item
-cannot be deleted — retire it via `is_active: false` instead.
-
-`quantity_completed` is updated automatically when an appointment linked to this
-plan is marked as completed — it is never set manually.
+`quantity_completed` is updated automatically when a linked appointment is marked as
+completed with a `treatmentPlanItemId` — it is never set manually.
 
 ## Dates
 
@@ -104,13 +98,12 @@ plan is marked as completed — it is never set manually.
 
 `end_date`, when set, must be on or after `start_date`.
 
-## Roles & Permissions
+## Permissions
 
 ### Client
 
 Clients have no direct access to treatment plans through this API. A plan is
-created on their behalf by their assigned therapist. They are the subject of the
-plan, not an actor in the system.
+created on their behalf by their assigned therapist.
 
 ### Therapist
 
@@ -134,20 +127,42 @@ modify clinical content — that belongs to the treating therapist.
 | Action | Allowed |
 |---|---|
 | View all plans regardless of therapist | ✅ |
-| Reassign the plan's therapist (e.g. when a therapist is unavailable) | ✅ |
+| Reassign the plan's therapist | ✅ |
 | Adjust plan dates | ✅ |
 | Force-cancel any plan (with reason) | ✅ |
 | Create a plan | ❌ |
 | Update clinical fields (diagnosis, goals, contraindications) | ❌ |
 | Add or remove plan items | ❌ |
 
-## Notes
+## Endpoints
 
-- Deleting a therapist or client that owns a plan is blocked — historical records
-  are protected.
-- `contraindications` is optional — not all plans have clinical restrictions.
-- The `completed` transition is manual, triggered by the therapist. The system
-  only auto-advances a plan to `in_progress` (on the first completed appointment).
+### Resource (`/me/treatment-plans`, therapist only)
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/me/treatment-plans` | List own plans (paginated, filterable by status, client) |
+| `GET` | `/me/treatment-plans/:id` | Get own plan by ID (includes items) |
+| `POST` | `/me/treatment-plans` | Create a plan with initial items |
+| `PATCH` | `/me/treatment-plans/:id` | Update clinical fields and / or status |
+| `POST` | `/me/treatment-plans/:id/items` | Add a treatment to the plan |
+| `DELETE` | `/me/treatment-plans/:id/items/:itemId` | Remove a treatment from the plan |
+
+### Admin (`/treatment-plans`, admin only)
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/treatment-plans` | List all plans (paginated, filterable by status, client, therapist) |
+| `GET` | `/treatment-plans/:id` | Get any plan by ID (includes items) |
+| `PATCH` | `/treatment-plans/:id` | Update therapist, dates, or force-cancel |
+
+## Errors
+
+| HTTP Error | When it occurs |
+|---|---|
+| 400 Bad Request | Invalid status transition; cancellation reason required; item has completed sessions |
+| 404 Not Found | Plan not found or therapist accessing another's plan |
+| 409 Conflict | Treatment already exists in the plan |
+| 422 Unprocessable Entity | Request body fails validation |
 
 ## Data Model
 

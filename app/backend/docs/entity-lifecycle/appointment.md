@@ -30,6 +30,8 @@ requested ──> scheduled ──> confirmed ──> completed
 | `no_show` | Client did not attend the confirmed appointment |
 | `cancelled` | Appointment was cancelled — can happen from any active state |
 
+`completed` and `no_show` are terminal — no further transitions.
+
 ### Valid transitions
 
 | From | To | Who can trigger |
@@ -42,12 +44,9 @@ requested ──> scheduled ──> confirmed ──> completed
 | `confirmed` | `no_show` | Admin |
 | `confirmed` | `cancelled` | Admin |
 
-`completed` and `no_show` are terminal — no further transitions.
-
 ## Cancellation
 
-Every cancellation requires a reason. The reason is a discriminated union — `other`
-additionally requires a free-text note; the remaining values do not.
+Every cancellation requires a reason. `other` additionally requires a free-text note.
 
 | Reason | When to use |
 |---|---|
@@ -59,39 +58,67 @@ additionally requires a free-text note; the remaining values do not.
 `cancellation_reason` and `cancellation_note` are null on all non-cancelled
 appointments and must be set when transitioning to `cancelled`.
 
-## Validation & Business Rules
+## Business Rules
 
-| Rule | Where enforced | Status |
+| Rule | Notes |
+|---|---|
+| `ended_at > started_at` | Required on create and update |
+| Valid status transition only | Enforced against the transitions table above |
+| Cancellation reason required on cancel | Discriminated union — reason is always required |
+| Cancellation note required when reason is `other` | Enforced server-side |
+| Therapist double-booking prevention | Active appointments in the same time slot are rejected |
+| Client double-booking prevention | Not implemented |
+| Therapist working hours validation | Not implemented |
+| Appointment must be in the future on create | Not implemented |
+
+Overlap detection checks active appointments (status not in `cancelled`, `no_show`)
+for the same therapist where time ranges intersect. Runs on create and on any update
+that changes `therapist_id`, `started_at`, or `ended_at`.
+
+## Permissions
+
+| Action | Who can do it |
+|---|---|
+| Create an appointment | Admin only |
+| View all appointments | Admin only |
+| View own appointments | Therapist (own only) |
+| Update appointment details | Admin only |
+| Delete an appointment | Admin only |
+| Transition to `completed` / `no_show` | Admin only |
+| Transition to `confirmed` / `cancelled` | Admin or therapist (own only) |
+
+## Endpoints
+
+### Admin (`/appointments`, admin only)
+
+| Method | Path | Description |
 |---|---|---|
-| `ended_at > started_at` | DB CHECK constraint + service layer | ✅ Implemented |
-| Valid status transition | `VALID_TRANSITIONS` map in service | ✅ Implemented |
-| Cancellation reason required on cancel | AJV discriminated union (DTO) | ✅ Implemented |
-| Cancellation note required when reason is `other` | Service layer | ✅ Implemented |
-| Therapist double-booking prevention | Service layer (`checkTherapistOverlap`) | ✅ Implemented |
-| Client double-booking prevention | — | 🔲 Future |
-| Therapist working hours validation | — | 🔲 Future |
-| Appointment must be in the future on create | — | 🔲 Future |
-| Minimum appointment duration | — | 🔲 Out of scope (MVP) |
+| `GET` | `/appointments` | List all appointments (paginated, filterable by status, therapist, client, date range) |
+| `GET` | `/appointments/:id` | Get an appointment by ID |
+| `POST` | `/appointments` | Create an appointment |
+| `PATCH` | `/appointments/:id` | Update appointment details (therapist, client, time, notes) |
+| `PATCH` | `/appointments/:id/status` | Change appointment status |
+| `DELETE` | `/appointments/:id` | Delete an appointment |
 
-### Overlap detection detail
+### Resource (`/me/appointments`, therapist only)
 
-`checkTherapistOverlap` queries active appointments (status not in `cancelled`,
-`no_show`) for the same therapist where the time ranges intersect
-(`started_at < new.ended_at AND ended_at > new.started_at`).
-It runs on create (when `therapist_id` is set) and on update (when
-`therapist_id`, `started_at`, or `ended_at` changes). The appointment being
-updated is excluded from its own check.
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/me/appointments` | List own appointments (paginated, filterable) |
+| `GET` | `/me/appointments/:id` | Get own appointment by ID |
+| `PATCH` | `/me/appointments/:id/status` | Change status — `confirmed` or `cancelled` only |
 
-## Notes
+When completing an appointment linked to a treatment plan, the request may carry an
+optional `treatmentPlanItemId` to credit the specific plan item with one completed session.
 
-- `treatment_plan_id` links to a treatment plan and is optional. When set and the
-  appointment is completed, the plan advances automatically from `open` to
-  `in_progress` if it hasn't started yet.
-- The appointment duration is derived from `started_at` / `ended_at`.
-- Deleting a client or therapist that has appointments is blocked by FK RESTRICT
-  constraints — historical records are protected. The service returns a 409 with
-  the name of the referencing table.
-- Appointments themselves are hard-deleted (no `deleted_at` column).
+## Errors
+
+| HTTP Error | When it occurs |
+|---|---|
+| 400 Bad Request | Invalid status transition; `ended_at` not after `started_at`; cancellation note required |
+| 404 Not Found | Appointment not found or therapist accessing another's appointment |
+| 409 Conflict | Therapist already has an active appointment in the requested time slot |
+| 422 Unprocessable Entity | Request body fails validation |
 
 ## Data Model
 

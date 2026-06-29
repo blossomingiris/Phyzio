@@ -3,10 +3,8 @@
 ## Overview
 
 A Treatment is an entry in the clinic's service catalog — a priced service that can
-be included in treatment plans or linked to appointments. Treatments are not patient
-records; they are reusable definitions managed by admins.
-
-The catalog is expected to be small and relatively stable.
+be included in treatment plans. Treatments are not patient records; they are reusable
+definitions managed by admins. The catalog is expected to be small and relatively stable.
 
 ## Active vs Inactive
 
@@ -14,12 +12,12 @@ The catalog is expected to be small and relatively stable.
 
 | State | Meaning |
 |---|---|
-| `true` | Treatment is available to be added to plans and appointments |
+| `true` | Treatment is available to be added to plans |
 | `false` | Treatment is retired — no longer offered, but historical records are preserved |
 
 Activation and deactivation are plain boolean toggles with no ordering constraints.
 Treatments are never hard-deleted — once a service appears in a plan, removing it
-would break historical records.
+would break historical records. Retire unused treatments via `is_active: false`.
 
 ## Pricing and VAT
 
@@ -27,8 +25,7 @@ would break historical records.
 `total_amount` is derived automatically as `price_per_unit × quantity`; it cannot
 be set manually.
 
-VAT (24%, Greek standard rate) is not stored — it is computed on every read and
-returned alongside the base amounts:
+VAT (24%, Greek standard rate) is not stored — it is computed on every read:
 
 | Field | Description |
 |---|---|
@@ -49,9 +46,34 @@ returned alongside the base amounts:
 | `general_tech` | General techniques |
 | `evaluations` | Assessment and evaluation sessions |
 
-## Notes
+## Permissions
 
-- A treatment referenced by a treatment plan item cannot be deleted — retire it
-  via `is_active: false` instead.
-- A treatment linked to an appointment can be deleted — the appointment keeps its
-  record but loses the treatment reference.
+| Action | Who can do it |
+|---|---|
+| Create a treatment | Admin only |
+| Read / list treatments | Admin only |
+| Update a treatment | Admin only |
+
+There are no therapist-facing (resource) treatment endpoints.
+
+## Endpoints
+
+### Admin (`/treatments`, admin only)
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/treatments` | List all treatments (paginated, filterable by category and `isActive`) |
+| `GET` | `/treatments/:id` | Get a treatment by ID |
+| `POST` | `/treatments` | Create a treatment |
+| `PATCH` | `/treatments/:id` | Update a treatment — including toggling `isActive` |
+
+## Errors
+
+| HTTP Error | When it occurs |
+|---|---|
+| 404 Not Found | Treatment ID does not exist |
+| 422 Unprocessable Entity | Request body fails validation (e.g. missing required fields, invalid category) |
+
+## Data Model
+
+See [`database/schema.md`](../database/schema.md) → `treatments` table.
