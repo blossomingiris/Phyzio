@@ -92,7 +92,42 @@ Examples:
 
 ---
 
-## 7. Antipatterns
+## 7. Discriminated unions
+
+Use `discriminatedUnion` (from `#app/modules/general/dto/typebox.ts`) when a body has
+distinct shapes identified by a literal property — each shape has its own required or
+forbidden fields. This lets AJV enforce the constraint declaratively instead of leaving
+it to manual service-layer checks.
+
+**Use a flat optional object** when fields are independent and any combination is valid.  
+**Use a discriminated union** when the body is polymorphic: different shapes for different
+values of a single literal discriminator (post type, decision kind, status transition, etc.).
+
+```ts
+// post type with shape-specific required fields
+const textPostSchema   = Type.Object({ type: Type.Literal("text"),  content: Type.String() },       { additionalProperties: false });
+const imagePostSchema  = Type.Object({ type: Type.Literal("image"), url: Type.String({ format: "uri" }) }, { additionalProperties: false });
+
+export const createPostBody = discriminatedUnion("type", [textPostSchema, imagePostSchema]);
+export type CreatePostBody  = Static<typeof createPostBody>;
+```
+
+**Rules:**
+- Every branch must be `Type.Object` with `{ additionalProperties: false }`
+- The discriminator property must be `Type.Literal` in every branch — AJV requires a `const` value per branch, not an enum
+- Export `Static<typeof schema>` from the DTO file that owns the body; TypeScript derives the full union automatically
+- If a branch is shared across DTOs, define it in `*.shared.dto.ts` as a schema only — never export its `Static<>` type from shared; the type belongs in the DTO that uses it as a request body
+
+**Endpoint design:** a discriminated union on the body and a dedicated endpoint are
+independent decisions. Use a dedicated endpoint (e.g. `PATCH /:id/status`) when the
+operation is a domain event — a state-machine transition, an irreversible action — not
+just a data edit. The body of that endpoint may or may not be a discriminated union.
+Conversely, a general update endpoint can use a discriminated union if the body is
+inherently polymorphic, regardless of whether it touches status.
+
+---
+
+## 8. Antipatterns
 
 ### Use Pick, never Omit
 

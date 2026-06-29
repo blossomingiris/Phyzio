@@ -46,6 +46,17 @@ export const treatmentPlanItemResponse = Type.Object({
   updatedAt: Type.String({ format: "date-time" }),
 });
 
+export const planCancelledStatusSchema = Type.Object(
+  {
+    status: Type.Literal("cancelled"),
+    cancellationReason: planCancellationReasonSchema,
+    cancellationNote: Type.Optional(
+      Type.String({ description: "Required when reason is 'other'" }),
+    ),
+  },
+  { additionalProperties: false },
+);
+
 export const planSortBySchema = Type.Optional(
   Type.Unsafe<"createdAt" | "startDate" | "status">({
     type: "string",

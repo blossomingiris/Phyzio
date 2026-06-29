@@ -18,11 +18,11 @@ import type {
 import { BadRequestError, ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, sql } from "drizzle-orm";
-import type { UpdateTreatmentPlanAdminBody } from "./treatment-plans.admin.dto.ts";
 import type {
   AddTreatmentPlanItemBody,
   CreateTreatmentPlanBody,
   UpdateTreatmentPlanBody,
+  UpdateTreatmentPlanStatusBody,
 } from "./treatment-plans.resource.dto.ts";
 
 type TreatmentPlanFilters = {
@@ -78,7 +78,7 @@ type PlanItemRow = {
   treatmentIsActive: boolean;
 };
 
-const TERMINAL_STATUSES: TreatmentPlanStatus[] = ["completed", "cancelled"];
+export const TERMINAL_STATUSES: TreatmentPlanStatus[] = ["completed", "cancelled"];
 
 const MANUAL_TRANSITIONS: Record<TreatmentPlanStatus, TreatmentPlanStatus[]> = {
   open: ["cancelled"],
@@ -248,47 +248,12 @@ export class TreatmentPlansService {
       throw new BadRequestError(`Cannot update a ${currentStatus} plan`, null);
     }
 
-    let cancellationReason: TreatmentPlanCancellationReason | undefined;
-    let cancellationNote: string | null | undefined;
-
-    if (data.status !== undefined) {
-      const allowed = MANUAL_TRANSITIONS[currentStatus];
-      if (!allowed.includes(data.status)) {
-        throw new BadRequestError(
-          `Cannot transition from '${currentStatus}' to '${data.status}'`,
-          null,
-        );
-      }
-
-      if (data.status === "cancelled") {
-        const reason = data.cancellationReason;
-        if (!reason) {
-          throw new BadRequestError("cancellationReason is required when cancelling", null);
-        }
-        cancellationReason = reason;
-        if (reason === "other") {
-          if (!data.cancellationNote) {
-            throw new BadRequestError(
-              "cancellationNote is required when cancellationReason is 'other'",
-              null,
-            );
-          }
-          cancellationNote = data.cancellationNote;
-        } else {
-          cancellationNote = null;
-        }
-      }
-    }
-
     await this.db
       .update(treatmentPlans)
       .set({
         primaryDiagnostic: data.primaryDiagnostic,
         clinicalGoals: data.clinicalGoals,
         contraindications: data.contraindications,
-        status: data.status,
-        cancellationReason,
-        cancellationNote,
         startDate: data.startDate ? new Date(data.startDate) : undefined,
         endDate:
           data.endDate !== undefined
@@ -303,25 +268,27 @@ export class TreatmentPlansService {
     return (await this.one({ id }))!;
   }
 
-  async adminUpdate(id: number, data: UpdateTreatmentPlanAdminBody) {
+  async updateStatus(id: number, data: UpdateTreatmentPlanStatusBody) {
     const currentStatus = await this.getStatusOrFail(id);
+
+    if (TERMINAL_STATUSES.includes(currentStatus)) {
+      throw new BadRequestError(`Cannot update a ${currentStatus} plan`, null);
+    }
+
+    const allowed = MANUAL_TRANSITIONS[currentStatus];
+    if (!allowed.includes(data.status)) {
+      throw new BadRequestError(
+        `Cannot transition from '${currentStatus}' to '${data.status}'`,
+        null,
+      );
+    }
 
     let cancellationReason: TreatmentPlanCancellationReason | undefined;
     let cancellationNote: string | null | undefined;
 
-    if (data.status !== undefined) {
-      if (data.status !== "cancelled") {
-        throw new BadRequestError("Admin can only set status to 'cancelled'", null);
-      }
-      if (TERMINAL_STATUSES.includes(currentStatus)) {
-        throw new BadRequestError(`Plan is already ${currentStatus}`, null);
-      }
-      const reason = data.cancellationReason;
-      if (!reason) {
-        throw new BadRequestError("cancellationReason is required when cancelling", null);
-      }
-      cancellationReason = reason;
-      if (reason === "other") {
+    if (data.status === "cancelled") {
+      cancellationReason = data.cancellationReason;
+      if (data.cancellationReason === "other") {
         if (!data.cancellationNote) {
           throw new BadRequestError(
             "cancellationNote is required when cancellationReason is 'other'",
@@ -336,20 +303,7 @@ export class TreatmentPlansService {
 
     await this.db
       .update(treatmentPlans)
-      .set({
-        therapistId: data.therapistId,
-        status: data.status,
-        cancellationReason,
-        cancellationNote,
-        startDate: data.startDate ? new Date(data.startDate) : undefined,
-        endDate:
-          data.endDate !== undefined
-            ? data.endDate
-              ? new Date(data.endDate)
-              : null
-            : undefined,
-        updatedAt: new Date(),
-      })
+      .set({ status: data.status, cancellationReason, cancellationNote, updatedAt: new Date() })
       .where(eq(treatmentPlans.id, id));
 
     return (await this.one({ id }))!;

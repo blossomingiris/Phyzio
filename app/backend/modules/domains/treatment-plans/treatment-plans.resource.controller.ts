@@ -10,12 +10,14 @@ import {
   findTreatmentPlanSchema,
   listTreatmentPlansSchema,
   updateTreatmentPlanSchema,
+  updateTreatmentPlanStatusSchema,
   type AddTreatmentPlanItemBody,
   type CreateTreatmentPlanBody,
   type ListTreatmentPlansQuery,
   type UpdateTreatmentPlanBody,
+  type UpdateTreatmentPlanStatusBody,
 } from "./treatment-plans.resource.dto.ts";
-import { TreatmentPlansService } from "./treatment-plans.service.ts";
+import { TreatmentPlansService } from "./treatment-plans.resource.service.ts";
 
 type ItemParams = { id: number; itemId: number };
 
@@ -62,6 +64,17 @@ export default async function treatmentPlansResourceController(app: FastifyInsta
       const therapistId: number = (req as any).user?.therapistId;
       await service.findOrFail(req.params.id, { therapistId });
       return service.update(req.params.id, req.body);
+    },
+  );
+
+  app.patch<{ Params: ParamId; Body: UpdateTreatmentPlanStatusBody }>(
+    "/:id/status",
+    { schema: updateTreatmentPlanStatusSchema },
+    async (req) => {
+      // TODO: replace with req.user.therapistId once auth is wired up
+      const therapistId: number = (req as any).user?.therapistId;
+      await service.findOrFail(req.params.id, { therapistId });
+      return service.updateStatus(req.params.id, req.body);
     },
   );
 

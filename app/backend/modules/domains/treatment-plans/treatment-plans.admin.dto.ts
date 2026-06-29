@@ -1,18 +1,18 @@
 import {
   clientSummarySchema,
-  paramId,
   paginationMeta,
+  paramId,
   sortOrderSchema,
   therapistSummarySchema,
 } from "#app/modules/general/dto/index.ts";
+import Type, { type Static } from "typebox";
 import {
   planCancellationReasonSchema,
+  planCancelledStatusSchema,
   planSortBySchema,
   planStatusSchema,
   treatmentPlanItemResponse,
 } from "./treatment-plans.shared.dto.ts";
-import Type, { type Static } from "typebox";
-
 
 export const treatmentPlanAdminResponse = Type.Object({
   id: Type.Integer(),
@@ -50,16 +50,13 @@ export const treatmentPlanAdminListResponse = Type.Object({
 export const updateTreatmentPlanAdminBody = Type.Object(
   {
     therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
-    status: Type.Optional(planStatusSchema),
-    cancellationReason: Type.Optional(planCancellationReasonSchema),
-    cancellationNote: Type.Optional(Type.String()),
     startDate: Type.Optional(Type.String({ format: "date-time" })),
-    endDate: Type.Optional(Type.Union([Type.String({ format: "date-time" }), Type.Null()])),
+    endDate: Type.Optional(
+      Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
+    ),
   },
   { additionalProperties: false },
 );
-export type UpdateTreatmentPlanAdminBody = Static<typeof updateTreatmentPlanAdminBody>;
-
 
 export const listTreatmentPlansQuery = Type.Object(
   {
@@ -75,7 +72,6 @@ export const listTreatmentPlansQuery = Type.Object(
   },
   { additionalProperties: false },
 );
-export type ListTreatmentPlansQuery = Static<typeof listTreatmentPlansQuery>;
 
 export const listTreatmentPlansSchema = {
   tags: ["Treatment Plans"],
@@ -98,3 +94,21 @@ export const updateTreatmentPlanSchema = {
   body: updateTreatmentPlanAdminBody,
   response: { 200: treatmentPlanAdminResponse },
 };
+
+export const updateTreatmentPlanStatusAdminBody = planCancelledStatusSchema;
+
+export const updateTreatmentPlanStatusAdminSchema = {
+  tags: ["Treatment Plans"],
+  summary: "Cancel a treatment plan",
+  params: paramId,
+  body: updateTreatmentPlanStatusAdminBody,
+  response: { 200: treatmentPlanAdminResponse },
+};
+
+export type UpdateTreatmentPlanAdminBody = Static<
+  typeof updateTreatmentPlanAdminBody
+>;
+export type UpdateTreatmentPlanStatusAdminBody = Static<
+  typeof updateTreatmentPlanStatusAdminBody
+>;
+export type ListTreatmentPlansQuery = Static<typeof listTreatmentPlansQuery>;

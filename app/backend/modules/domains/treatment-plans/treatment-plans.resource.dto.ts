@@ -4,8 +4,10 @@ import {
   paramId,
   sortOrderSchema,
 } from "#app/modules/general/dto/index.ts";
+import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
 import {
+  planCancelledStatusSchema,
   planCancellationReasonSchema,
   planSortBySchema,
   planStatusSchema,
@@ -67,9 +69,6 @@ export const updateTreatmentPlanBody = Type.Object(
     primaryDiagnostic: Type.Optional(Type.String({ minLength: 1 })),
     clinicalGoals: Type.Optional(Type.String({ minLength: 1 })),
     contraindications: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-    status: Type.Optional(planStatusSchema),
-    cancellationReason: Type.Optional(planCancellationReasonSchema),
-    cancellationNote: Type.Optional(Type.String()),
     startDate: Type.Optional(Type.String({ format: "date-time" })),
     endDate: Type.Optional(
       Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
@@ -77,6 +76,26 @@ export const updateTreatmentPlanBody = Type.Object(
   },
   { additionalProperties: false },
 );
+
+const pausedPlanStatusSchema = Type.Object(
+  { status: Type.Literal("paused") },
+  { additionalProperties: false },
+);
+const completedPlanStatusSchema = Type.Object(
+  { status: Type.Literal("completed") },
+  { additionalProperties: false },
+);
+const inProgressPlanStatusSchema = Type.Object(
+  { status: Type.Literal("in_progress") },
+  { additionalProperties: false },
+);
+
+export const updateTreatmentPlanStatusBody = discriminatedUnion("status", [
+  planCancelledStatusSchema,
+  pausedPlanStatusSchema,
+  completedPlanStatusSchema,
+  inProgressPlanStatusSchema,
+]);
 
 export const addTreatmentPlanItemBody = Type.Object(
   { treatmentId: Type.Integer({ minimum: 1 }) },
@@ -134,6 +153,14 @@ export const updateTreatmentPlanSchema = {
   response: { 200: treatmentPlanResourceResponse },
 };
 
+export const updateTreatmentPlanStatusSchema = {
+  tags: ["Me"],
+  summary: "Update the status of a treatment plan",
+  params: paramId,
+  body: updateTreatmentPlanStatusBody,
+  response: { 200: treatmentPlanResourceResponse },
+};
+
 export const addTreatmentPlanItemSchema = {
   tags: ["Me"],
   summary: "Add a treatment to a plan",
@@ -153,3 +180,4 @@ export type CreateTreatmentPlanBody = Static<typeof createTreatmentPlanBody>;
 export type ListTreatmentPlansQuery = Static<typeof listTreatmentPlansQuery>;
 export type AddTreatmentPlanItemBody = Static<typeof addTreatmentPlanItemBody>;
 export type UpdateTreatmentPlanBody = Static<typeof updateTreatmentPlanBody>;
+export type UpdateTreatmentPlanStatusBody = Static<typeof updateTreatmentPlanStatusBody>;

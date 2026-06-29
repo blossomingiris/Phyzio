@@ -4,13 +4,17 @@ import {
   findTreatmentPlanSchema,
   listTreatmentPlansSchema,
   updateTreatmentPlanSchema,
+  updateTreatmentPlanStatusAdminSchema,
   type ListTreatmentPlansQuery,
   type UpdateTreatmentPlanAdminBody,
+  type UpdateTreatmentPlanStatusAdminBody,
 } from "./treatment-plans.admin.dto.ts";
-import { TreatmentPlansService } from "./treatment-plans.service.ts";
+import { TreatmentPlansAdminService } from "./treatment-plans.admin.service.ts";
+import { TreatmentPlansService } from "./treatment-plans.resource.service.ts";
 
 export default async function treatmentPlansAdminController(app: FastifyInstance) {
   const service = new TreatmentPlansService(app.drizzle);
+  const adminService = new TreatmentPlansAdminService(app.drizzle, service);
 
   app.get<{ Querystring: ListTreatmentPlansQuery }>(
     "/",
@@ -34,7 +38,16 @@ export default async function treatmentPlansAdminController(app: FastifyInstance
     { schema: updateTreatmentPlanSchema },
     async (req) => {
       await service.findOrFail(req.params.id);
-      return service.adminUpdate(req.params.id, req.body);
+      return adminService.update(req.params.id, req.body);
+    },
+  );
+
+  app.patch<{ Params: ParamId; Body: UpdateTreatmentPlanStatusAdminBody }>(
+    "/:id/status",
+    { schema: updateTreatmentPlanStatusAdminSchema },
+    async (req) => {
+      await service.findOrFail(req.params.id);
+      return adminService.cancel(req.params.id, req.body);
     },
   );
 }

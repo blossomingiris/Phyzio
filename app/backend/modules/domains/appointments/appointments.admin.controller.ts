@@ -1,5 +1,5 @@
 import { type ParamId } from "#app/modules/general/dto/index.ts";
-import { TreatmentPlansService } from "#app/modules/domains/treatment-plans/treatment-plans.service.ts";
+import { TreatmentPlansService } from "#app/modules/domains/treatment-plans/treatment-plans.resource.service.ts";
 import type { FastifyInstance } from "fastify";
 import {
   createAppointmentSchema,
