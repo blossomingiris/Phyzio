@@ -1,8 +1,10 @@
 import {
   clientSummarySchema,
+  errorResponse,
   paginationMeta,
   paramId,
   sortOrderSchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
@@ -128,21 +130,35 @@ export const listTreatmentPlansSchema = {
   tags: ["Me"],
   summary: "List my treatment plans",
   querystring: listTreatmentPlansQuery,
-  response: { 200: treatmentPlanResourceListResponse },
+  response: {
+    200: treatmentPlanResourceListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+  },
 };
 
 export const findTreatmentPlanSchema = {
   tags: ["Me"],
   summary: "Get a treatment plan by ID",
   params: paramId,
-  response: { 200: treatmentPlanResourceResponse },
+  response: {
+    200: treatmentPlanResourceResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const createTreatmentPlanSchema = {
   tags: ["Me"],
   summary: "Create a treatment plan",
   body: createTreatmentPlanBody,
-  response: { 201: treatmentPlanResourceResponse },
+  response: {
+    201: treatmentPlanResourceResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export const updateTreatmentPlanSchema = {
@@ -150,7 +166,13 @@ export const updateTreatmentPlanSchema = {
   summary: "Update a treatment plan",
   params: paramId,
   body: updateTreatmentPlanBody,
-  response: { 200: treatmentPlanResourceResponse },
+  response: {
+    200: treatmentPlanResourceResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export const updateTreatmentPlanStatusSchema = {
@@ -158,7 +180,13 @@ export const updateTreatmentPlanStatusSchema = {
   summary: "Update the status of a treatment plan",
   params: paramId,
   body: updateTreatmentPlanStatusBody,
-  response: { 200: treatmentPlanResourceResponse },
+  response: {
+    200: treatmentPlanResourceResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export const addTreatmentPlanItemSchema = {
@@ -166,14 +194,26 @@ export const addTreatmentPlanItemSchema = {
   summary: "Add a treatment to a plan",
   params: paramId,
   body: addTreatmentPlanItemBody,
-  response: { 201: treatmentPlanResourceResponse },
+  response: {
+    201: treatmentPlanResourceResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export const deleteTreatmentPlanItemSchema = {
   tags: ["Me"],
   summary: "Remove a treatment from a plan",
   params: treatmentPlanItemParams,
-  response: { 200: Type.Object({ success: Type.Boolean() }) },
+  response: {
+    200: Type.Object({ success: Type.Boolean() }),
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export type CreateTreatmentPlanBody = Static<typeof createTreatmentPlanBody>;

@@ -1,3 +1,7 @@
+import {
+  errorResponse,
+  validationErrorResponse,
+} from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 import {
   specialitySchema,
@@ -49,21 +53,33 @@ export const updateMePasswordBody = Type.Object(
 export const getMeSchema = {
   tags: ["Me"],
   summary: "Get own profile",
-  response: { 200: meResponse },
+  response: {
+    200: meResponse,
+    401: errorResponse,
+  },
 };
 
 export const updateMeSchema = {
   tags: ["Me"],
   summary: "Update own profile",
   body: updateMeBody,
-  response: { 200: meResponse },
+  response: {
+    200: meResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const updateMePasswordSchema = {
   tags: ["Me"],
   summary: "Change own password",
   body: updateMePasswordBody,
-  response: { 200: meResponse },
+  response: {
+    200: meResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+  },
 };
 
 export type UpdateMeBody = Static<typeof updateMeBody>;

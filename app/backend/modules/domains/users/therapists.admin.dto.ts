@@ -1,10 +1,12 @@
 import { specialityEnum } from "#app/database/schemas.ts";
 import type { Speciality } from "#app/database/types.ts";
 import {
+  errorResponse,
   paginationMeta,
   paramId,
   sortOrderSchema,
   sortParamsSchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -107,21 +109,38 @@ export const listTherapistsSchema = {
   tags: ["Therapists"],
   summary: "List all therapists",
   querystring: listTherapistsQuery,
-  response: { 200: therapistListResponse },
+  response: {
+    200: therapistListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const findTherapistSchema = {
   tags: ["Therapists"],
   summary: "Get a therapist by ID",
   params: paramId,
-  response: { 200: therapistResponse },
+  response: {
+    200: therapistResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const createTherapistSchema = {
   tags: ["Therapists"],
   summary: "Create a therapist",
   body: createTherapistBody,
-  response: { 201: therapistResponse },
+  response: {
+    201: therapistResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const updateTherapistSchema = {
@@ -129,14 +148,26 @@ export const updateTherapistSchema = {
   summary: "Update therapist profile",
   params: paramId,
   body: updateTherapistBody,
-  response: { 200: therapistResponse },
+  response: {
+    200: therapistResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const deleteTherapistSchema = {
   tags: ["Therapists"],
   summary: "Delete a therapist",
   params: paramId,
-  response: { 200: Type.Object({ success: Type.Boolean() }) },
+  response: {
+    200: Type.Object({ success: Type.Boolean() }),
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export type ListTherapistsQuery = Static<typeof listTherapistsQuery>;

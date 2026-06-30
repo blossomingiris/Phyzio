@@ -1,10 +1,12 @@
 import { userRoleEnum } from "#app/database/schemas.ts";
 import type { UserRole } from "#app/database/types.ts";
 import {
+  errorResponse,
   paginationMeta,
   paramId,
   sortOrderSchema,
   sortParamsSchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -82,21 +84,38 @@ export const listUsersSchema = {
   tags: ["Users"],
   summary: "List all users",
   querystring: listUsersQuery,
-  response: { 200: userListResponse },
+  response: {
+    200: userListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const findUserSchema = {
   tags: ["Users"],
   summary: "Get a user by ID",
   params: paramId,
-  response: { 200: userResponse },
+  response: {
+    200: userResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const createUserSchema = {
   tags: ["Users"],
   summary: "Create a user",
   body: createUserBody,
-  response: { 201: userResponse },
+  response: {
+    201: userResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const updateUserSchema = {
@@ -104,7 +123,14 @@ export const updateUserSchema = {
   summary: "Update user profile",
   params: paramId,
   body: updateUserBody,
-  response: { 200: userResponse },
+  response: {
+    200: userResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const updateRoleSchema = {
@@ -112,7 +138,13 @@ export const updateRoleSchema = {
   summary: "Update user role",
   params: paramId,
   body: updateRoleBody,
-  response: { 200: userResponse },
+  response: {
+    200: userResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export type ListUsersQuery = Static<typeof listUsersQuery>;

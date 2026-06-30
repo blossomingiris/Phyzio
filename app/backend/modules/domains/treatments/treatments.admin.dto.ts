@@ -1,9 +1,11 @@
 import { categoryEnum } from "#app/database/schemas.ts";
 import type { TreatmentCategory } from "#app/database/types.ts";
 import {
+  errorResponse,
   paramId,
   paginationMeta,
   sortOrderSchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -96,21 +98,37 @@ export const listTreatmentsSchema = {
   tags: ["Treatments"],
   summary: "List all treatments",
   querystring: listTreatmentsQuery,
-  response: { 200: treatmentListResponse },
+  response: {
+    200: treatmentListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const findTreatmentSchema = {
   tags: ["Treatments"],
   summary: "Get a treatment by ID",
   params: paramId,
-  response: { 200: treatmentResponse },
+  response: {
+    200: treatmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const createTreatmentSchema = {
   tags: ["Treatments"],
   summary: "Create a treatment",
   body: createTreatmentBody,
-  response: { 201: treatmentResponse },
+  response: {
+    201: treatmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const updateTreatmentSchema = {
@@ -118,5 +136,11 @@ export const updateTreatmentSchema = {
   summary: "Update a treatment",
   params: paramId,
   body: updateTreatmentBody,
-  response: { 200: treatmentResponse },
+  response: {
+    200: treatmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };

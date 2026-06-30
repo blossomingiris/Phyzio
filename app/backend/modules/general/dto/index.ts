@@ -1,3 +1,4 @@
+export * from "./errors.dto.ts";
 import { communicationEnum, specialityEnum } from "#app/database/schemas.ts";
 import type { ClientCommunication, Speciality } from "#app/database/types.ts";
 import Type, { type Static, type TSchema } from "typebox";
@@ -74,4 +75,3 @@ export const clientSummarySchema = Type.Object({
   email: Type.Union([Type.String({ format: "email" }), Type.Null()]),
   preferredCommunication: communicationSchema,
 });
-

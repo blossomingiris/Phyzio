@@ -15,7 +15,7 @@ import type {
   TreatmentPlanCancellationReason,
   TreatmentPlanStatus,
 } from "#app/database/types.ts";
-import { BadRequestError, ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
+import { BadRequestError, ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import type {
@@ -247,7 +247,7 @@ export class TreatmentPlansService {
     const currentStatus = await this.getStatusOrFail(id);
 
     if (TERMINAL_STATUSES.includes(currentStatus)) {
-      throw new BadRequestError(`Cannot update a ${currentStatus} plan`, null);
+      throw new UnprocessableEntityError(`Cannot update a ${currentStatus} plan`, null);
     }
 
     await this.db
@@ -274,12 +274,12 @@ export class TreatmentPlansService {
     const currentStatus = await this.getStatusOrFail(id);
 
     if (TERMINAL_STATUSES.includes(currentStatus)) {
-      throw new BadRequestError(`Cannot update a ${currentStatus} plan`, null);
+      throw new UnprocessableEntityError(`Cannot update a ${currentStatus} plan`, null);
     }
 
     const allowed = MANUAL_TRANSITIONS[currentStatus];
     if (!allowed.includes(data.status)) {
-      throw new BadRequestError(
+      throw new UnprocessableEntityError(
         `Cannot transition from '${currentStatus}' to '${data.status}'`,
         null,
       );
@@ -315,7 +315,7 @@ export class TreatmentPlansService {
     const currentStatus = await this.getStatusOrFail(planId);
 
     if (TERMINAL_STATUSES.includes(currentStatus)) {
-      throw new BadRequestError(`Cannot add items to a ${currentStatus} plan`, null);
+      throw new UnprocessableEntityError(`Cannot add items to a ${currentStatus} plan`, null);
     }
 
     try {
@@ -346,7 +346,7 @@ export class TreatmentPlansService {
     if (!item) throw new NotFoundError("Plan item not found");
 
     if (item.quantityCompleted > 0) {
-      throw new BadRequestError("Cannot remove an item with completed sessions", null);
+      throw new UnprocessableEntityError("Cannot remove an item with completed sessions", null);
     }
 
     await this.db.delete(treatmentPlanItems).where(eq(treatmentPlanItems.id, itemId));
@@ -530,7 +530,7 @@ export class TreatmentPlansService {
 
     const inactiveIds = rows.filter((r) => !r.isActive).map((r) => r.id);
     if (inactiveIds.length > 0) {
-      throw new BadRequestError(`Treatments are inactive: ${inactiveIds.join(", ")}`, null);
+      throw new UnprocessableEntityError(`Treatments are inactive: ${inactiveIds.join(", ")}`, null);
     }
   }
 

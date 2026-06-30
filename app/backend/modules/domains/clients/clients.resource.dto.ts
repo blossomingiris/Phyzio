@@ -1,7 +1,9 @@
 import {
+  errorResponse,
   paramId,
   paginationMeta,
   sortOrderSchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -39,14 +41,23 @@ export const listMyClientsSchema = {
   tags: ["Me"],
   summary: "List my clients",
   querystring: listMyClientsQuery,
-  response: { 200: myClientListResponse },
+  response: {
+    200: myClientListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+  },
 };
 
 export const findMyClientSchema = {
   tags: ["Me"],
   summary: "Get one of my clients by ID",
   params: paramId,
-  response: { 200: clientBaseResponse },
+  response: {
+    200: clientBaseResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const updateMyClientSchema = {
@@ -54,7 +65,12 @@ export const updateMyClientSchema = {
   summary: "Update one of my clients",
   params: paramId,
   body: updateMyClientBody,
-  response: { 200: clientBaseResponse },
+  response: {
+    200: clientBaseResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export type ListMyClientsQuery = Static<typeof listMyClientsQuery>;

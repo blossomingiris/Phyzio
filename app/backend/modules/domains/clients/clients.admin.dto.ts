@@ -1,8 +1,10 @@
 import {
+  errorResponse,
   paramId,
   paginationMeta,
   sortOrderSchema,
   therapistSummarySchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -59,21 +61,38 @@ export const listClientsSchema = {
   tags: ["Clients"],
   summary: "List all clients",
   querystring: listClientsQuery,
-  response: { 200: clientListResponse },
+  response: {
+    200: clientListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const findClientSchema = {
   tags: ["Clients"],
   summary: "Get a client by ID",
   params: paramId,
-  response: { 200: clientResponse },
+  response: {
+    200: clientResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const createClientSchema = {
   tags: ["Clients"],
   summary: "Create a client",
   body: createClientBody,
-  response: { 201: clientResponse },
+  response: {
+    201: clientResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const updateClientSchema = {
@@ -81,14 +100,27 @@ export const updateClientSchema = {
   summary: "Update a client",
   params: paramId,
   body: updateClientBody,
-  response: { 200: clientResponse },
+  response: {
+    200: clientResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const deleteClientSchema = {
   tags: ["Clients"],
   summary: "Delete a client",
   params: paramId,
-  response: { 200: Type.Object({ success: Type.Boolean() }) },
+  response: {
+    200: Type.Object({ success: Type.Boolean() }),
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export type ListClientsQuery = Static<typeof listClientsQuery>;

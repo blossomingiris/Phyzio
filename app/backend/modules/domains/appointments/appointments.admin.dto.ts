@@ -1,8 +1,10 @@
 import {
+  errorResponse,
   paramId,
   paginationMeta,
   sortOrderSchema,
   therapistSummarySchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
@@ -71,21 +73,38 @@ export const listAppointmentsSchema = {
   tags: ["Appointments"],
   summary: "List all appointments",
   querystring: listAppointmentsQuery,
-  response: { 200: appointmentListResponse },
+  response: {
+    200: appointmentListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const findAppointmentSchema = {
   tags: ["Appointments"],
   summary: "Get an appointment by ID",
   params: paramId,
-  response: { 200: appointmentResponse },
+  response: {
+    200: appointmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const createAppointmentSchema = {
   tags: ["Appointments"],
   summary: "Create an appointment",
   body: createAppointmentBody,
-  response: { 201: appointmentResponse },
+  response: {
+    201: appointmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const updateAppointmentSchema = {
@@ -93,14 +112,27 @@ export const updateAppointmentSchema = {
   summary: "Update an appointment",
   params: paramId,
   body: updateAppointmentBody,
-  response: { 200: appointmentResponse },
+  response: {
+    200: appointmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+    409: errorResponse,
+  },
 };
 
 export const deleteAppointmentSchema = {
   tags: ["Appointments"],
   summary: "Delete an appointment",
   params: paramId,
-  response: { 200: Type.Object({ success: Type.Boolean() }) },
+  response: {
+    200: Type.Object({ success: Type.Boolean() }),
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const updateAppointmentStatusSchema = {
@@ -108,7 +140,14 @@ export const updateAppointmentStatusSchema = {
   summary: "Change appointment status",
   params: paramId,
   body: updateAppointmentStatusBody,
-  response: { 200: appointmentResponse },
+  response: {
+    200: appointmentResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export type ListAppointmentsQuery = Static<typeof listAppointmentsQuery>;

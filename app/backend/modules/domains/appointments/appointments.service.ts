@@ -10,7 +10,7 @@ import type {
   CancellationReason,
   Speciality,
 } from "#app/database/types.ts";
-import { BadRequestError, ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
+import { BadRequestError, ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, gt, gte, inArray, lt, lte, not } from "drizzle-orm";
 import type {
@@ -243,7 +243,7 @@ export class AppointmentsService {
     const allowed = VALID_TRANSITIONS[appointment.status];
 
     if (!allowed.includes(data.status)) {
-      throw new BadRequestError(
+      throw new UnprocessableEntityError(
         `Cannot update status from '${appointment.status}' to '${data.status}'`,
         null,
       );

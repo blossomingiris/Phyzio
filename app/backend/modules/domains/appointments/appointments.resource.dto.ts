@@ -1,7 +1,9 @@
 import {
+  errorResponse,
   paramId,
   paginationMeta,
   sortOrderSchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
@@ -48,14 +50,23 @@ export const listMyAppointmentsSchema = {
   tags: ["Me"],
   summary: "List my appointments",
   querystring: listMyAppointmentsQuery,
-  response: { 200: myAppointmentListResponse },
+  response: {
+    200: myAppointmentListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+  },
 };
 
 export const findMyAppointmentSchema = {
   tags: ["Me"],
   summary: "Get my appointment by ID",
   params: paramId,
-  response: { 200: appointmentBaseResponse },
+  response: {
+    200: appointmentBaseResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const updateMyAppointmentStatusSchema = {
@@ -63,7 +74,13 @@ export const updateMyAppointmentStatusSchema = {
   summary: "Change status of my appointment",
   params: paramId,
   body: updateMyAppointmentStatusBody,
-  response: { 200: appointmentBaseResponse },
+  response: {
+    200: appointmentBaseResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export type ListMyAppointmentsQuery = Static<typeof listMyAppointmentsQuery>;

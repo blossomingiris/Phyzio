@@ -1,9 +1,11 @@
 import {
   clientSummarySchema,
+  errorResponse,
   paginationMeta,
   paramId,
   sortOrderSchema,
   therapistSummarySchema,
+  validationErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 import {
@@ -77,14 +79,25 @@ export const listTreatmentPlansSchema = {
   tags: ["Treatment Plans"],
   summary: "List all treatment plans",
   querystring: listTreatmentPlansQuery,
-  response: { 200: treatmentPlanAdminListResponse },
+  response: {
+    200: treatmentPlanAdminListResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+  },
 };
 
 export const findTreatmentPlanSchema = {
   tags: ["Treatment Plans"],
   summary: "Get a treatment plan by ID",
   params: paramId,
-  response: { 200: treatmentPlanAdminResponse },
+  response: {
+    200: treatmentPlanAdminResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const updateTreatmentPlanSchema = {
@@ -92,7 +105,13 @@ export const updateTreatmentPlanSchema = {
   summary: "Update a treatment plan",
   params: paramId,
   body: updateTreatmentPlanAdminBody,
-  response: { 200: treatmentPlanAdminResponse },
+  response: {
+    200: treatmentPlanAdminResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
 };
 
 export const updateTreatmentPlanStatusAdminBody = planCancelledStatusSchema;
@@ -102,7 +121,14 @@ export const updateTreatmentPlanStatusAdminSchema = {
   summary: "Cancel a treatment plan",
   params: paramId,
   body: updateTreatmentPlanStatusAdminBody,
-  response: { 200: treatmentPlanAdminResponse },
+  response: {
+    200: treatmentPlanAdminResponse,
+    400: validationErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+    422: errorResponse,
+  },
 };
 
 export type UpdateTreatmentPlanAdminBody = Static<

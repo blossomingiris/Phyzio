@@ -1,6 +1,6 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { treatmentPlans } from "#app/database/schemas.ts";
-import { BadRequestError } from "#app/errors/httpErrors.ts";
+import { BadRequestError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import { eq } from "drizzle-orm";
 import type {
   UpdateTreatmentPlanAdminBody,
@@ -43,7 +43,7 @@ export class TreatmentPlansAdminService {
       .where(eq(treatmentPlans.id, id));
 
     if (TERMINAL_STATUSES.includes(row!.status)) {
-      throw new BadRequestError(`Plan is already ${row!.status}`, null);
+      throw new UnprocessableEntityError(`Plan is already ${row!.status}`, null);
     }
 
     let cancellationNote: string | null = null;
