@@ -4,7 +4,10 @@ import type { Speciality } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, ilike, not, or } from "drizzle-orm";
-import type { CreateClientBody, UpdateClientBody } from "./clients.admin.dto.ts";
+import type {
+  CreateClientBody,
+  UpdateClientBody,
+} from "./clients.admin.dto.ts";
 import type { ClientSortBy, ClientSortParams } from "./clients.shared.dto.ts";
 
 type ClientFilters = {
@@ -121,10 +124,14 @@ export class ClientsService {
         ? { ...data, email: data.email.toLowerCase() }
         : data;
     try {
-      const [row] = await this.db.insert(clients).values(normalized).returning();
+      const [row] = await this.db
+        .insert(clients)
+        .values(normalized)
+        .returning();
       return (await this.one({ id: row!.id }))!;
     } catch (e: any) {
       if (e?.code === "23505") throw new ConflictError("Email already in use");
+      if (e?.code === "23503") throw new NotFoundError("Therapist not found");
       throw e;
     }
   }
@@ -138,14 +145,22 @@ export class ClientsService {
       const [conflict] = await this.db
         .select({ id: clients.id })
         .from(clients)
-        .where(and(eq(clients.email, normalized.email), not(eq(clients.id, id))));
+        .where(
+          and(eq(clients.email, normalized.email), not(eq(clients.id, id))),
+        );
       if (conflict) throw new ConflictError("Email already in use");
     }
 
-    await this.db
-      .update(clients)
-      .set({ ...normalized, updatedAt: new Date() })
-      .where(eq(clients.id, id));
+    try {
+      await this.db
+        .update(clients)
+        .set({ ...normalized, updatedAt: new Date() })
+        .where(eq(clients.id, id));
+    } catch (e: any) {
+      if (e?.code === "23505") throw new ConflictError("Email already in use");
+      if (e?.code === "23503") throw new NotFoundError("Therapist not found");
+      throw e;
+    }
 
     return this.one({ id });
   }

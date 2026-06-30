@@ -4,7 +4,7 @@ import {
   paginationMeta,
   sortOrderSchema,
   therapistSummarySchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -63,7 +63,7 @@ export const listClientsSchema = {
   querystring: listClientsQuery,
   response: {
     200: clientListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
   },
@@ -75,7 +75,7 @@ export const findClientSchema = {
   params: paramId,
   response: {
     200: clientResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -88,7 +88,7 @@ export const createClientSchema = {
   body: createClientBody,
   response: {
     201: clientResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     409: errorResponse,
@@ -102,7 +102,7 @@ export const updateClientSchema = {
   body: updateClientBody,
   response: {
     200: clientResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -116,7 +116,7 @@ export const deleteClientSchema = {
   params: paramId,
   response: {
     200: Type.Object({ success: Type.Boolean() }),
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,

@@ -6,7 +6,7 @@ import {
   paramId,
   sortOrderSchema,
   sortParamsSchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -86,7 +86,7 @@ export const listUsersSchema = {
   querystring: listUsersQuery,
   response: {
     200: userListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
   },
@@ -98,7 +98,7 @@ export const findUserSchema = {
   params: paramId,
   response: {
     200: userResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -111,7 +111,7 @@ export const createUserSchema = {
   body: createUserBody,
   response: {
     201: userResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     409: errorResponse,
@@ -125,7 +125,7 @@ export const updateUserSchema = {
   body: updateUserBody,
   response: {
     200: userResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -140,7 +140,7 @@ export const updateRoleSchema = {
   body: updateRoleBody,
   response: {
     200: userResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,

@@ -12,10 +12,12 @@ export class HttpError extends Error implements FastifyError {
   }
 }
 
-export class BadRequestError extends HttpError {
-  public errors: unknown;
+export type FieldError = { field: string; message: string };
 
-  constructor(message: string, errors: unknown) {
+export class BadRequestError extends HttpError {
+  public errors: FieldError[];
+
+  constructor(message: string, errors: FieldError[] = []) {
     super(400, "BAD_REQUEST", message);
     this.errors = errors;
   }
@@ -52,8 +54,8 @@ export class ConflictError extends HttpError {
 }
 
 export class UnprocessableEntityError extends HttpError {
-  public errors: unknown;
-  constructor(message: string, errors: unknown) {
+  public errors: FieldError[];
+  constructor(message: string, errors: FieldError[] = []) {
     super(422, "UNPROCESSABLE_ENTITY", message);
     this.errors = errors;
   }

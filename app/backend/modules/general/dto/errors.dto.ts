@@ -5,7 +5,10 @@ export const errorResponse = Type.Object({
   message: Type.String(),
 });
 
-export const validationErrorResponse = Type.Object({
+// Response shape for errors that carry field-level detail — used for:
+// 400 (BadRequestError) and 422 (UnprocessableEntityError)
+
+export const fieldErrorResponse = Type.Object({
   code: Type.String(),
   message: Type.String(),
   errors: Type.Array(

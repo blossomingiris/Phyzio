@@ -43,7 +43,7 @@ export class TreatmentPlansAdminService {
       .where(eq(treatmentPlans.id, id));
 
     if (TERMINAL_STATUSES.includes(row!.status)) {
-      throw new UnprocessableEntityError(`Plan is already ${row!.status}`, null);
+      throw new UnprocessableEntityError(`Plan is already ${row!.status}`);
     }
 
     let cancellationNote: string | null = null;
@@ -51,7 +51,12 @@ export class TreatmentPlansAdminService {
       if (!data.cancellationNote) {
         throw new BadRequestError(
           "cancellationNote is required when cancellationReason is 'other'",
-          null,
+          [
+            {
+              field: "cancellationNote",
+              message: "is required when cancellationReason is 'other'",
+            },
+          ],
         );
       }
       cancellationNote = data.cancellationNote;

@@ -5,7 +5,7 @@ import {
   paramId,
   paginationMeta,
   sortOrderSchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -100,7 +100,7 @@ export const listTreatmentsSchema = {
   querystring: listTreatmentsQuery,
   response: {
     200: treatmentListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
   },
@@ -112,7 +112,7 @@ export const findTreatmentSchema = {
   params: paramId,
   response: {
     200: treatmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -125,7 +125,7 @@ export const createTreatmentSchema = {
   body: createTreatmentBody,
   response: {
     201: treatmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
   },
@@ -138,7 +138,7 @@ export const updateTreatmentSchema = {
   body: updateTreatmentBody,
   response: {
     200: treatmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,

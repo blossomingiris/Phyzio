@@ -5,7 +5,7 @@ import {
   paramId,
   sortOrderSchema,
   therapistSummarySchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 import {
@@ -81,7 +81,7 @@ export const listTreatmentPlansSchema = {
   querystring: listTreatmentPlansQuery,
   response: {
     200: treatmentPlanAdminListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
   },
@@ -93,7 +93,7 @@ export const findTreatmentPlanSchema = {
   params: paramId,
   response: {
     200: treatmentPlanAdminResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -107,7 +107,7 @@ export const updateTreatmentPlanSchema = {
   body: updateTreatmentPlanAdminBody,
   response: {
     200: treatmentPlanAdminResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -123,11 +123,11 @@ export const updateTreatmentPlanStatusAdminSchema = {
   body: updateTreatmentPlanStatusAdminBody,
   response: {
     200: treatmentPlanAdminResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 

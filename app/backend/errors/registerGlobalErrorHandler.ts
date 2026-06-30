@@ -4,6 +4,7 @@ import type {
   FastifyReply,
   FastifyRequest,
 } from "fastify";
+import { translateDbError } from "./translateDbError.ts";
 import {
   BadRequestError,
   HttpError,
@@ -45,6 +46,14 @@ export function registerGlobalErrorHandler(app: FastifyInstance) {
         return reply
           .code(error.statusCode)
           .send({ code: error.code, message: error.message });
+      }
+
+      const dbError = translateDbError(error);
+      if (dbError) {
+        request.log.error({ err: error }, "Unhandled Database Error");
+        return reply
+          .code(dbError.statusCode)
+          .send({ code: dbError.code, message: dbError.message });
       }
 
       request.log.error(error);

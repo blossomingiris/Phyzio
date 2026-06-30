@@ -4,7 +4,7 @@ import {
   paginationMeta,
   paramId,
   sortOrderSchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
@@ -132,7 +132,7 @@ export const listTreatmentPlansSchema = {
   querystring: listTreatmentPlansQuery,
   response: {
     200: treatmentPlanResourceListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
   },
 };
@@ -143,7 +143,7 @@ export const findTreatmentPlanSchema = {
   params: paramId,
   response: {
     200: treatmentPlanResourceResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
   },
@@ -155,9 +155,9 @@ export const createTreatmentPlanSchema = {
   body: createTreatmentPlanBody,
   response: {
     201: treatmentPlanResourceResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 
@@ -168,10 +168,10 @@ export const updateTreatmentPlanSchema = {
   body: updateTreatmentPlanBody,
   response: {
     200: treatmentPlanResourceResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 
@@ -182,10 +182,10 @@ export const updateTreatmentPlanStatusSchema = {
   body: updateTreatmentPlanStatusBody,
   response: {
     200: treatmentPlanResourceResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 
@@ -196,10 +196,10 @@ export const addTreatmentPlanItemSchema = {
   body: addTreatmentPlanItemBody,
   response: {
     201: treatmentPlanResourceResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 
@@ -209,10 +209,10 @@ export const deleteTreatmentPlanItemSchema = {
   params: treatmentPlanItemParams,
   response: {
     200: Type.Object({ success: Type.Boolean() }),
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 

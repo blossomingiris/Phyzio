@@ -156,23 +156,31 @@ export class AppointmentsService {
     const startedAt = new Date(data.startedAt);
     const endedAt = new Date(data.endedAt);
     if (endedAt <= startedAt) {
-      throw new BadRequestError("endedAt must be after startedAt", null);
+      throw new BadRequestError("endedAt must be after startedAt", [
+        { field: "endedAt", message: "must be after startedAt" },
+      ]);
     }
     if (data.therapistId !== undefined) {
       await this.checkTherapistOverlap(data.therapistId, startedAt, endedAt);
     }
-    const [row] = await this.db
-      .insert(appointments)
-      .values({
-        therapistId: data.therapistId,
-        clientId: data.clientId,
-        treatmentPlanId: data.treatmentPlanId,
-        startedAt,
-        endedAt,
-        notes: data.notes,
-      })
-      .returning();
-    return (await this.one({ id: row!.id }))!;
+    try {
+      const [row] = await this.db
+        .insert(appointments)
+        .values({
+          therapistId: data.therapistId,
+          clientId: data.clientId,
+          treatmentPlanId: data.treatmentPlanId,
+          startedAt,
+          endedAt,
+          notes: data.notes,
+        })
+        .returning();
+      return (await this.one({ id: row!.id }))!;
+    } catch (e: any) {
+      if (e?.code === "23503")
+        throw new NotFoundError("Therapist, client, or treatment plan not found");
+      throw e;
+    }
   }
 
   async update(id: number, data: UpdateAppointmentBody) {
@@ -190,7 +198,9 @@ export class AppointmentsService {
       const effectiveEnd = endedAt ?? current.endedAt;
 
       if (effectiveEnd <= effectiveStart) {
-        throw new BadRequestError("endedAt must be after startedAt", null);
+        throw new BadRequestError("endedAt must be after startedAt", [
+        { field: "endedAt", message: "must be after startedAt" },
+      ]);
       }
 
       const effectiveTherapistId =
@@ -205,18 +215,24 @@ export class AppointmentsService {
       }
     }
 
-    await this.db
-      .update(appointments)
-      .set({
-        therapistId: data.therapistId,
-        clientId: data.clientId,
-        treatmentPlanId: data.treatmentPlanId,
-        startedAt,
-        endedAt,
-        notes: data.notes,
-        updatedAt: new Date(),
-      })
-      .where(eq(appointments.id, id));
+    try {
+      await this.db
+        .update(appointments)
+        .set({
+          therapistId: data.therapistId,
+          clientId: data.clientId,
+          treatmentPlanId: data.treatmentPlanId,
+          startedAt,
+          endedAt,
+          notes: data.notes,
+          updatedAt: new Date(),
+        })
+        .where(eq(appointments.id, id));
+    } catch (e: any) {
+      if (e?.code === "23503")
+        throw new NotFoundError("Therapist, client, or treatment plan not found");
+      throw e;
+    }
 
     return this.one({ id });
   }
@@ -245,7 +261,6 @@ export class AppointmentsService {
     if (!allowed.includes(data.status)) {
       throw new UnprocessableEntityError(
         `Cannot update status from '${appointment.status}' to '${data.status}'`,
-        null,
       );
     }
 
@@ -258,7 +273,12 @@ export class AppointmentsService {
         if (!data.cancellationNote) {
           throw new BadRequestError(
             "cancellationNote is required when cancellationReason is 'other'",
-            null,
+            [
+              {
+                field: "cancellationNote",
+                message: "is required when cancellationReason is 'other'",
+              },
+            ],
           );
         }
         cancellationNote = data.cancellationNote;

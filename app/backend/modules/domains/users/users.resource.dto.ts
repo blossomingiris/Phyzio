@@ -1,6 +1,6 @@
 import {
   errorResponse,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 import {
@@ -65,7 +65,7 @@ export const updateMeSchema = {
   body: updateMeBody,
   response: {
     200: meResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     409: errorResponse,
   },
@@ -77,7 +77,7 @@ export const updateMePasswordSchema = {
   body: updateMePasswordBody,
   response: {
     200: meResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
   },
 };

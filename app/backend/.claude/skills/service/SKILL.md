@@ -76,9 +76,33 @@ private async getStatusOrFail(id: number): Promise<EntityStatus> {
 Catch Postgres error codes in the service and re-throw as domain errors. The correct
 error type depends on the operation:
 
-| Code    | On INSERT/UPDATE                          | On DELETE                              |
-| ------- | ----------------------------------------- | -------------------------------------- |
-| `23503` | FK target missing → `NotFoundError`       | Row referenced elsewhere → `ConflictError` |
-| `23505` | Unique violation → `ConflictError`        | —                                      |
+| Code    | On INSERT/UPDATE                    | On DELETE                                  |
+| ------- | ----------------------------------- | ------------------------------------------ |
+| `23503` | FK target missing → `NotFoundError` | Row referenced elsewhere → `ConflictError` |
+| `23505` | Unique violation → `ConflictError`  | —                                          |
 
 Always re-throw unrecognised errors so unexpected failures surface.
+
+### Wrap every write that touches a foreign key
+
+Any `insert`/`update`/transaction writing a caller-supplied FK can raise `23503` —
+wrap the statement (not the prechecks). This guards the *referenced* row (e.g. the
+therapist a client points at), which is not what `findOrFail` covers — that checks
+the entity being acted on. Even a dedicated existence query for the FK target races,
+so the catch is the safety net, never optional.
+
+```ts
+try {
+  await this.db.update(clients).set({ ...normalized }).where(eq(clients.id, id));
+} catch (e: any) {
+  if (e?.code === "23503") throw new NotFoundError("Therapist not found");
+  throw e;
+}
+```
+
+Picking the message:
+
+- **One** caller FK → name it: `"Therapist not found"`.
+- **Several** → `23503` can't say which, so name the candidates:
+  `"Therapist, client, or treatment plan not found"` (or read `e.constraint` for the exact one).
+- Trusted FKs (auth `therapistId`, pre-validated ids) can't fail — ignore them.

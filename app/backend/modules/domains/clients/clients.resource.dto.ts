@@ -3,7 +3,7 @@ import {
   paramId,
   paginationMeta,
   sortOrderSchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -43,7 +43,7 @@ export const listMyClientsSchema = {
   querystring: listMyClientsQuery,
   response: {
     200: myClientListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
   },
 };
@@ -54,7 +54,7 @@ export const findMyClientSchema = {
   params: paramId,
   response: {
     200: clientBaseResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
   },
@@ -67,7 +67,7 @@ export const updateMyClientSchema = {
   body: updateMyClientBody,
   response: {
     200: clientBaseResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
   },

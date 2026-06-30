@@ -3,7 +3,7 @@ import {
   paramId,
   paginationMeta,
   sortOrderSchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
@@ -52,7 +52,7 @@ export const listMyAppointmentsSchema = {
   querystring: listMyAppointmentsQuery,
   response: {
     200: myAppointmentListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
   },
 };
@@ -63,7 +63,7 @@ export const findMyAppointmentSchema = {
   params: paramId,
   response: {
     200: appointmentBaseResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
   },
@@ -76,10 +76,10 @@ export const updateMyAppointmentStatusSchema = {
   body: updateMyAppointmentStatusBody,
   response: {
     200: appointmentBaseResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 

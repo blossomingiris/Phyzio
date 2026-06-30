@@ -216,29 +216,34 @@ export class TreatmentPlansService {
 
     let planId!: number;
 
-    await this.db.transaction(async (tx) => {
-      const [plan] = await tx
-        .insert(treatmentPlans)
-        .values({
-          therapistId,
-          clientId: data.clientId,
-          primaryDiagnostic: data.primaryDiagnostic,
-          clinicalGoals: data.clinicalGoals,
-          contraindications: data.contraindications,
-          startDate: new Date(data.startDate),
-          endDate: data.endDate ? new Date(data.endDate) : null,
-        })
-        .returning({ id: treatmentPlans.id });
+    try {
+      await this.db.transaction(async (tx) => {
+        const [plan] = await tx
+          .insert(treatmentPlans)
+          .values({
+            therapistId,
+            clientId: data.clientId,
+            primaryDiagnostic: data.primaryDiagnostic,
+            clinicalGoals: data.clinicalGoals,
+            contraindications: data.contraindications,
+            startDate: new Date(data.startDate),
+            endDate: data.endDate ? new Date(data.endDate) : null,
+          })
+          .returning({ id: treatmentPlans.id });
 
-      planId = plan!.id;
+        planId = plan!.id;
 
-      await tx.insert(treatmentPlanItems).values(
-        data.items.map((item) => ({
-          treatmentPlanId: planId,
-          treatmentId: item.treatmentId,
-        })),
-      );
-    });
+        await tx.insert(treatmentPlanItems).values(
+          data.items.map((item) => ({
+            treatmentPlanId: planId,
+            treatmentId: item.treatmentId,
+          })),
+        );
+      });
+    } catch (e: any) {
+      if (e?.code === "23503") throw new NotFoundError("Client not found");
+      throw e;
+    }
 
     return (await this.one({ id: planId }))!;
   }
@@ -247,7 +252,7 @@ export class TreatmentPlansService {
     const currentStatus = await this.getStatusOrFail(id);
 
     if (TERMINAL_STATUSES.includes(currentStatus)) {
-      throw new UnprocessableEntityError(`Cannot update a ${currentStatus} plan`, null);
+      throw new UnprocessableEntityError(`Cannot update a ${currentStatus} plan`);
     }
 
     await this.db
@@ -274,14 +279,13 @@ export class TreatmentPlansService {
     const currentStatus = await this.getStatusOrFail(id);
 
     if (TERMINAL_STATUSES.includes(currentStatus)) {
-      throw new UnprocessableEntityError(`Cannot update a ${currentStatus} plan`, null);
+      throw new UnprocessableEntityError(`Cannot update a ${currentStatus} plan`);
     }
 
     const allowed = MANUAL_TRANSITIONS[currentStatus];
     if (!allowed.includes(data.status)) {
       throw new UnprocessableEntityError(
         `Cannot transition from '${currentStatus}' to '${data.status}'`,
-        null,
       );
     }
 
@@ -294,7 +298,12 @@ export class TreatmentPlansService {
         if (!data.cancellationNote) {
           throw new BadRequestError(
             "cancellationNote is required when cancellationReason is 'other'",
-            null,
+            [
+              {
+                field: "cancellationNote",
+                message: "is required when cancellationReason is 'other'",
+              },
+            ],
           );
         }
         cancellationNote = data.cancellationNote;
@@ -315,7 +324,7 @@ export class TreatmentPlansService {
     const currentStatus = await this.getStatusOrFail(planId);
 
     if (TERMINAL_STATUSES.includes(currentStatus)) {
-      throw new UnprocessableEntityError(`Cannot add items to a ${currentStatus} plan`, null);
+      throw new UnprocessableEntityError(`Cannot add items to a ${currentStatus} plan`);
     }
 
     try {
@@ -346,7 +355,7 @@ export class TreatmentPlansService {
     if (!item) throw new NotFoundError("Plan item not found");
 
     if (item.quantityCompleted > 0) {
-      throw new UnprocessableEntityError("Cannot remove an item with completed sessions", null);
+      throw new UnprocessableEntityError("Cannot remove an item with completed sessions");
     }
 
     await this.db.delete(treatmentPlanItems).where(eq(treatmentPlanItems.id, itemId));
@@ -530,7 +539,13 @@ export class TreatmentPlansService {
 
     const inactiveIds = rows.filter((r) => !r.isActive).map((r) => r.id);
     if (inactiveIds.length > 0) {
-      throw new UnprocessableEntityError(`Treatments are inactive: ${inactiveIds.join(", ")}`, null);
+      throw new UnprocessableEntityError(
+        `Treatments are inactive: ${inactiveIds.join(", ")}`,
+        inactiveIds.map((id) => ({
+          field: "items",
+          message: `Treatment ${id} is inactive`,
+        })),
+      );
     }
   }
 

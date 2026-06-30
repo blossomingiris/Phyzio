@@ -4,7 +4,7 @@ import {
   paginationMeta,
   sortOrderSchema,
   therapistSummarySchema,
-  validationErrorResponse,
+  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import { discriminatedUnion } from "#app/modules/general/dto/typebox.ts";
 import Type, { type Static } from "typebox";
@@ -75,7 +75,7 @@ export const listAppointmentsSchema = {
   querystring: listAppointmentsQuery,
   response: {
     200: appointmentListResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
   },
@@ -87,7 +87,7 @@ export const findAppointmentSchema = {
   params: paramId,
   response: {
     200: appointmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -100,7 +100,7 @@ export const createAppointmentSchema = {
   body: createAppointmentBody,
   response: {
     201: appointmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     409: errorResponse,
@@ -114,7 +114,7 @@ export const updateAppointmentSchema = {
   body: updateAppointmentBody,
   response: {
     200: appointmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -128,7 +128,7 @@ export const deleteAppointmentSchema = {
   params: paramId,
   response: {
     200: Type.Object({ success: Type.Boolean() }),
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
@@ -142,11 +142,11 @@ export const updateAppointmentStatusSchema = {
   body: updateAppointmentStatusBody,
   response: {
     200: appointmentResponse,
-    400: validationErrorResponse,
+    400: fieldErrorResponse,
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
-    422: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 
