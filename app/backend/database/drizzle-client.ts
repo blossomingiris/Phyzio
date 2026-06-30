@@ -6,11 +6,19 @@ export type DrizzleClient = ReturnType<typeof drizzle>;
 
 export default async function initDrizzleClient(): Promise<DrizzleClient> {
   const client = new Client({ connectionString: APP_DATABASE_URL });
-  await client.connect();
+
+  client.on("error", (err) => {
+    console.error("[database] connection error:", err);
+  });
+
+  try {
+    await client.connect();
+  } catch (err) {
+    console.error("[database] failed to connect:", err);
+    throw err;
+  }
 
   const db = drizzle(client);
 
   return db as unknown as DrizzleClient;
 }
-
-initDrizzleClient().then(() => console.log("Database created successfully"));
