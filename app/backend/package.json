@@ -11,6 +11,7 @@
     "server": "node --watch index.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "node database/seed.ts",
     "docker": "docker compose up -d"
   },
   "dependencies": {
