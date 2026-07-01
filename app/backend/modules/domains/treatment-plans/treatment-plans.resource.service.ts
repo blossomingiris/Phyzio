@@ -16,6 +16,7 @@ import type {
   TreatmentPlanStatus,
 } from "#app/database/types.ts";
 import { BadRequestError, ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
+import { getDbError } from "#app/errors/translateDbError.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import type {
@@ -240,8 +241,9 @@ export class TreatmentPlansService {
           })),
         );
       });
-    } catch (e: any) {
-      if (e?.code === "23503") throw new NotFoundError("Client not found");
+    } catch (e) {
+      if (getDbError(e)?.code === "23503")
+        throw new NotFoundError("Client not found");
       throw e;
     }
 
@@ -332,9 +334,11 @@ export class TreatmentPlansService {
         treatmentPlanId: planId,
         treatmentId: data.treatmentId,
       });
-    } catch (e: any) {
-      if (e?.code === "23505") throw new ConflictError("This treatment is already in the plan");
-      if (e?.code === "23503") throw new NotFoundError("Treatment not found");
+    } catch (e) {
+      const code = getDbError(e)?.code;
+      if (code === "23505")
+        throw new ConflictError("This treatment is already in the plan");
+      if (code === "23503") throw new NotFoundError("Treatment not found");
       throw e;
     }
 

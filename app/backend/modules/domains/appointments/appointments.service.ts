@@ -11,6 +11,7 @@ import type {
   Speciality,
 } from "#app/database/types.ts";
 import { BadRequestError, ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
+import { getDbError } from "#app/errors/translateDbError.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, gt, gte, inArray, lt, lte, not } from "drizzle-orm";
 import type {
@@ -176,8 +177,8 @@ export class AppointmentsService {
         })
         .returning();
       return (await this.one({ id: row!.id }))!;
-    } catch (e: any) {
-      if (e?.code === "23503")
+    } catch (e) {
+      if (getDbError(e)?.code === "23503")
         throw new NotFoundError("Therapist, client, or treatment plan not found");
       throw e;
     }
@@ -228,8 +229,8 @@ export class AppointmentsService {
           updatedAt: new Date(),
         })
         .where(eq(appointments.id, id));
-    } catch (e: any) {
-      if (e?.code === "23503")
+    } catch (e) {
+      if (getDbError(e)?.code === "23503")
         throw new NotFoundError("Therapist, client, or treatment plan not found");
       throw e;
     }
@@ -240,10 +241,11 @@ export class AppointmentsService {
   async destroy(id: number) {
     try {
       await this.db.delete(appointments).where(eq(appointments.id, id));
-    } catch (e: any) {
-      if (e?.code === "23503") {
+    } catch (e) {
+      const dbErr = getDbError(e);
+      if (dbErr?.code === "23503") {
         throw new ConflictError(
-          `Cannot delete appointment: referenced by table '${e.table}'`,
+          `Cannot delete appointment: referenced by table '${dbErr.table}'`,
         );
       }
       throw e;

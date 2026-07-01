@@ -2,6 +2,7 @@ import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { therapists, users } from "#app/database/schemas.ts";
 import { type Speciality } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
+import { getDbError } from "#app/errors/translateDbError.ts";
 import type {
   CreateTherapistBody,
   TherapistSortBy,
@@ -129,8 +130,9 @@ export class TherapistsService {
         const { userId, ...therapistRest } = therapist!;
         return { id: userId, firstName, lastName, email, ...therapistRest };
       });
-    } catch (e: any) {
-      if (e?.code === "23505") throw new ConflictError("Email already in use");
+    } catch (e) {
+      if (getDbError(e)?.code === "23505")
+        throw new ConflictError("Email already in use");
       throw e;
     }
   }

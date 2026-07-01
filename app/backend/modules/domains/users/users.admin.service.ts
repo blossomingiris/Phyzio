@@ -2,6 +2,7 @@ import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { users } from "#app/database/schemas.ts";
 import type { User, UserRole } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
+import { getDbError } from "#app/errors/translateDbError.ts";
 import type {
   UserSortBy,
   UserSortParams,
@@ -96,8 +97,9 @@ export class UsersService {
         .values({ ...data, email: data.email.toLowerCase() })
         .returning();
       return user!;
-    } catch (e: any) {
-      if (e?.code === "23505") throw new ConflictError("Email already in use");
+    } catch (e) {
+      if (getDbError(e)?.code === "23505")
+        throw new ConflictError("Email already in use");
       throw e;
     }
   }

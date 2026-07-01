@@ -13,11 +13,26 @@ const DB_ERROR_FACTORIES: Record<string, () => HttpError> = {
   "22P02": () => new BadRequestError("Invalid input syntax"),
 };
 
+export type DbError = { code: string; table?: string };
+
 /**
- * Translates a raw database driver error into a domain `HttpError`, or returns
- * `undefined` if the error is not a recognised database error.
+ * Unwraps the Postgres error from Drizzle.
+ * Used by service `catch` blocks to read `code`/`table` and map DB errors to
+ * domain `HttpError`s.
+ * @param error - The value caught in a `catch` block.
+ * @returns The pg error (`{ code, table }`), or `undefined` if not a DB error.
  */
+export function getDbError(error: unknown): DbError | undefined {
+  let current: unknown = error;
+  while (current != null) {
+    const code = (current as { code?: unknown }).code;
+    if (typeof code === "string") return current as DbError;
+    current = (current as { cause?: unknown }).cause;
+  }
+  return undefined;
+}
+
 export function translateDbError(error: unknown): HttpError | undefined {
-  const code = (error as { code?: unknown })?.code;
-  return typeof code === "string" ? DB_ERROR_FACTORIES[code]?.() : undefined;
+  const code = getDbError(error)?.code;
+  return code ? DB_ERROR_FACTORIES[code]?.() : undefined;
 }
