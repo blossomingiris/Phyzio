@@ -57,7 +57,7 @@ export function registerGlobalErrorHandler(app: FastifyInstance) {
       }
 
       request.log.error({ err: error }, "Unhandled Error");
-      return reply.code(500).send({ error: "Internal Server Error" });
+      return reply.code(500).send({ code: "INTERNAL_SERVER_ERROR", message: "Internal Server Error" });
     },
   );
 }

@@ -9,7 +9,6 @@ const DB_ERROR_FACTORIES: Record<string, () => HttpError> = {
   "23503": () =>
     new ConflictError("Referenced record not found or still in use"),
   "23502": () => new BadRequestError("A required field is missing"),
-  "23514": () => new BadRequestError("A field failed a constraint"),
   "22P02": () => new BadRequestError("Invalid input syntax"),
 };
 
