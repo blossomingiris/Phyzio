@@ -1,7 +1,5 @@
-// TODO: this controller requires auth middleware to extract the therapist ID from the JWT.
-// Wire up auth before registering this controller in routes.plugin.ts.
-
 import { type ParamId } from "#app/modules/general/dto/index.ts";
+import { authOnly } from "#app/modules/general/auth/authOnly.ts";
 import type { FastifyInstance } from "fastify";
 import {
   findMyAppointmentSchema,
@@ -15,15 +13,15 @@ import { AppointmentsService } from "./appointments.service.ts";
 export default async function appointmentsResourceController(app: FastifyInstance) {
   const service = new AppointmentsService(app.drizzle);
 
+  app.addHook("preHandler", authOnly);
+
   app.get<{ Querystring: ListMyAppointmentsQuery }>(
     "/",
     { schema: listMyAppointmentsSchema },
     async (req) => {
-      // TODO: replace with req.user.therapistId once auth is wired up
-      const therapistId: number = (req as any).user?.therapistId;
       const { page, limit, status, clientId, dateFrom, dateTo, sortBy, sortOrder } = req.query;
       return service.all(
-        { therapistId, status, clientId, dateFrom, dateTo },
+        { therapistId: req.user.id, status, clientId, dateFrom, dateTo },
         { page, limit },
         { sortBy, sortOrder },
       );
@@ -34,9 +32,7 @@ export default async function appointmentsResourceController(app: FastifyInstanc
     "/:id",
     { schema: findMyAppointmentSchema },
     async (req) => {
-      // TODO: replace with req.user.therapistId once auth is wired up
-      const therapistId: number = (req as any).user?.therapistId;
-      return service.findOrFail(req.params.id, { therapistId });
+      return service.findOrFail(req.params.id, { therapistId: req.user.id });
     },
   );
 
@@ -44,10 +40,8 @@ export default async function appointmentsResourceController(app: FastifyInstanc
     "/:id/status",
     { schema: updateMyAppointmentStatusSchema },
     async (req) => {
-      // TODO: replace with req.user.therapistId once auth is wired up
-      const therapistId: number = (req as any).user?.therapistId;
-      await service.findOrFail(req.params.id, { therapistId });
-      return service.updateStatus(req.params.id, req.body, { therapistId });
+      await service.findOrFail(req.params.id, { therapistId: req.user.id });
+      return service.updateStatus(req.params.id, req.body, { therapistId: req.user.id });
     },
   );
 }

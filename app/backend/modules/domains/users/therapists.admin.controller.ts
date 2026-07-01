@@ -10,10 +10,13 @@ import {
   type UpdateTherapistBody,
 } from "#app/modules/domains/users/therapists.admin.dto.ts";
 import { type ParamId } from "#app/modules/general/dto/index.ts";
+import { authOnly } from "#app/modules/general/auth/authOnly.ts";
 import type { FastifyInstance } from "fastify";
 
 export default async function therapistsAdminController(app: FastifyInstance) {
   const service = new TherapistsService(app.drizzle);
+
+  app.addHook("preHandler", authOnly);
 
   app.get<{ Querystring: ListTherapistsQuery }>(
     "/",

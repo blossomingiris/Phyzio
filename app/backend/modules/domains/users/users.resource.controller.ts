@@ -1,7 +1,10 @@
-// TODO: this controller requires auth plugin to extract the user ID from the JWT.
-import { TherapistsService } from "#app/modules/domains/users/therapists.admin.service.ts";
-import { UsersService } from "#app/modules/domains/users/users.admin.service.ts";
+import { AUTH_BCRYPT_ROUNDS } from "#app/config/auth.ts";
+import { UnauthorizedError } from "#app/errors/httpErrors.ts";
+import { authOnly } from "#app/modules/general/auth/authOnly.ts";
+import bcrypt from "bcrypt";
 import type { FastifyInstance } from "fastify";
+import { TherapistsService } from "./therapists.admin.service.ts";
+import { UsersService } from "./users.admin.service.ts";
 import {
   getMeSchema,
   updateMePasswordSchema,
@@ -13,6 +16,8 @@ import {
 export default async function usersResourceController(app: FastifyInstance) {
   const userService = new UsersService(app.drizzle);
   const therapistService = new TherapistsService(app.drizzle);
+
+  app.addHook("preHandler", authOnly);
 
   async function getMe(userId: number) {
     const user = await userService.findOrFail(userId);
@@ -31,33 +36,29 @@ export default async function usersResourceController(app: FastifyInstance) {
   }
 
   app.get("/", { schema: getMeSchema }, async (req) => {
-    // TODO: replace with req.user.id once auth is wired up
-    const userId: number = (req as any).user?.id;
-    return getMe(userId);
+    return getMe(req.user.id);
   });
 
   app.patch<{ Body: UpdateMeBody }>(
     "/",
     { schema: updateMeSchema },
     async (req) => {
-      // TODO: replace with req.user.id once auth is wired up
-      const userId: number = (req as any).user?.id;
-      await userService.findOrFail(userId);
+      await userService.findOrFail(req.user.id);
 
       const { phone, workingHours, ...userFields } = req.body;
 
       if (Object.keys(userFields).length > 0) {
-        await userService.update(userId, userFields);
+        await userService.update(req.user.id, userFields);
       }
 
       if (phone !== undefined || workingHours !== undefined) {
-        const therapist = await therapistService.one({ id: userId });
+        const therapist = await therapistService.one({ id: req.user.id });
         if (therapist) {
-          await therapistService.update(userId, { phone, workingHours });
+          await therapistService.update(req.user.id, { phone, workingHours });
         }
       }
 
-      return getMe(userId);
+      return getMe(req.user.id);
     },
   );
 
@@ -65,15 +66,24 @@ export default async function usersResourceController(app: FastifyInstance) {
     "/password",
     { schema: updateMePasswordSchema },
     async (req) => {
-      // TODO: replace with req.user.id once auth is wired up
-      const userId: number = (req as any).user?.id;
-      await userService.findOrFail(userId);
+      const user = await userService.findOrFail(req.user.id);
 
-      // TODO: verify req.body.currentPassword against stored hash
-      // TODO: hash req.body.newPassword before storing
-      await userService.updatePassword(userId, req.body.newPassword);
+      const currentPasswordMatches = await bcrypt.compare(
+        req.body.currentPassword,
+        user.password,
+      );
 
-      return getMe(userId);
+      if (!currentPasswordMatches) {
+        throw new UnauthorizedError("Current password is incorrect");
+      }
+
+      const newHashedPassword = await bcrypt.hash(
+        req.body.newPassword,
+        AUTH_BCRYPT_ROUNDS,
+      );
+      await userService.updatePassword(req.user.id, newHashedPassword);
+
+      return getMe(req.user.id);
     },
   );
 }
