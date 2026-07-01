@@ -1,3 +1,4 @@
+import authController from "#app/modules/domains/auth/auth.controller.ts";
 import appointmentsAdminController from "#app/modules/domains/appointments/appointments.admin.controller.ts";
 import treatmentsAdminController from "#app/modules/domains/treatments/treatments.admin.controller.ts";
 import appointmentsResourceController from "#app/modules/domains/appointments/appointments.resource.controller.ts";
@@ -11,6 +12,7 @@ import treatmentPlansResourceController from "#app/modules/domains/treatment-pla
 import type { FastifyInstance } from "fastify";
 
 export default async function routes(app: FastifyInstance) {
+  app.register(authController, { prefix: "/auth" });
   app.register(usersAdminController, { prefix: "/users" });
   app.register(therapistsAdminController, { prefix: "/therapists" });
   app.register(clientsAdminController, { prefix: "/clients" });

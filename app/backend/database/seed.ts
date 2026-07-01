@@ -1,9 +1,11 @@
 import "dotenv/config";
 
-import { drizzle } from "drizzle-orm/node-postgres";
+import bcrypt from "bcrypt";
 import { sql } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { Client } from "pg";
 
+import { AUTH_BCRYPT_ROUNDS } from "#app/config/auth.ts";
 import { APP_DATABASE_URL } from "#app/config/db.ts";
 import {
   appointments,
@@ -16,9 +18,8 @@ import {
   type WorkingHours,
 } from "#app/database/schemas.ts";
 
-// NOTE: passwords are stored in plain text for now. Hashing is a pending TODO
-// that lands with the auth work, so the seed mirrors the current behaviour.
 const DEFAULT_PASSWORD = "password123";
+const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, AUTH_BCRYPT_ROUNDS);
 
 const fullDays: WorkingHours = {
   mon: [{ start: "09:00", end: "17:00" }],
@@ -45,7 +46,6 @@ const splitShift: WorkingHours = {
   ],
 };
 
-/** Build a Date at a day offset from now with a fixed hour (local time). */
 function at(dayOffset: number, hour: number, minute = 0): Date {
   const d = new Date();
   d.setHours(hour, minute, 0, 0);
@@ -80,28 +80,28 @@ async function seed() {
           firstName: "Admin",
           lastName: "User",
           email: "admin@phyzio.test",
-          password: DEFAULT_PASSWORD,
+          password: hashedPassword,
           role: "admin",
         },
         {
           firstName: "Sarah",
           lastName: "Connor",
           email: "sarah.connor@phyzio.test",
-          password: DEFAULT_PASSWORD,
+          password: hashedPassword,
           role: "therapist",
         },
         {
           firstName: "James",
           lastName: "Reed",
           email: "james.reed@phyzio.test",
-          password: DEFAULT_PASSWORD,
+          password: hashedPassword,
           role: "therapist",
         },
         {
           firstName: "Maria",
           lastName: "Lopez",
           email: "maria.lopez@phyzio.test",
-          password: DEFAULT_PASSWORD,
+          password: hashedPassword,
           role: "therapist",
         },
       ])
