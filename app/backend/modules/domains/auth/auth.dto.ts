@@ -16,6 +16,7 @@ const loginResponse = Type.Object({
 export const loginSchema = {
   tags: ["Auth"],
   summary: "Login with email and password",
+  security: [],
   body: loginBody,
   response: {
     200: loginResponse,
