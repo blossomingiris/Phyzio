@@ -2,11 +2,11 @@ import { userRoleEnum } from "#app/database/schemas.ts";
 import type { UserRole } from "#app/database/types.ts";
 import {
   errorResponse,
+  fieldErrorResponse,
   paginationMeta,
   paramId,
   sortOrderSchema,
   sortParamsSchema,
-  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -80,8 +80,10 @@ export const listUsersQuery = Type.Object(
   { additionalProperties: false },
 );
 
+const tag = { tags: ["Admin / Users"] as const };
+
 export const listUsersSchema = {
-  tags: ["Users"],
+  ...tag,
   summary: "List all users",
   querystring: listUsersQuery,
   response: {
@@ -93,7 +95,7 @@ export const listUsersSchema = {
 };
 
 export const findUserSchema = {
-  tags: ["Users"],
+  ...tag,
   summary: "Get a user by ID",
   params: paramId,
   response: {
@@ -106,7 +108,7 @@ export const findUserSchema = {
 };
 
 export const createUserSchema = {
-  tags: ["Users"],
+  ...tag,
   summary: "Create a user",
   body: createUserBody,
   response: {
@@ -119,7 +121,7 @@ export const createUserSchema = {
 };
 
 export const updateUserSchema = {
-  tags: ["Users"],
+  ...tag,
   summary: "Update user profile",
   params: paramId,
   body: updateUserBody,
@@ -134,7 +136,7 @@ export const updateUserSchema = {
 };
 
 export const updateRoleSchema = {
-  tags: ["Users"],
+  ...tag,
   summary: "Update user role",
   params: paramId,
   body: updateRoleBody,

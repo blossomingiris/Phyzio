@@ -2,11 +2,11 @@ import { specialityEnum } from "#app/database/schemas.ts";
 import type { Speciality } from "#app/database/types.ts";
 import {
   errorResponse,
+  fieldErrorResponse,
   paginationMeta,
   paramId,
   sortOrderSchema,
   sortParamsSchema,
-  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -105,8 +105,10 @@ export const listTherapistsQuery = Type.Object(
   { additionalProperties: false },
 );
 
+const tag = { tags: ["Admin / Therapists"] as const };
+
 export const listTherapistsSchema = {
-  tags: ["Therapists"],
+  ...tag,
   summary: "List all therapists",
   querystring: listTherapistsQuery,
   response: {
@@ -118,7 +120,7 @@ export const listTherapistsSchema = {
 };
 
 export const findTherapistSchema = {
-  tags: ["Therapists"],
+  ...tag,
   summary: "Get a therapist by ID",
   params: paramId,
   response: {
@@ -131,7 +133,7 @@ export const findTherapistSchema = {
 };
 
 export const createTherapistSchema = {
-  tags: ["Therapists"],
+  ...tag,
   summary: "Create a therapist",
   body: createTherapistBody,
   response: {
@@ -144,7 +146,7 @@ export const createTherapistSchema = {
 };
 
 export const updateTherapistSchema = {
-  tags: ["Therapists"],
+  ...tag,
   summary: "Update therapist profile",
   params: paramId,
   body: updateTherapistBody,
@@ -158,7 +160,7 @@ export const updateTherapistSchema = {
 };
 
 export const deleteTherapistSchema = {
-  tags: ["Therapists"],
+  ...tag,
   summary: "Delete a therapist",
   params: paramId,
   response: {

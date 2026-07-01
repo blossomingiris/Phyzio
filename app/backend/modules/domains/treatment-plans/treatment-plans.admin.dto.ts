@@ -75,8 +75,10 @@ export const listTreatmentPlansQuery = Type.Object(
   { additionalProperties: false },
 );
 
+const tag = { tags: ["Admin / Treatment Plans"] as const };
+
 export const listTreatmentPlansSchema = {
-  tags: ["Treatment Plans"],
+  ...tag,
   summary: "List all treatment plans",
   querystring: listTreatmentPlansQuery,
   response: {
@@ -88,7 +90,7 @@ export const listTreatmentPlansSchema = {
 };
 
 export const findTreatmentPlanSchema = {
-  tags: ["Treatment Plans"],
+  ...tag,
   summary: "Get a treatment plan by ID",
   params: paramId,
   response: {
@@ -101,7 +103,7 @@ export const findTreatmentPlanSchema = {
 };
 
 export const updateTreatmentPlanSchema = {
-  tags: ["Treatment Plans"],
+  ...tag,
   summary: "Update a treatment plan",
   params: paramId,
   body: updateTreatmentPlanAdminBody,
@@ -118,7 +120,7 @@ export const updateTreatmentPlanSchema = {
 export const updateTreatmentPlanStatusAdminBody = planCancelledStatusSchema;
 
 export const updateTreatmentPlanStatusAdminSchema = {
-  tags: ["Treatment Plans"],
+  ...tag,
   summary: "Cancel a treatment plan",
   params: paramId,
   body: updateTreatmentPlanStatusAdminBody,

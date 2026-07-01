@@ -126,8 +126,10 @@ const treatmentPlanItemParams = Type.Object(
   { additionalProperties: false },
 );
 
+const tag = { tags: ["Me / Treatment Plans"] as const };
+
 export const listTreatmentPlansSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "List my treatment plans",
   querystring: listTreatmentPlansQuery,
   response: {
@@ -138,7 +140,7 @@ export const listTreatmentPlansSchema = {
 };
 
 export const findTreatmentPlanSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Get a treatment plan by ID",
   params: paramId,
   response: {
@@ -150,7 +152,7 @@ export const findTreatmentPlanSchema = {
 };
 
 export const createTreatmentPlanSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Create a treatment plan",
   body: createTreatmentPlanBody,
   response: {
@@ -163,7 +165,7 @@ export const createTreatmentPlanSchema = {
 };
 
 export const updateTreatmentPlanSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Update a treatment plan",
   params: paramId,
   body: updateTreatmentPlanBody,
@@ -177,7 +179,7 @@ export const updateTreatmentPlanSchema = {
 };
 
 export const updateTreatmentPlanStatusSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Update the status of a treatment plan",
   params: paramId,
   body: updateTreatmentPlanStatusBody,
@@ -191,7 +193,7 @@ export const updateTreatmentPlanStatusSchema = {
 };
 
 export const addTreatmentPlanItemSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Add a treatment to a plan",
   params: paramId,
   body: addTreatmentPlanItemBody,
@@ -206,7 +208,7 @@ export const addTreatmentPlanItemSchema = {
 };
 
 export const deleteTreatmentPlanItemSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Remove a treatment from a plan",
   params: treatmentPlanItemParams,
   response: {

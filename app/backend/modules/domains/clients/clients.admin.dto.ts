@@ -57,8 +57,10 @@ export const createClientBody = Type.Object(
 
 export const updateClientBody = Type.Partial(createClientBody);
 
+const tag = { tags: ["Admin / Clients"] as const };
+
 export const listClientsSchema = {
-  tags: ["Clients"],
+  ...tag,
   summary: "List all clients",
   querystring: listClientsQuery,
   response: {
@@ -70,7 +72,7 @@ export const listClientsSchema = {
 };
 
 export const findClientSchema = {
-  tags: ["Clients"],
+  ...tag,
   summary: "Get a client by ID",
   params: paramId,
   response: {
@@ -83,7 +85,7 @@ export const findClientSchema = {
 };
 
 export const createClientSchema = {
-  tags: ["Clients"],
+  ...tag,
   summary: "Create a client",
   body: createClientBody,
   response: {
@@ -97,7 +99,7 @@ export const createClientSchema = {
 };
 
 export const updateClientSchema = {
-  tags: ["Clients"],
+  ...tag,
   summary: "Update a client",
   params: paramId,
   body: updateClientBody,
@@ -113,7 +115,7 @@ export const updateClientSchema = {
 };
 
 export const deleteClientSchema = {
-  tags: ["Clients"],
+  ...tag,
   summary: "Delete a client",
   params: paramId,
   response: {

@@ -37,8 +37,10 @@ export const listMyClientsQuery = Type.Object(
 
 export const updateMyClientBody = Type.Partial(clientBaseBody);
 
+const tag = { tags: ["Me / Clients"] as const };
+
 export const listMyClientsSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "List my clients",
   querystring: listMyClientsQuery,
   response: {
@@ -49,7 +51,7 @@ export const listMyClientsSchema = {
 };
 
 export const findMyClientSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Get one of my clients by ID",
   params: paramId,
   response: {
@@ -61,7 +63,7 @@ export const findMyClientSchema = {
 };
 
 export const updateMyClientSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Update one of my clients",
   params: paramId,
   body: updateMyClientBody,

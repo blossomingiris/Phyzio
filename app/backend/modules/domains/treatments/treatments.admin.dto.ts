@@ -94,8 +94,10 @@ export const listTreatmentsQuery = Type.Object(
 );
 export type ListTreatmentsQuery = Static<typeof listTreatmentsQuery>;
 
+const tag = { tags: ["Admin / Treatments"] as const };
+
 export const listTreatmentsSchema = {
-  tags: ["Treatments"],
+  ...tag,
   summary: "List all treatments",
   querystring: listTreatmentsQuery,
   response: {
@@ -107,7 +109,7 @@ export const listTreatmentsSchema = {
 };
 
 export const findTreatmentSchema = {
-  tags: ["Treatments"],
+  ...tag,
   summary: "Get a treatment by ID",
   params: paramId,
   response: {
@@ -120,7 +122,7 @@ export const findTreatmentSchema = {
 };
 
 export const createTreatmentSchema = {
-  tags: ["Treatments"],
+  ...tag,
   summary: "Create a treatment",
   body: createTreatmentBody,
   response: {
@@ -132,7 +134,7 @@ export const createTreatmentSchema = {
 };
 
 export const updateTreatmentSchema = {
-  tags: ["Treatments"],
+  ...tag,
   summary: "Update a treatment",
   params: paramId,
   body: updateTreatmentBody,

@@ -69,8 +69,10 @@ export const updateAppointmentStatusBody = discriminatedUnion("status", [
   nonCancelledStatusSchema,
 ]);
 
+const tag = { tags: ["Admin / Appointments"] as const };
+
 export const listAppointmentsSchema = {
-  tags: ["Appointments"],
+  ...tag,
   summary: "List all appointments",
   querystring: listAppointmentsQuery,
   response: {
@@ -82,7 +84,7 @@ export const listAppointmentsSchema = {
 };
 
 export const findAppointmentSchema = {
-  tags: ["Appointments"],
+  ...tag,
   summary: "Get an appointment by ID",
   params: paramId,
   response: {
@@ -95,7 +97,7 @@ export const findAppointmentSchema = {
 };
 
 export const createAppointmentSchema = {
-  tags: ["Appointments"],
+  ...tag,
   summary: "Create an appointment",
   body: createAppointmentBody,
   response: {
@@ -108,7 +110,7 @@ export const createAppointmentSchema = {
 };
 
 export const updateAppointmentSchema = {
-  tags: ["Appointments"],
+  ...tag,
   summary: "Update an appointment",
   params: paramId,
   body: updateAppointmentBody,
@@ -123,7 +125,7 @@ export const updateAppointmentSchema = {
 };
 
 export const deleteAppointmentSchema = {
-  tags: ["Appointments"],
+  ...tag,
   summary: "Delete an appointment",
   params: paramId,
   response: {
@@ -136,7 +138,7 @@ export const deleteAppointmentSchema = {
 };
 
 export const updateAppointmentStatusSchema = {
-  tags: ["Appointments"],
+  ...tag,
   summary: "Change appointment status",
   params: paramId,
   body: updateAppointmentStatusBody,

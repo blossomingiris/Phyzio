@@ -50,8 +50,10 @@ export const updateMePasswordBody = Type.Object(
   { additionalProperties: false },
 );
 
+const tag = { tags: ["Me / Profile"] as const };
+
 export const getMeSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Get own profile",
   response: {
     200: meResponse,
@@ -60,7 +62,7 @@ export const getMeSchema = {
 };
 
 export const updateMeSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Update own profile",
   body: updateMeBody,
   response: {
@@ -72,7 +74,7 @@ export const updateMeSchema = {
 };
 
 export const updateMePasswordSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Change own password",
   body: updateMePasswordBody,
   response: {

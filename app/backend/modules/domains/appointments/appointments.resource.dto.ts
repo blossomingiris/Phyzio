@@ -46,8 +46,10 @@ export const updateMyAppointmentStatusBody = discriminatedUnion("status", [
   cancelledStatusSchema,
 ]);
 
+const tag = { tags: ["Me / Appointments"] as const };
+
 export const listMyAppointmentsSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "List my appointments",
   querystring: listMyAppointmentsQuery,
   response: {
@@ -58,7 +60,7 @@ export const listMyAppointmentsSchema = {
 };
 
 export const findMyAppointmentSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Get my appointment by ID",
   params: paramId,
   response: {
@@ -70,7 +72,7 @@ export const findMyAppointmentSchema = {
 };
 
 export const updateMyAppointmentStatusSchema = {
-  tags: ["Me"],
+  ...tag,
   summary: "Change status of my appointment",
   params: paramId,
   body: updateMyAppointmentStatusBody,
