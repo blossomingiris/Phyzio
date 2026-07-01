@@ -48,6 +48,12 @@ export function registerGlobalErrorHandler(app: FastifyInstance) {
           .send({ code: error.code, message: error.message });
       }
 
+      if (error.statusCode && error.statusCode < 500) {
+        return reply
+          .code(error.statusCode)
+          .send({ code: error.code, message: error.message, errors: [] });
+      }
+
       const dbError = translateDbError(error);
       if (dbError) {
         request.log.error({ err: error }, "Unhandled Database Error");
