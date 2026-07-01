@@ -3,6 +3,7 @@ import "dotenv/config";
 import { type TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 
 import { APP_DOMAIN, APP_PORT, APP_PROTOCOL } from "#app/config/app.ts";
+import { LOGGER_OPTIONS } from "#app/config/logger.ts";
 import Fastify from "fastify";
 import { registerGlobalErrorHandler } from "./errors/registerGlobalErrorHandler.ts";
 import databasePlugin from "./plugins/database.plugin.ts";
@@ -10,7 +11,7 @@ import routes from "./plugins/routes.plugin.ts";
 import swaggerPlugin from "./plugins/swagger.plugin.ts";
 
 const app = Fastify({
-  logger: true,
+  logger: LOGGER_OPTIONS,
   ajv: {
     customOptions: {
       allErrors: true,
@@ -31,11 +32,10 @@ try {
   await app.listen({ port: APP_PORT });
   const address = app.server.address();
   const port = typeof address === "string" ? address : address?.port;
-  console.log(`✨ Server running on ${APP_PROTOCOL}://${APP_DOMAIN}:${port}`);
-  console.log(
-    `📖 API documentation available at ${APP_PROTOCOL}://${APP_DOMAIN}:${port}/docs`,
+  app.log.info(
+    `API documentation available at ${APP_PROTOCOL}://${APP_DOMAIN}:${port}/docs`,
   );
 } catch (error) {
-  app.log.error(error);
+  app.log.error({ err: error }, "Failed to start server");
   process.exit(1);
 }
