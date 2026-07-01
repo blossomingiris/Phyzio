@@ -18,6 +18,7 @@ const app = Fastify({
       allErrors: true,
       removeAdditional: false,
       discriminator: true,
+      keywords: ["example"],
     },
   },
 }).withTypeProvider<TypeBoxTypeProvider>();
