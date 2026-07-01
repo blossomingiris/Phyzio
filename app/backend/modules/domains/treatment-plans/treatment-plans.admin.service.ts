@@ -1,6 +1,7 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { treatmentPlans } from "#app/database/schemas.ts";
 import { BadRequestError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
+import { getDbError } from "#app/errors/translateDbError.ts";
 import { eq } from "drizzle-orm";
 import type {
   UpdateTreatmentPlanAdminBody,
@@ -18,20 +19,28 @@ export class TreatmentPlansAdminService {
   }
 
   async update(id: number, data: UpdateTreatmentPlanAdminBody) {
-    await this.db
-      .update(treatmentPlans)
-      .set({
-        therapistId: data.therapistId,
-        startDate: data.startDate ? new Date(data.startDate) : undefined,
-        endDate:
-          data.endDate !== undefined
-            ? data.endDate
-              ? new Date(data.endDate)
-              : null
-            : undefined,
-        updatedAt: new Date(),
-      })
-      .where(eq(treatmentPlans.id, id));
+    try {
+      await this.db
+        .update(treatmentPlans)
+        .set({
+          therapistId: data.therapistId,
+          startDate: data.startDate ? new Date(data.startDate) : undefined,
+          endDate:
+            data.endDate !== undefined
+              ? data.endDate
+                ? new Date(data.endDate)
+                : null
+              : undefined,
+          updatedAt: new Date(),
+        })
+        .where(eq(treatmentPlans.id, id));
+    } catch (e) {
+      if (getDbError(e)?.code === "23503")
+        throw new UnprocessableEntityError("Invalid field value", [
+          { field: "therapistId", message: "Therapist not found" },
+        ]);
+      throw e;
+    }
 
     return (await this.planService.one({ id }))!;
   }

@@ -243,7 +243,9 @@ export class TreatmentPlansService {
       });
     } catch (e) {
       if (getDbError(e)?.code === "23503")
-        throw new NotFoundError("Client not found");
+        throw new UnprocessableEntityError("Invalid field value", [
+          { field: "clientId", message: "Client not found" },
+        ]);
       throw e;
     }
 
@@ -338,7 +340,10 @@ export class TreatmentPlansService {
       const code = getDbError(e)?.code;
       if (code === "23505")
         throw new ConflictError("This treatment is already in the plan");
-      if (code === "23503") throw new NotFoundError("Treatment not found");
+      if (code === "23503")
+        throw new UnprocessableEntityError("Invalid field value", [
+          { field: "treatmentId", message: "Treatment not found" },
+        ]);
       throw e;
     }
 

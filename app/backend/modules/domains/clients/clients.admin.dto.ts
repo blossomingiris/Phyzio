@@ -1,10 +1,10 @@
 import {
   errorResponse,
-  paramId,
+  fieldErrorResponse,
   paginationMeta,
+  paramId,
   sortOrderSchema,
   therapistSummarySchema,
-  fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
@@ -92,6 +92,7 @@ export const createClientSchema = {
     401: errorResponse,
     403: errorResponse,
     409: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 
@@ -107,6 +108,7 @@ export const updateClientSchema = {
     403: errorResponse,
     404: errorResponse,
     409: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 

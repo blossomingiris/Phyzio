@@ -1,7 +1,7 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { clients, therapists, users } from "#app/database/schemas.ts";
 import type { Speciality } from "#app/database/types.ts";
-import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
+import { ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
 import { and, asc, count, desc, eq, ilike, not, or } from "drizzle-orm";
@@ -133,7 +133,10 @@ export class ClientsService {
     } catch (e) {
       const code = getDbError(e)?.code;
       if (code === "23505") throw new ConflictError("Email already in use");
-      if (code === "23503") throw new NotFoundError("Therapist not found");
+      if (code === "23503")
+        throw new UnprocessableEntityError("Invalid field value", [
+          { field: "therapistId", message: "Therapist not found" },
+        ]);
       throw e;
     }
   }
@@ -161,7 +164,10 @@ export class ClientsService {
     } catch (e) {
       const code = getDbError(e)?.code;
       if (code === "23505") throw new ConflictError("Email already in use");
-      if (code === "23503") throw new NotFoundError("Therapist not found");
+      if (code === "23503")
+        throw new UnprocessableEntityError("Invalid field value", [
+          { field: "therapistId", message: "Therapist not found" },
+        ]);
       throw e;
     }
 

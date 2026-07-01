@@ -111,6 +111,7 @@ export const updateTreatmentPlanSchema = {
     401: errorResponse,
     403: errorResponse,
     404: errorResponse,
+    422: fieldErrorResponse,
   },
 };
 

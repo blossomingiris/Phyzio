@@ -157,6 +157,7 @@ export const createTreatmentPlanSchema = {
     201: treatmentPlanResourceResponse,
     400: fieldErrorResponse,
     401: errorResponse,
+    404: errorResponse,
     422: fieldErrorResponse,
   },
 };
@@ -199,6 +200,7 @@ export const addTreatmentPlanItemSchema = {
     400: fieldErrorResponse,
     401: errorResponse,
     404: errorResponse,
+    409: errorResponse,
     422: fieldErrorResponse,
   },
 };
