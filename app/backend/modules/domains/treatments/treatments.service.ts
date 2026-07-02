@@ -1,4 +1,4 @@
-import { BILLING_VAT_RATE } from "#app/config/billing.ts";
+import { BILLING_VAT_RATE } from "#app/modules/general/billing.ts";
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { treatments } from "#app/database/schemas.ts";
 import type { TreatmentCategory } from "#app/database/types.ts";
