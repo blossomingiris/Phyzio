@@ -1,15 +1,22 @@
-import { errorResponse, fieldErrorResponse } from "#app/modules/general/dto/index.ts";
+import {
+  errorResponse,
+  fieldErrorResponse,
+} from "#app/modules/general/dto/index.ts";
 import Type, { type Static } from "typebox";
 
 export const loginBody = Type.Object(
   {
-    email: Type.String({ format: "email", maxLength: 255, example: "admin@phyzio.test" }),
+    email: Type.String({
+      format: "email",
+      maxLength: 255,
+      example: "admin@phyzio.test",
+    }),
     password: Type.String({ minLength: 1, example: "password123" }),
   },
   { additionalProperties: false },
 );
 
-const loginResponse = Type.Object({
+const tokenResponse = Type.Object({
   token: Type.String(),
 });
 
@@ -21,9 +28,28 @@ export const loginSchema = {
   security: [],
   body: loginBody,
   response: {
-    200: loginResponse,
+    200: tokenResponse,
     400: fieldErrorResponse,
     401: errorResponse,
+  },
+};
+
+export const refreshSchema = {
+  ...tag,
+  summary: "Exchange the refresh token cookie for a new access token",
+  security: [],
+  response: {
+    200: tokenResponse,
+    401: errorResponse,
+  },
+};
+
+export const logoutSchema = {
+  ...tag,
+  summary: "Revoke the refresh token cookie",
+  security: [],
+  response: {
+    200: Type.Object({ success: Type.Literal(true) }),
   },
 };
 

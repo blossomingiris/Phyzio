@@ -6,6 +6,7 @@ import { APP_DOMAIN, APP_PORT, APP_PROTOCOL } from "#app/config/app.ts";
 import { LOGGER_OPTIONS } from "#app/config/logger.ts";
 import Fastify from "fastify";
 import { registerGlobalErrorHandler } from "./errors/registerGlobalErrorHandler.ts";
+import cookiePlugin from "./plugins/cookie.plugin.ts";
 import databasePlugin from "./plugins/database.plugin.ts";
 import jwtPlugin from "./plugins/jwt.plugin.ts";
 import routes from "./plugins/routes.plugin.ts";
@@ -25,6 +26,7 @@ const app = Fastify({
 
 registerGlobalErrorHandler(app);
 app.register(databasePlugin);
+app.register(cookiePlugin);
 app.register(jwtPlugin);
 app.register(swaggerPlugin);
 app.register(routes);
