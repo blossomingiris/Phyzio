@@ -1,5 +1,5 @@
 import type { ParamId } from "#app/modules/general/dto/index.ts";
-import { authOnly } from "#app/modules/general/auth/authOnly.ts";
+import { adminOnly } from "#app/modules/general/auth/requireRole.ts";
 import type { FastifyInstance } from "fastify";
 import {
   findTreatmentPlanSchema,
@@ -17,7 +17,7 @@ export default async function treatmentPlansAdminController(app: FastifyInstance
   const service = new TreatmentPlansService(app.drizzle);
   const adminService = new TreatmentPlansAdminService(app.drizzle, service);
 
-  app.addHook("preHandler", authOnly);
+  app.addHook("preHandler", adminOnly);
 
   app.get<{ Querystring: ListTreatmentPlansQuery }>(
     "/",

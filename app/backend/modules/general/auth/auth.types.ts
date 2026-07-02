@@ -3,11 +3,7 @@ import "@fastify/jwt";
 
 export type JwtPayload = {
   id: number;
-};
-
-export type AuthUser = {
-  id: number;
-  roles: UserRole[];
+  role: UserRole;
 };
 
 declare module "@fastify/jwt" {

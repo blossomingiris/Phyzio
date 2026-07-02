@@ -1,5 +1,5 @@
 import { type ParamId } from "#app/modules/general/dto/index.ts";
-import { authOnly } from "#app/modules/general/auth/authOnly.ts";
+import { adminOnly } from "#app/modules/general/auth/requireRole.ts";
 import type { FastifyInstance } from "fastify";
 import {
   createClientSchema,
@@ -16,7 +16,7 @@ import { ClientsService } from "./clients.service.ts";
 export default async function clientsAdminController(app: FastifyInstance) {
   const service = new ClientsService(app.drizzle);
 
-  app.addHook("preHandler", authOnly);
+  app.addHook("preHandler", adminOnly);
 
   app.get<{ Querystring: ListClientsQuery }>(
     "/",
