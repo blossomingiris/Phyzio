@@ -1,0 +1,5838 @@
+export interface paths {
+    "/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login with email and password */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /**
+                         * Format: email
+                         * @example admin@phyzio.test
+                         */
+                        email: string;
+                        /** @example password123 */
+                        password: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            token: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Exchange the refresh token cookie for a new access token */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            token: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revoke the refresh token cookie */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @enum {boolean} */
+                            success: true;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all users */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    /** @description Partial match on first or last name */
+                    search?: string;
+                    role?: "admin" | "therapist";
+                    sortBy?: "createdAt" | "lastName" | "email";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** Format: email */
+                                email: string;
+                                /** @enum {string} */
+                                role: "admin" | "therapist";
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a user */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName: string;
+                        lastName: string;
+                        /** Format: email */
+                        email: string;
+                        /** @description Min 8 chars with uppercase, lowercase, and digit */
+                        password: string;
+                        /** @enum {string} */
+                        role: "admin" | "therapist";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a user by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update user profile */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName?: string;
+                        lastName?: string;
+                        /** Format: email */
+                        email?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/users/{id}/role": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update user role */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        role: "admin" | "therapist";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/therapists/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all therapists */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    /** @description Partial match on first or last name */
+                    search?: string;
+                    speciality?: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                    isActive?: boolean;
+                    /** @description Include soft-deleted therapists */
+                    deleted?: boolean;
+                    sortBy?: "createdAt" | "lastName" | "email";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** Format: email */
+                                email: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                workingHours: {
+                                    mon?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    tue?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    wed?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    thu?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    fri?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sat?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sun?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                };
+                                isActive: boolean;
+                                /** Format: date-time */
+                                deletedAt?: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a therapist */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName: string;
+                        lastName: string;
+                        /** Format: email */
+                        email: string;
+                        /** @description Min 8 chars with uppercase, lowercase, and digit */
+                        password: string;
+                        /** @enum {string} */
+                        speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                        phone: string;
+                        workingHours: {
+                            mon?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            tue?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            wed?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            thu?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            fri?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            sat?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            sun?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                            phone: string;
+                            workingHours: {
+                                mon?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                tue?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                wed?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                thu?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                fri?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                sat?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                sun?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                            };
+                            isActive: boolean;
+                            /** Format: date-time */
+                            deletedAt?: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/therapists/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a therapist by ID */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Allow fetching a soft-deleted therapist */
+                    deleted?: boolean;
+                };
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                            phone: string;
+                            workingHours: {
+                                mon?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                tue?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                wed?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                thu?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                fri?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                sat?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                sun?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                            };
+                            isActive: boolean;
+                            /** Format: date-time */
+                            deletedAt?: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Delete a therapist */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Update therapist profile */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        speciality?: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                        phone?: string;
+                        workingHours?: {
+                            mon?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            tue?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            wed?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            thu?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            fri?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            sat?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            sun?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                        };
+                        isActive?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                            phone: string;
+                            workingHours: {
+                                mon?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                tue?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                wed?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                thu?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                fri?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                sat?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                                sun?: {
+                                    /** @description Time in HH:MM format */
+                                    start: string;
+                                    /** @description Time in HH:MM format */
+                                    end: string;
+                                }[];
+                            };
+                            isActive: boolean;
+                            /** Format: date-time */
+                            deletedAt?: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/clients/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all clients */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    /** @description Partial match on first name, last name, or phone */
+                    search?: string;
+                    therapistId?: number;
+                    /** @description Include soft-deleted clients */
+                    deleted?: boolean;
+                    sortBy?: "createdAt" | "lastName";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                                medicalNotes: string | null;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                therapist: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    /** @enum {string} */
+                                    speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                    phone: string;
+                                    /** Format: email */
+                                    email: string;
+                                    isActive: boolean;
+                                } | null;
+                                /** Format: date-time */
+                                deletedAt?: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a client */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName: string;
+                        lastName: string;
+                        /** Format: date */
+                        birthDate?: string;
+                        phone?: string;
+                        /** Format: email */
+                        email?: string;
+                        medicalNotes?: string;
+                        /** @enum {string} */
+                        origin?: "whats_up" | "phone" | "walk_in" | "other";
+                        /** @enum {string} */
+                        preferredCommunication?: "whats_up" | "phone" | "email";
+                        therapistId?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            birthDate: string | null;
+                            phone: string | null;
+                            email: string | null;
+                            origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                            /** @enum {string} */
+                            preferredCommunication: "whats_up" | "phone" | "email";
+                            medicalNotes: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                            /** Format: date-time */
+                            deletedAt?: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/clients/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a client by ID */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Allow fetching a soft-deleted client */
+                    deleted?: boolean;
+                };
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            birthDate: string | null;
+                            phone: string | null;
+                            email: string | null;
+                            origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                            /** @enum {string} */
+                            preferredCommunication: "whats_up" | "phone" | "email";
+                            medicalNotes: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                            /** Format: date-time */
+                            deletedAt?: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Delete a client */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Update a client */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName?: string;
+                        lastName?: string;
+                        /** Format: date */
+                        birthDate?: string;
+                        phone?: string;
+                        /** Format: email */
+                        email?: string;
+                        medicalNotes?: string;
+                        /** @enum {string} */
+                        origin?: "whats_up" | "phone" | "walk_in" | "other";
+                        /** @enum {string} */
+                        preferredCommunication?: "whats_up" | "phone" | "email";
+                        therapistId?: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            birthDate: string | null;
+                            phone: string | null;
+                            email: string | null;
+                            origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                            /** @enum {string} */
+                            preferredCommunication: "whats_up" | "phone" | "email";
+                            medicalNotes: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                            /** Format: date-time */
+                            deletedAt?: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/appointments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all appointments */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    status?: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                    therapistId?: number;
+                    clientId?: number;
+                    /** @description Filter appointments with startedAt ≥ dateFrom */
+                    dateFrom?: string;
+                    /** @description Filter appointments with startedAt ≤ dateTo */
+                    dateTo?: string;
+                    sortBy?: "startedAt" | "createdAt";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                client: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    birthDate: string | null;
+                                    phone: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    preferredCommunication: "whats_up" | "phone" | "email";
+                                };
+                                treatmentPlanId: number | null;
+                                /** Format: date-time */
+                                startedAt: string;
+                                /** Format: date-time */
+                                endedAt: string;
+                                notes: string | null;
+                                /** @enum {string} */
+                                status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                                cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                                cancellationNote: string | null;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                therapist: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    /** @enum {string} */
+                                    speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                    phone: string;
+                                    /** Format: email */
+                                    email: string;
+                                    isActive: boolean;
+                                } | null;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create an appointment */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        therapistId?: number;
+                        clientId: number;
+                        treatmentPlanId?: number;
+                        /** Format: date-time */
+                        startedAt: string;
+                        /** Format: date-time */
+                        endedAt: string;
+                        notes?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            treatmentPlanId: number | null;
+                            /** Format: date-time */
+                            startedAt: string;
+                            /** Format: date-time */
+                            endedAt: string;
+                            notes: string | null;
+                            /** @enum {string} */
+                            status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/appointments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an appointment by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            treatmentPlanId: number | null;
+                            /** Format: date-time */
+                            startedAt: string;
+                            /** Format: date-time */
+                            endedAt: string;
+                            notes: string | null;
+                            /** @enum {string} */
+                            status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        /** Delete an appointment */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /** Update an appointment */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        therapistId?: number;
+                        clientId?: number;
+                        treatmentPlanId?: number;
+                        /** Format: date-time */
+                        startedAt?: string;
+                        /** Format: date-time */
+                        endedAt?: string;
+                        notes?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            treatmentPlanId: number | null;
+                            /** Format: date-time */
+                            startedAt: string;
+                            /** Format: date-time */
+                            endedAt: string;
+                            notes: string | null;
+                            /** @enum {string} */
+                            status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/appointments/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change appointment status */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "cancelled";
+                        /** @enum {string} */
+                        cancellationReason: "client_request" | "client_unreachable" | "therapist_unavailable" | "other";
+                        /** @description Required when reason is 'other' */
+                        cancellationNote?: string;
+                    } | {
+                        /** @enum {string} */
+                        status: "completed";
+                        treatmentPlanItemId?: number;
+                    } | {
+                        /** @enum {string} */
+                        status: "requested" | "scheduled" | "confirmed" | "no_show";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            treatmentPlanId: number | null;
+                            /** Format: date-time */
+                            startedAt: string;
+                            /** Format: date-time */
+                            endedAt: string;
+                            notes: string | null;
+                            /** @enum {string} */
+                            status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            } | null;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/treatments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all treatments */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    category?: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                    isActive?: boolean;
+                    sortBy?: "createdAt" | "category" | "pricePerUnit" | "durationMinutes";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                /** @enum {string} */
+                                category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                /** @description Decimal as string */
+                                pricePerUnit: string;
+                                quantity: number;
+                                totalAmount: string | null;
+                                /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                vatRate: number;
+                                /** @description VAT portion as decimal string */
+                                vatAmount: string | null;
+                                /** @description totalAmount + vatAmount as decimal string */
+                                totalWithVat: string | null;
+                                durationMinutes: number;
+                                isActive: boolean;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a treatment */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                        /** @description Decimal as string, e.g. '50.00' */
+                        pricePerUnit: string;
+                        quantity: number;
+                        durationMinutes: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            /** @enum {string} */
+                            category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                            /** @description Decimal as string */
+                            pricePerUnit: string;
+                            quantity: number;
+                            totalAmount: string | null;
+                            /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                            vatRate: number;
+                            /** @description VAT portion as decimal string */
+                            vatAmount: string | null;
+                            /** @description totalAmount + vatAmount as decimal string */
+                            totalWithVat: string | null;
+                            durationMinutes: number;
+                            isActive: boolean;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/treatments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a treatment by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            /** @enum {string} */
+                            category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                            /** @description Decimal as string */
+                            pricePerUnit: string;
+                            quantity: number;
+                            totalAmount: string | null;
+                            /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                            vatRate: number;
+                            /** @description VAT portion as decimal string */
+                            vatAmount: string | null;
+                            /** @description totalAmount + vatAmount as decimal string */
+                            totalWithVat: string | null;
+                            durationMinutes: number;
+                            isActive: boolean;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a treatment */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        category?: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                        /** @description Decimal as string, e.g. '50.00' */
+                        pricePerUnit?: string;
+                        quantity?: number;
+                        durationMinutes?: number;
+                        isActive?: boolean;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            /** @enum {string} */
+                            category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                            /** @description Decimal as string */
+                            pricePerUnit: string;
+                            quantity: number;
+                            totalAmount: string | null;
+                            /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                            vatRate: number;
+                            /** @description VAT portion as decimal string */
+                            vatAmount: string | null;
+                            /** @description totalAmount + vatAmount as decimal string */
+                            totalWithVat: string | null;
+                            durationMinutes: number;
+                            isActive: boolean;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/treatment-plans/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all treatment plans */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    status?: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                    clientId?: number;
+                    therapistId?: number;
+                    sortBy?: "createdAt" | "startDate" | "status";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                therapist: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    /** @enum {string} */
+                                    speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                    phone: string;
+                                    /** Format: email */
+                                    email: string;
+                                    isActive: boolean;
+                                };
+                                client: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    birthDate: string | null;
+                                    phone: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    preferredCommunication: "whats_up" | "phone" | "email";
+                                };
+                                /** @enum {string} */
+                                status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                                /** Format: date-time */
+                                startDate: string;
+                                endDate: string | null;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/treatment-plans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a treatment plan by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            };
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a treatment plan */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        therapistId?: number;
+                        /** Format: date-time */
+                        startDate?: string;
+                        endDate?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            };
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/treatment-plans/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Cancel a treatment plan */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "cancelled";
+                        /** @enum {string} */
+                        cancellationReason: "client_request" | "client_unreachable" | "therapist_referral" | "other";
+                        /** @description Required when reason is 'other' */
+                        cancellationNote?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            therapist: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                /** Format: email */
+                                email: string;
+                                isActive: boolean;
+                            };
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get own profile */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            therapist?: {
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                workingHours: {
+                                    mon?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    tue?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    wed?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    thu?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    fri?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sat?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sun?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                };
+                                isActive: boolean;
+                            };
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update own profile */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName?: string;
+                        lastName?: string;
+                        /** Format: email */
+                        email?: string;
+                        phone?: string;
+                        workingHours?: {
+                            mon?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            tue?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            wed?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            thu?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            fri?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            sat?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                            sun?: {
+                                /** @description Time in HH:MM format */
+                                start: string;
+                                /** @description Time in HH:MM format */
+                                end: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            therapist?: {
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                workingHours: {
+                                    mon?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    tue?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    wed?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    thu?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    fri?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sat?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sun?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                };
+                                isActive: boolean;
+                            };
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change own password */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        currentPassword: string;
+                        /** @description Min 8 chars with uppercase, lowercase, and digit */
+                        newPassword: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            /** Format: email */
+                            email: string;
+                            /** @enum {string} */
+                            role: "admin" | "therapist";
+                            therapist?: {
+                                /** @enum {string} */
+                                speciality: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
+                                phone: string;
+                                workingHours: {
+                                    mon?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    tue?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    wed?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    thu?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    fri?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sat?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                    sun?: {
+                                        /** @description Time in HH:MM format */
+                                        start: string;
+                                        /** @description Time in HH:MM format */
+                                        end: string;
+                                    }[];
+                                };
+                                isActive: boolean;
+                            };
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/clients/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List my clients */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    /** @description Partial match on first name, last name, or phone */
+                    search?: string;
+                    sortBy?: "createdAt" | "lastName";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                                medicalNotes: string | null;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/clients/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get one of my clients by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            birthDate: string | null;
+                            phone: string | null;
+                            email: string | null;
+                            origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                            /** @enum {string} */
+                            preferredCommunication: "whats_up" | "phone" | "email";
+                            medicalNotes: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update one of my clients */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        firstName?: string;
+                        lastName?: string;
+                        /** Format: date */
+                        birthDate?: string;
+                        phone?: string;
+                        /** Format: email */
+                        email?: string;
+                        medicalNotes?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            firstName: string;
+                            lastName: string;
+                            birthDate: string | null;
+                            phone: string | null;
+                            email: string | null;
+                            origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
+                            /** @enum {string} */
+                            preferredCommunication: "whats_up" | "phone" | "email";
+                            medicalNotes: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/appointments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List my appointments */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    status?: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                    clientId?: number;
+                    dateFrom?: string;
+                    dateTo?: string;
+                    sortBy?: "startedAt" | "createdAt";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                client: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    birthDate: string | null;
+                                    phone: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    preferredCommunication: "whats_up" | "phone" | "email";
+                                };
+                                treatmentPlanId: number | null;
+                                /** Format: date-time */
+                                startedAt: string;
+                                /** Format: date-time */
+                                endedAt: string;
+                                notes: string | null;
+                                /** @enum {string} */
+                                status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                                cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                                cancellationNote: string | null;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/appointments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get my appointment by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            treatmentPlanId: number | null;
+                            /** Format: date-time */
+                            startedAt: string;
+                            /** Format: date-time */
+                            endedAt: string;
+                            notes: string | null;
+                            /** @enum {string} */
+                            status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/appointments/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change status of my appointment */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "confirmed";
+                    } | {
+                        /** @enum {string} */
+                        status: "cancelled";
+                        /** @enum {string} */
+                        cancellationReason: "client_request" | "client_unreachable" | "therapist_unavailable" | "other";
+                        /** @description Required when reason is 'other' */
+                        cancellationNote?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            treatmentPlanId: number | null;
+                            /** Format: date-time */
+                            startedAt: string;
+                            /** Format: date-time */
+                            endedAt: string;
+                            notes: string | null;
+                            /** @enum {string} */
+                            status: "requested" | "scheduled" | "confirmed" | "completed" | "no_show" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_unavailable" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/treatment-plans/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List my treatment plans */
+        get: {
+            parameters: {
+                query?: {
+                    page?: number;
+                    limit?: number;
+                    status?: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                    clientId?: number;
+                    sortBy?: "createdAt" | "startDate" | "status";
+                    /** @description Sort direction */
+                    sortOrder?: "asc" | "desc";
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                id: number;
+                                client: {
+                                    id: number;
+                                    firstName: string;
+                                    lastName: string;
+                                    birthDate: string | null;
+                                    phone: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    preferredCommunication: "whats_up" | "phone" | "email";
+                                };
+                                /** @enum {string} */
+                                status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                                /** Format: date-time */
+                                startDate: string;
+                                endDate: string | null;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            pagination: {
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        /** Create a treatment plan */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        clientId: number;
+                        primaryDiagnostic: string;
+                        clinicalGoals: string;
+                        contraindications?: string;
+                        /** Format: date-time */
+                        startDate: string;
+                        /** Format: date-time */
+                        endDate?: string;
+                        items: {
+                            treatmentId: number;
+                        }[];
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/treatment-plans/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a treatment plan by ID */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a treatment plan */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        primaryDiagnostic?: string;
+                        clinicalGoals?: string;
+                        contraindications?: string | null;
+                        /** Format: date-time */
+                        startDate?: string;
+                        endDate?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/treatment-plans/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update the status of a treatment plan */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "cancelled";
+                        /** @enum {string} */
+                        cancellationReason: "client_request" | "client_unreachable" | "therapist_referral" | "other";
+                        /** @description Required when reason is 'other' */
+                        cancellationNote?: string;
+                    } | {
+                        /** @enum {string} */
+                        status: "paused";
+                    } | {
+                        /** @enum {string} */
+                        status: "completed";
+                    } | {
+                        /** @enum {string} */
+                        status: "in_progress";
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/me/treatment-plans/{id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add a treatment to a plan */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        treatmentId: number;
+                    };
+                };
+            };
+            responses: {
+                /** @description Default Response */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            id: number;
+                            client: {
+                                id: number;
+                                firstName: string;
+                                lastName: string;
+                                birthDate: string | null;
+                                phone: string | null;
+                                email: string | null;
+                                /** @enum {string} */
+                                preferredCommunication: "whats_up" | "phone" | "email";
+                            };
+                            primaryDiagnostic: string;
+                            clinicalGoals: string;
+                            contraindications: string | null;
+                            /** @enum {string} */
+                            status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationNote: string | null;
+                            /** Format: date-time */
+                            startDate: string;
+                            endDate: string | null;
+                            items: {
+                                id: number;
+                                treatment: {
+                                    id: number;
+                                    /** @enum {string} */
+                                    category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                    /** @description Decimal as string */
+                                    pricePerUnit: string;
+                                    quantity: number;
+                                    totalAmount: string | null;
+                                    /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                    vatRate: number;
+                                    /** @description VAT portion as decimal string */
+                                    vatAmount: string | null;
+                                    /** @description totalAmount + vatAmount as decimal string */
+                                    totalWithVat: string | null;
+                                    durationMinutes: number;
+                                    isActive: boolean;
+                                };
+                                quantityCompleted: number;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                            }[];
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/me/treatment-plans/{id}/items/{itemId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove a treatment from a plan */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                    itemId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                422: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            code: string;
+                            message: string;
+                            errors: {
+                                field: string;
+                                message: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+}
+export type webhooks = Record<string, never>;
+export interface components {
+    schemas: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
+}
+export type $defs = Record<string, never>;
+export type operations = Record<string, never>;
