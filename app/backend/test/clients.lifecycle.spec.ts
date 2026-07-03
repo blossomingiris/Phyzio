@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { ADMIN_EMAIL, createTestApp, type TestApp } from "./helpers/app.ts";
+import { ADMIN_EMAIL, ADMIN_PASSWORD, createTestApp, type TestApp } from "./helpers/app.ts";
 
 describe("clients lifecycle", () => {
   let h: TestApp;
@@ -88,10 +88,63 @@ describe("clients lifecycle", () => {
     expect(res.statusCode).toBe(409);
   });
 
-  it("soft-deletes a client", async () => {
+  it("soft-deletes a client: hidden by default, visible with deleted=true", async () => {
     const { id } = await createClient({ email: "delete@clients.test" });
-    const res = await h.inject({ method: "DELETE", url: `/clients/${id}`, headers: auth() });
+
+    const del = await h.inject({ method: "DELETE", url: `/clients/${id}`, headers: auth() });
+    expect(del.statusCode).toBe(200);
+    expect(del.json<{ success: boolean }>().success).toBe(true);
+
+    // Default reads exclude soft-deleted rows
+    const hidden = await h.inject({ method: "GET", url: `/clients/${id}`, headers: auth() });
+    expect(hidden.statusCode).toBe(404);
+
+    // Admin can opt in to see the deleted record
+    const shown = await h.inject({
+      method: "GET",
+      url: `/clients/${id}?deleted=true`,
+      headers: auth(),
+    });
+    expect(shown.statusCode).toBe(200);
+    expect(shown.json<{ deletedAt: string | null }>().deletedAt).not.toBeNull();
+  });
+
+  it("keeps the assigned therapist visible on a client after the therapist is soft-deleted", async () => {
+    // History is preserved: the client's therapist summary is populated from a
+    // leftJoin that intentionally does NOT filter the therapist's deletedAt.
+    const therapistRes = await h.inject({
+      method: "POST",
+      url: "/therapists",
+      headers: auth(),
+      payload: {
+        firstName: "Hist",
+        lastName: "Therapist",
+        email: "hist-therapist@clients.test",
+        password: ADMIN_PASSWORD,
+        speciality: "orthopedic",
+        phone: "+1234567890",
+        workingHours: {},
+      },
+    });
+    expect(therapistRes.statusCode).toBe(201);
+    const therapistId = therapistRes.json<{ id: number }>().id;
+
+    const { id: clientId } = await createClient({
+      email: "hist-client@clients.test",
+      therapistId,
+    });
+
+    const del = await h.inject({
+      method: "DELETE",
+      url: `/therapists/${therapistId}`,
+      headers: auth(),
+    });
+    expect(del.statusCode).toBe(200);
+
+    const res = await h.inject({ method: "GET", url: `/clients/${clientId}`, headers: auth() });
     expect(res.statusCode).toBe(200);
-    expect(res.json<{ success: boolean }>().success).toBe(true);
+    const body = res.json<{ therapist: { id: number } | null }>();
+    expect(body.therapist).not.toBeNull();
+    expect(body.therapist?.id).toBe(therapistId);
   });
 });

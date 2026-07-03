@@ -8,6 +8,7 @@ import {
   listClientsSchema,
   updateClientSchema,
   type CreateClientBody,
+  type FindClientQuery,
   type ListClientsQuery,
   type UpdateClientBody,
 } from "./clients.admin.dto.ts";
@@ -22,16 +23,21 @@ export default async function clientsAdminController(app: FastifyInstance) {
     "/",
     { schema: listClientsSchema },
     async (req) => {
-      const { page, limit, search, therapistId, sortBy, sortOrder } = req.query;
-      return service.all({ search, therapistId }, { page, limit }, { sortBy, sortOrder });
+      const { page, limit, search, therapistId, deleted, sortBy, sortOrder } =
+        req.query;
+      return service.all(
+        { search, therapistId, deleted },
+        { page, limit },
+        { sortBy, sortOrder },
+      );
     },
   );
 
-  app.get<{ Params: ParamId }>(
+  app.get<{ Params: ParamId; Querystring: FindClientQuery }>(
     "/:id",
     { schema: findClientSchema },
     async (req) => {
-      return service.findOrFail(req.params.id);
+      return service.findOrFail(req.params.id, { deleted: req.query.deleted });
     },
   );
 

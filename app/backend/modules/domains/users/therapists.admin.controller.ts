@@ -6,6 +6,7 @@ import {
   listTherapistsSchema,
   updateTherapistSchema,
   type CreateTherapistBody,
+  type FindTherapistQuery,
   type ListTherapistsQuery,
   type UpdateTherapistBody,
 } from "#app/modules/domains/users/therapists.admin.dto.ts";
@@ -22,21 +23,29 @@ export default async function therapistsAdminController(app: FastifyInstance) {
     "/",
     { schema: listTherapistsSchema },
     async (req) => {
-      const { page, limit, search, speciality, isActive, sortBy, sortOrder } =
-        req.query;
+      const {
+        page,
+        limit,
+        search,
+        speciality,
+        isActive,
+        deleted,
+        sortBy,
+        sortOrder,
+      } = req.query;
       return service.all(
-        { search, speciality, isActive },
+        { search, speciality, isActive, deleted },
         { page, limit },
         { sortBy, sortOrder },
       );
     },
   );
 
-  app.get<{ Params: ParamId }>(
+  app.get<{ Params: ParamId; Querystring: FindTherapistQuery }>(
     "/:id",
     { schema: findTherapistSchema },
     async (req) => {
-      return service.findOrFail(req.params.id);
+      return service.findOrFail(req.params.id, { deleted: req.query.deleted });
     },
   );
 

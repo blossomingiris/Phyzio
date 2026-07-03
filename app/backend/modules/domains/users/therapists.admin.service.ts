@@ -12,13 +12,14 @@ import type {
   UpdateTherapistBody,
 } from "#app/modules/domains/users/therapists.admin.dto.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNull, or } from "drizzle-orm";
 
 type TherapistFilters = {
   id?: number;
   speciality?: Speciality;
   search?: string;
   isActive?: boolean;
+  deleted?: boolean;
 };
 
 const THERAPIST_SORT_COLUMNS = {
@@ -96,8 +97,8 @@ export class TherapistsService {
     return row ?? null;
   }
 
-  async findOrFail(id: number) {
-    const therapist = await this.one({ id });
+  async findOrFail(id: number, filters: Omit<TherapistFilters, "id"> = {}) {
+    const therapist = await this.one({ id, ...filters });
 
     if (!therapist) {
       throw new NotFoundError("Therapist not found");
@@ -159,6 +160,7 @@ export class TherapistsService {
 
   private buildWhere(filters: TherapistFilters) {
     return and(
+      filters.deleted ? undefined : isNull(therapists.deletedAt),
       filters.id !== undefined ? eq(therapists.userId, filters.id) : undefined,
       filters.speciality !== undefined
         ? eq(therapists.speciality, filters.speciality)

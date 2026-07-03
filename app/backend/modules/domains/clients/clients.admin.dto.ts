@@ -39,8 +39,26 @@ export const listClientsQuery = Type.Object(
       }),
     ),
     therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
+    deleted: Type.Optional(
+      Type.Boolean({
+        default: false,
+        description: "Include soft-deleted clients",
+      }),
+    ),
     sortBy: clientSortBySchema,
     sortOrder: sortOrderSchema,
+  },
+  { additionalProperties: false },
+);
+
+export const findClientQuery = Type.Object(
+  {
+    deleted: Type.Optional(
+      Type.Boolean({
+        default: false,
+        description: "Allow fetching a soft-deleted client",
+      }),
+    ),
   },
   { additionalProperties: false },
 );
@@ -75,6 +93,7 @@ export const findClientSchema = {
   ...tag,
   summary: "Get a client by ID",
   params: paramId,
+  querystring: findClientQuery,
   response: {
     200: clientResponse,
     400: fieldErrorResponse,
@@ -128,5 +147,6 @@ export const deleteClientSchema = {
 };
 
 export type ListClientsQuery = Static<typeof listClientsQuery>;
+export type FindClientQuery = Static<typeof findClientQuery>;
 export type CreateClientBody = Static<typeof createClientBody>;
 export type UpdateClientBody = Static<typeof updateClientBody>;

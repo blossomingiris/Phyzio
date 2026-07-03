@@ -99,8 +99,26 @@ export const listTherapistsQuery = Type.Object(
     ),
     speciality: Type.Optional(specialitySchema),
     isActive: Type.Optional(Type.Boolean()),
+    deleted: Type.Optional(
+      Type.Boolean({
+        default: false,
+        description: "Include soft-deleted therapists",
+      }),
+    ),
     sortBy: therapistSortBySchema,
     sortOrder: sortOrderSchema,
+  },
+  { additionalProperties: false },
+);
+
+export const findTherapistQuery = Type.Object(
+  {
+    deleted: Type.Optional(
+      Type.Boolean({
+        default: false,
+        description: "Allow fetching a soft-deleted therapist",
+      }),
+    ),
   },
   { additionalProperties: false },
 );
@@ -123,6 +141,7 @@ export const findTherapistSchema = {
   ...tag,
   summary: "Get a therapist by ID",
   params: paramId,
+  querystring: findTherapistQuery,
   response: {
     200: therapistResponse,
     400: fieldErrorResponse,
@@ -173,6 +192,7 @@ export const deleteTherapistSchema = {
 };
 
 export type ListTherapistsQuery = Static<typeof listTherapistsQuery>;
+export type FindTherapistQuery = Static<typeof findTherapistQuery>;
 export type CreateTherapistBody = Static<typeof createTherapistBody>;
 export type UpdateTherapistBody = Static<typeof updateTherapistBody>;
 const therapistSortParamsSchema = sortParamsSchema(therapistSortBySchema);

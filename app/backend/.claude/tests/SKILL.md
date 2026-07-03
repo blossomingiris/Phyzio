@@ -92,7 +92,11 @@ Always spread `...nextSlot()` into appointment payloads, never hardcode a fixed 
 
 Check the service files for valid transitions. One non-obvious rule: **a treatment plan's `open → in_progress` transition is automatic, not manual** — it triggers when the first linked appointment is marked `completed`. To test any `in_progress` behaviour, create an appointment with `treatmentPlanId`, walk it through its states to `completed`, and the plan advances automatically.
 
-## 8. Write tests that have real value
+## 8. Soft delete
+
+Therapists and clients are soft-deleted (`DELETE` stamps `deletedAt`). Reads exclude deleted rows **by default**; admin opts in with `?deleted=true` on list and find-by-id. When testing a delete, assert both sides: `404` / absent from the list by default, and present (with `deletedAt` populated) when `deleted=true`.
+
+## 9. Write tests that have real value
 
 Most valuable test categories:
 
@@ -108,6 +112,6 @@ Don't test:
 
 If a requested test looks like coverage for its own sake, say so. Ask what real scenario it protects against and agree before writing.
 
-## 9. Keep test output clean
+## 10. Keep test output clean
 
 Pass `logger: false` when creating the test app so Fastify request logs don't pollute output.

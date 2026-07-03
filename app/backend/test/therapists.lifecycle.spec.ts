@@ -2,8 +2,7 @@
 // - Find by ID returns the therapist; nonexistent ID returns 404
 // - Update changes a field (phone)
 // - Duplicate email is rejected (409)
-// - Delete is a soft delete: stamps deletedAt, returns success
-//   NOTE: reads do NOT currently filter deletedAt, so the record stays visible
+// - Delete is a soft delete: hidden from reads by default, visible with ?deleted=true
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ADMIN_EMAIL, ADMIN_PASSWORD, createTestApp, type TestApp } from "./helpers/app.ts";
 
@@ -90,17 +89,34 @@ describe("therapists lifecycle", () => {
     expect(res.statusCode).toBe(409);
   });
 
-  it("soft-deletes a therapist (stamps deletedAt)", async () => {
+  it("soft-deletes a therapist: hidden by default, visible with deleted=true", async () => {
     const { id } = await createTherapist();
 
     const del = await h.inject({ method: "DELETE", url: `/therapists/${id}`, headers: auth() });
     expect(del.statusCode).toBe(200);
     expect(del.json<{ success: boolean }>().success).toBe(true);
 
-    // Current behavior: reads don't filter deletedAt, so the row remains fetchable
-    // with deletedAt populated. When includeDeleted is added, this flips to 404 by default.
-    const res = await h.inject({ method: "GET", url: `/therapists/${id}`, headers: auth() });
-    expect(res.statusCode).toBe(200);
-    expect(res.json<{ deletedAt: string | null }>().deletedAt).not.toBeNull();
+    // Default reads exclude soft-deleted rows
+    const hidden = await h.inject({ method: "GET", url: `/therapists/${id}`, headers: auth() });
+    expect(hidden.statusCode).toBe(404);
+
+    const listed = await h.inject({ method: "GET", url: "/therapists", headers: auth() });
+    expect(listed.json<{ data: { id: number }[] }>().data.some((t) => t.id === id)).toBe(false);
+
+    // Admin can opt in to see the deleted record, with deletedAt populated
+    const shown = await h.inject({
+      method: "GET",
+      url: `/therapists/${id}?deleted=true`,
+      headers: auth(),
+    });
+    expect(shown.statusCode).toBe(200);
+    expect(shown.json<{ deletedAt: string | null }>().deletedAt).not.toBeNull();
+
+    const listedAll = await h.inject({
+      method: "GET",
+      url: "/therapists?deleted=true",
+      headers: auth(),
+    });
+    expect(listedAll.json<{ data: { id: number }[] }>().data.some((t) => t.id === id)).toBe(true);
   });
 });

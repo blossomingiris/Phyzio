@@ -4,7 +4,7 @@ import type { Speciality } from "#app/database/types.ts";
 import { ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, ilike, not, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNull, not, or } from "drizzle-orm";
 import type {
   CreateClientBody,
   UpdateClientBody,
@@ -15,6 +15,7 @@ type ClientFilters = {
   id?: number;
   therapistId?: number;
   search?: string;
+  deleted?: boolean;
 };
 
 type ClientQueryRow = typeof clients.$inferSelect & {
@@ -211,6 +212,7 @@ export class ClientsService {
 
   private buildWhere(filters: ClientFilters) {
     return and(
+      filters.deleted ? undefined : isNull(clients.deletedAt),
       filters.id !== undefined ? eq(clients.id, filters.id) : undefined,
       filters.therapistId !== undefined
         ? eq(clients.therapistId, filters.therapistId)
