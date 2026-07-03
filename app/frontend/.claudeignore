@@ -1,0 +1,16 @@
+# --- Dependencies ---
+/node_modules/
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Build output ---
+/dist/
+
+# --- Generated files ---
+package-lock.json
+
+# --- IDE, OS, and tool files ---
+.vscode/
