@@ -1,8 +1,10 @@
+import { AUTH_BCRYPT_ROUNDS } from "#app/config/auth.ts";
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { therapists, users } from "#app/database/schemas.ts";
 import { type Speciality } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
+import bcrypt from "bcrypt";
 import type {
   CreateTherapistBody,
   TherapistSortBy,
@@ -115,11 +117,13 @@ export class TherapistsService {
       workingHours,
     } = data;
 
+    const hashedPassword = await bcrypt.hash(password, AUTH_BCRYPT_ROUNDS);
+
     try {
       return await this.db.transaction(async (tx) => {
         const [user] = await tx
           .insert(users)
-          .values({ firstName, lastName, email, password, role: "therapist" })
+          .values({ firstName, lastName, email, password: hashedPassword, role: "therapist" })
           .returning();
 
         const [therapist] = await tx

@@ -1,8 +1,10 @@
+import { AUTH_BCRYPT_ROUNDS } from "#app/config/auth.ts";
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
 import { users } from "#app/database/schemas.ts";
 import type { User, UserRole } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
+import bcrypt from "bcrypt";
 import type {
   UserSortBy,
   UserSortParams,
@@ -92,9 +94,10 @@ export class UsersService {
 
   async create(data: CreateUser) {
     try {
+      const hashedPassword = await bcrypt.hash(data.password, AUTH_BCRYPT_ROUNDS);
       const [user] = await this.db
         .insert(users)
-        .values({ ...data, email: data.email.toLowerCase() })
+        .values({ ...data, email: data.email.toLowerCase(), password: hashedPassword })
         .returning();
       return user!;
     } catch (e) {
