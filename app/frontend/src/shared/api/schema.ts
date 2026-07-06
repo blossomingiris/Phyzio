@@ -1,4 +1,3 @@
-// Public type surface for the API layer, built over the generated OpenAPI schema.
 export type { ApiPaths, ApiSchemas } from "./generated";
 
 // The backend inlines every DTO, so `components.schemas` is empty and no named

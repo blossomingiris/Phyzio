@@ -4,7 +4,7 @@ argument-hint: [feature/area to focus the report on]
 ---
 
 Sync the frontend with the current backend contract. With **openapi-react-query** the generated
-schema *is* the client — features call `rqClient` / `fetchClient` (from `src/shared/api/instance.ts`)
+schema *is* the client — features call `rqClient` / `fetchClient` (from `src/shared/api/client.ts`)
 with path + method literals typed against `paths`, so there are no hand-written per-endpoint
 modules to edit. Drift surfaces as type errors at the call sites.
 
