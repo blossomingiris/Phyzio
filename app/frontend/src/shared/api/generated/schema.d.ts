@@ -50,14 +50,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -66,10 +59,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -116,10 +106,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -230,14 +217,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -246,10 +226,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -258,10 +235,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -317,14 +291,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -333,10 +300,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -345,10 +309,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -357,10 +318,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -417,14 +375,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -433,10 +384,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -445,10 +393,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -457,10 +402,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -518,14 +460,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -534,10 +469,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -546,10 +478,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -558,10 +487,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -570,10 +496,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -639,14 +562,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -655,10 +571,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -667,10 +580,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -679,10 +589,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -801,14 +708,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -817,10 +717,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -829,10 +726,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -981,14 +875,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -997,10 +884,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1009,10 +893,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1021,10 +902,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1132,14 +1010,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1148,10 +1019,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1160,10 +1028,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1172,10 +1037,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1211,14 +1073,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1227,10 +1082,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1239,10 +1091,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1251,10 +1100,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1401,14 +1247,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1417,10 +1256,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1429,10 +1265,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1441,10 +1274,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1530,14 +1360,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1546,10 +1369,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1558,10 +1378,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1638,14 +1455,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1654,10 +1464,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1666,10 +1473,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1678,10 +1482,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1690,14 +1491,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -1773,14 +1567,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1789,10 +1576,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1801,10 +1585,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1813,10 +1594,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1852,14 +1630,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1868,10 +1639,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1880,10 +1648,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -1892,10 +1657,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -1975,14 +1737,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -1991,10 +1746,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2003,10 +1755,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2015,10 +1764,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2027,10 +1773,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2039,14 +1782,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -2143,14 +1879,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2159,10 +1888,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2171,10 +1897,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -2255,14 +1978,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2271,10 +1987,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2283,10 +1996,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2295,10 +2005,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -2380,14 +2087,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2396,10 +2096,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2408,10 +2105,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2420,10 +2114,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -2459,14 +2150,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2475,10 +2159,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2487,10 +2168,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2499,10 +2177,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -2586,14 +2261,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2602,10 +2270,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2614,10 +2279,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2626,10 +2288,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2638,10 +2297,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -2743,14 +2399,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2759,10 +2408,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2771,10 +2417,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2783,10 +2426,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2795,14 +2435,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -2877,14 +2510,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2893,10 +2519,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2905,10 +2528,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -2970,14 +2590,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -2986,10 +2599,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -2998,10 +2608,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -3066,14 +2673,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -3082,10 +2682,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3094,10 +2691,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3106,10 +2700,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -3178,14 +2769,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -3194,10 +2778,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3206,10 +2787,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3218,10 +2796,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -3309,14 +2884,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -3325,10 +2893,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3337,10 +2902,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -3449,14 +3011,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -3465,10 +3020,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3477,10 +3029,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3489,10 +3038,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -3600,14 +3146,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -3616,10 +3155,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3628,10 +3164,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3640,10 +3173,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3652,14 +3182,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -3779,14 +3302,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -3795,10 +3311,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3807,10 +3320,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3819,10 +3329,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -3831,14 +3338,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -3939,10 +3439,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4093,14 +3590,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4109,10 +3599,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -4121,10 +3608,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4239,14 +3723,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4255,10 +3732,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4328,14 +3802,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4344,10 +3811,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4409,14 +3873,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4425,10 +3882,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -4437,10 +3891,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4505,14 +3956,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4521,10 +3965,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -4533,10 +3974,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4619,14 +4057,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4635,10 +4066,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4711,14 +4139,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4727,10 +4148,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -4739,10 +4157,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -4835,14 +4250,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4851,10 +4259,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -4863,10 +4268,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -4875,14 +4277,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -4958,14 +4353,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -4974,10 +4362,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -5075,14 +4460,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -5091,10 +4469,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5103,10 +4478,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5115,14 +4487,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -5218,14 +4583,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -5234,10 +4592,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5246,10 +4601,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
             };
@@ -5348,14 +4700,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -5364,10 +4709,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5376,10 +4718,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5388,14 +4727,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -5513,14 +4845,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -5529,10 +4854,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5541,10 +4863,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5553,14 +4872,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -5660,14 +4972,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -5676,10 +4981,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5688,10 +4990,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5700,10 +4999,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5712,14 +5008,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -5770,14 +5059,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
                 /** @description Default Response */
@@ -5786,10 +5068,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5798,10 +5077,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                        };
+                        "application/json": components["schemas"]["ApiError"];
                     };
                 };
                 /** @description Default Response */
@@ -5810,14 +5086,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": {
-                            code: string;
-                            message: string;
-                            errors: {
-                                field: string;
-                                message: string;
-                            }[];
-                        };
+                        "application/json": components["schemas"]["ApiFieldError"];
                     };
                 };
             };
@@ -5830,7 +5099,20 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        ApiError: {
+            code: string;
+            message: string;
+        };
+        ApiFieldError: {
+            code: string;
+            message: string;
+            errors: {
+                field: string;
+                message: string;
+            }[];
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;

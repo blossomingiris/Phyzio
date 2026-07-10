@@ -1,9 +1,4 @@
-export type { ApiPaths, ApiSchemas } from "./generated";
+import type { ApiSchemas } from "./generated";
 
-// The backend inlines every DTO, so `components.schemas` is empty and no named
-// error type is generated. Declare the shared error-body shape by hand until the
-// backend exposes named schemas via `$ref`.
-export type ApiError = {
-  code: string;
-  message: string;
-};
+export type ApiError = ApiSchemas["ApiError"];
+export type ApiFieldError = ApiSchemas["ApiFieldError"];
