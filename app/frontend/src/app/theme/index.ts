@@ -3,10 +3,8 @@ import {
   type CSSVariablesResolver,
   type MantineColorsTuple,
 } from "@mantine/core";
+import classes from "./theme.module.css";
 
-// Each color is 5 meaningful steps (subtle → subtleHover → base → hover →
-// text) expanded into the 10-slot tuple Mantine reads for its filled/light
-// variants and hovers. Edit the steps below to reskin.
 function buildColorTuple({
   subtle,
   subtleHover,
@@ -37,7 +35,7 @@ function buildColorTuple({
 const primary = buildColorTuple({
   subtle: "oklch(0.96 0.03 31)",
   subtleHover: "oklch(0.93 0.05 31)",
-  base: "oklch(0.62 0.190 31)",
+  base: "oklch(0.6664 0.1899 30.91)",
   hover: "oklch(0.54 0.190 31)",
   text: "oklch(1 0 0)",
 });
@@ -124,18 +122,9 @@ export const theme = createTheme({
     Drawer: { defaultProps: { radius: "lg" } },
     Input: {
       defaultProps: { size: "sm" },
-      classNames: { input: "app-input" },
+      classNames: { input: classes.input },
     },
-    NavLink: { defaultProps: { color: "accent" } },
-    // Checked box fills with the foreground, white checkmark.
-    Checkbox: {
-      vars: () => ({
-        root: {
-          "--checkbox-color": "var(--mantine-color-text)",
-          "--checkbox-icon-color": "var(--mantine-color-white)",
-        },
-      }),
-    },
+    Checkbox: { defaultProps: { color: "accent" } },
   },
 });
 
@@ -144,9 +133,9 @@ export const cssVariablesResolver: CSSVariablesResolver = () => ({
     "--surface-subtle": surfaceSubtle,
   },
   light: {
-    "--mantine-color-dimmed": "oklch(0.556 0 0)",
+    "--mantine-color-dimmed": "oklch(0.55 0.015 290)",
     "--mantine-color-placeholder": "oklch(0.65 0.012 290)",
-    "--mantine-color-default-border": "oklch(0.922 0 0)",
+    "--mantine-color-default-border": "oklch(0.9 0.01 290)",
   },
   dark: {},
 });

@@ -8,7 +8,6 @@ export const router = createBrowserRouter([
     children: [
       {
         path: ROUTES.LOGIN,
-        lazy: () => import("@/features/auth/login.page"),
       },
       {
         path: ROUTES.HOME,

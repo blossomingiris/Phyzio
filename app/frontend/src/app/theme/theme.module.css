@@ -1,0 +1,15 @@
+.input {
+  background-color: var(--surface-subtle);
+  box-shadow: var(--mantine-shadow-xs);
+  transition:
+    border-color 100ms ease,
+    box-shadow 100ms ease,
+    background-color 100ms ease;
+}
+
+.input:focus,
+.input:focus-within {
+  box-shadow:
+    var(--mantine-shadow-xs),
+    0 0 0 3px color-mix(in oklch, var(--mantine-primary-color-filled) 25%, transparent);
+}
