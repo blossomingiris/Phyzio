@@ -37,7 +37,7 @@ const primary = buildColorTuple({
   subtleHover: "oklch(0.93 0.05 31)",
   base: "oklch(0.6664 0.1899 30.91)",
   hover: "oklch(0.54 0.190 31)",
-  text: "oklch(1 0 0)",
+  text: "oklch(0.48 0.15 42)",
 });
 
 const accent = buildColorTuple({
@@ -136,6 +136,8 @@ export const cssVariablesResolver: CSSVariablesResolver = () => ({
     "--mantine-color-dimmed": "oklch(0.55 0.015 290)",
     "--mantine-color-placeholder": "oklch(0.65 0.012 290)",
     "--mantine-color-default-border": "oklch(0.9 0.01 290)",
+    "--mantine-color-error": "var(--mantine-color-error-6)",
+    "--input-asterisk-color": "var(--mantine-color-primary-6)",
   },
   dark: {},
 });
