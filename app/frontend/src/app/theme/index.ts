@@ -86,7 +86,7 @@ export const theme = createTheme({
       "'Urbanist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     fontWeight: "600",
     sizes: {
-      h1: { fontSize: "3.5rem", lineHeight: "1.1" },
+      h1: { fontSize: "1.75rem", lineHeight: "1.2" },
       h2: { fontSize: "1.5rem", lineHeight: "1.2" },
       h3: { fontSize: "1.25rem", lineHeight: "1.3" },
       h4: { fontSize: "1.125rem", lineHeight: "1.35" },
@@ -126,6 +126,8 @@ export const theme = createTheme({
       classNames: { input: classes.input },
     },
     Checkbox: { defaultProps: { color: "accent" } },
+    Button: { defaultProps: { radius: "xs" } },
+    Tooltip: { defaultProps: { radius: "xs" } },
   },
 });
 

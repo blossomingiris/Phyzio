@@ -9,6 +9,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import {
   IconChevronLeft,
   IconChevronRight,
@@ -36,17 +37,42 @@ const NavbarContext = createContext<{
   onToggleCollapse?: () => void;
 }>({ collapsed: false });
 
-function NavbarRoot({
-  collapsed = false,
-  onToggleCollapse,
-  children,
-}: {
-  collapsed?: boolean;
-  onToggleCollapse?: () => void;
-  children: ReactNode;
-}) {
+type NavbarState = {
+  opened: boolean;
+  toggle: () => void;
+};
+
+const NavbarStateContext = createContext<NavbarState | null>(null);
+
+export function NavbarProvider({ children }: { children: ReactNode }) {
+  const [opened, setOpened] = useLocalStorage({
+    key: "phyzio-sidebar-opened",
+    defaultValue: true,
+    getInitialValueInEffect: false,
+  });
+  const toggle = () => setOpened((prev) => !prev);
+
   return (
-    <NavbarContext.Provider value={{ collapsed, onToggleCollapse }}>
+    <NavbarStateContext.Provider value={{ opened, toggle }}>
+      {children}
+    </NavbarStateContext.Provider>
+  );
+}
+
+export function useNavbarState() {
+  const context = useContext(NavbarStateContext);
+  if (!context) {
+    throw new Error("useNavbarState must be used within a NavbarProvider");
+  }
+  return context;
+}
+
+function NavbarRoot({ children }: { children: ReactNode }) {
+  const { opened, toggle } = useNavbarState();
+  const collapsed = !opened;
+
+  return (
+    <NavbarContext.Provider value={{ collapsed, onToggleCollapse: toggle }}>
       <AppShell.Navbar
         p="sm"
         bg="var(--surface-subtle)"

@@ -1,37 +1,96 @@
-import { Navbar } from "@/shared/components/navbar/navbar";
-import { navigationConfig } from "@/shared/components/navbar/navigation.config";
-import { AppShell as MantineAppShell } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
-import { Outlet } from "react-router";
+import { Breadcrumbs } from "@/shared/components/breadcrumbs/breadcrumbs";
+import {
+  Navbar,
+  NavbarProvider,
+  useNavbarState,
+} from "@/shared/components/navbar/navbar";
+import {
+  footerNavigationConfig,
+  navigationConfig,
+} from "@/shared/components/navbar/navigation.config";
+import {
+  HeaderActionsProvider,
+  HeaderActionsSlot,
+} from "@/shared/hooks/use-header-actions";
+
+import { Group, AppShell as MantineAppShell, Paper } from "@mantine/core";
+import { Outlet, useLocation } from "react-router";
+
+const navItems = [...navigationConfig, ...footerNavigationConfig];
 
 export function AppShell() {
-  const [opened, setOpened] = useLocalStorage({
-    key: "phyzio-sidebar-opened",
-    defaultValue: true,
-    getInitialValueInEffect: false,
-  });
-  const toggle = () => setOpened((prev) => !prev);
+  return (
+    <NavbarProvider>
+      <AppShellLayout />
+    </NavbarProvider>
+  );
+}
+
+function AppShellLayout() {
+  const { opened } = useNavbarState();
+  const { pathname } = useLocation();
+  const currentNavItem = navItems.find((item) => item.path === pathname);
+  const crumbs = currentNavItem ? [{ label: currentNavItem.title }] : [];
 
   return (
     <MantineAppShell
+      layout="alt"
+      withBorder={false}
+      header={{ height: 84 }}
       navbar={{
         width: opened ? 260 : 80,
         breakpoint: "xs",
       }}
-      padding="md"
+      padding="xs"
     >
-      <Navbar collapsed={!opened} onToggleCollapse={toggle}>
-        <Navbar.Header>Phyzio</Navbar.Header>
-        <Navbar.Section grow>
-          {navigationConfig.map((item) => (
-            <Navbar.Link key={item.key} item={item} />
-          ))}
-        </Navbar.Section>
-        <Navbar.Footer />
-      </Navbar>
-      <MantineAppShell.Main>
-        <Outlet />
-      </MantineAppShell.Main>
+      <HeaderActionsProvider>
+        <MantineAppShell.Header pt="xs" px="xs" bg="var(--surface-subtle)">
+          <Paper
+            withBorder
+            h="100%"
+            p="sm"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              borderRadius:
+                "var(--mantine-radius-sm) var(--mantine-radius-sm) 0 0",
+            }}
+          >
+            <Group justify="space-between" w="100%">
+              <Breadcrumbs items={crumbs} />
+              <HeaderActionsSlot />
+            </Group>
+          </Paper>
+        </MantineAppShell.Header>
+        <Navbar>
+          <Navbar.Header>Phyzio</Navbar.Header>
+          <Navbar.Section grow>
+            {navigationConfig.map((item) => (
+              <Navbar.Link key={item.key} item={item} />
+            ))}
+          </Navbar.Section>
+          <Navbar.Footer />
+        </Navbar>
+        <MantineAppShell.Main
+          bg="var(--surface-subtle)"
+          pt="var(--app-shell-header-offset)"
+          style={{ display: "flex" }}
+        >
+          <Paper
+            p="md"
+            style={{
+              flex: 1,
+              borderRadius:
+                "0 0 var(--mantine-radius-sm) var(--mantine-radius-sm)",
+              borderLeft: "1px solid var(--paper-border-color)",
+              borderRight: "1px solid var(--paper-border-color)",
+              borderBottom: "1px solid var(--paper-border-color)",
+            }}
+          >
+            <Outlet />
+          </Paper>
+        </MantineAppShell.Main>
+      </HeaderActionsProvider>
     </MantineAppShell>
   );
 }
