@@ -66,3 +66,20 @@ large desktop monitors.
   required information.
 - Don't build a mobile-drawer / off-canvas-hide breakpoint unless a phone
   breakpoint is actually in scope.
+
+---
+
+## 5. Accessibility
+
+Only the basics Mantine doesn't already give us for free.
+
+- **Heading order.** One `order={1}` `Title` per page (the page's main
+  heading), then nest subsequent headings sequentially by `order` without
+  skipping levels. Use `order` to express hierarchy, not `size`.
+- **Images.** Meaningful images get descriptive `alt` text; purely decorative
+  images get `alt=""` (empty, never omitted).
+- **Icon-only controls.** An `ActionIcon`/icon-only button with no visible
+  text needs `aria-label` describing the action — icons carry no semantics on
+  their own (see `NavbarToggle` in `navbar.tsx` for the pattern: `ActionIcon`
+  + `aria-label` + `Tooltip`). Icons paired with visible text, or passed into
+  a component prop (e.g. `Alert`'s `icon`), need nothing extra.
