@@ -1,4 +1,8 @@
 import {
+  BreadcrumbProvider,
+  useBreadcrumbLabel,
+} from "@/shared/lib/react/use-breadcrumb";
+import {
   HeaderActionsProvider,
   HeaderActionsSlot,
 } from "@/shared/lib/react/use-header-actions";
@@ -21,7 +25,9 @@ const navItems = [...navigationConfig, ...footerNavigationConfig];
 export function AppShell() {
   return (
     <NavbarProvider>
-      <AppShellLayout />
+      <BreadcrumbProvider>
+        <AppShellLayout />
+      </BreadcrumbProvider>
     </NavbarProvider>
   );
 }
@@ -29,8 +35,20 @@ export function AppShell() {
 function AppShellLayout() {
   const { opened } = useNavbarState();
   const { pathname } = useLocation();
+  const detailLabel = useBreadcrumbLabel();
   const currentNavItem = navItems.find((item) => item.path === pathname);
-  const crumbs = currentNavItem ? [{ label: currentNavItem.title }] : [];
+  const parentNavItem = navItems.find(
+    (item) => item.path !== "/" && pathname.startsWith(`${item.path}/`),
+  );
+
+  const crumbs = currentNavItem
+    ? [{ label: currentNavItem.title }]
+    : parentNavItem
+      ? [
+          { label: parentNavItem.title, path: parentNavItem.path },
+          ...(detailLabel ? [{ label: detailLabel }] : []),
+        ]
+      : [];
 
   return (
     <MantineAppShell
@@ -48,7 +66,7 @@ function AppShellLayout() {
           <Paper
             withBorder
             h="100%"
-            p="sm"
+            p="md"
             style={{
               display: "flex",
               alignItems: "center",
