@@ -66,6 +66,7 @@ const error = buildColorTuple({
 
 const foreground = "oklch(0.399 0.018 290)";
 const surfaceSubtle = "oklch(0.97 0 0)";
+const surfaceSubtleHover = "oklch(0.93 0 0)";
 
 export const theme = createTheme({
   primaryColor: "primary",
@@ -131,6 +132,7 @@ export const theme = createTheme({
 export const cssVariablesResolver: CSSVariablesResolver = () => ({
   variables: {
     "--surface-subtle": surfaceSubtle,
+    "--surface-subtle-hover": surfaceSubtleHover,
   },
   light: {
     "--mantine-color-dimmed": "oklch(0.55 0.015 290)",

@@ -5,7 +5,7 @@ import { IconCircleCheck } from "@tabler/icons-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { z } from "zod";
-import { AuthLayout } from "./components/auth-layout";
+import { AuthLayout } from "./ui/auth-layout";
 
 const forgotPasswordSchema = z.object({
   email: z.email("Enter a valid email"),

@@ -6,7 +6,7 @@ import { schemaResolver, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { Link, useNavigate } from "react-router";
 import { z } from "zod";
-import { AuthLayout } from "./components/auth-layout";
+import { AuthLayout } from "./ui/auth-layout";
 
 const loginSchema = z.object({
   email: z.email("Enter a valid email"),

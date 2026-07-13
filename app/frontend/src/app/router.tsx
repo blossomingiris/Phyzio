@@ -1,8 +1,10 @@
+import { AppointmentsPage } from "@/features/appointments/appointments.page";
 import { ForgotPasswordPage } from "@/features/auth/forgot-password.page";
 import { LoginPage } from "@/features/auth/login.page";
 import { ROUTES } from "@/shared/config/routes";
-import { createBrowserRouter, redirect } from "react-router";
-import App from "./App";
+import { createBrowserRouter } from "react-router";
+import { App } from "./app";
+import { AppShell } from "./app-shell";
 
 export const router = createBrowserRouter([
   {
@@ -17,8 +19,13 @@ export const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
-        path: ROUTES.HOME,
-        loader: () => redirect(ROUTES.LOGIN),
+        element: <AppShell />,
+        children: [
+          {
+            path: ROUTES.HOME,
+            element: <AppointmentsPage />,
+          },
+        ],
       },
     ],
   },
