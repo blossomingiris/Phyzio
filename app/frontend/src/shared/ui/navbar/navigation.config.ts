@@ -1,4 +1,4 @@
-import { ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/model/routes";
 import {
   IconActivity,
   IconCalendar,

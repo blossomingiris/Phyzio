@@ -1,7 +1,7 @@
-import { AppointmentsPage } from "@/features/appointments/appointments.page";
+import { AppointmentListPage } from "@/features/appointments/appointment-list.page";
 import { ForgotPasswordPage } from "@/features/auth/forgot-password.page";
 import { LoginPage } from "@/features/auth/login.page";
-import { ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/model/routes";
 import { createBrowserRouter } from "react-router";
 import { App } from "./app";
 import { AppShell } from "./app-shell";
@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ROUTES.HOME,
-            element: <AppointmentsPage />,
+            element: <AppointmentListPage />,
           },
         ],
       },

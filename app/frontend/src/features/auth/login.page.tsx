@@ -1,6 +1,6 @@
 import { rqClient } from "@/shared/api/client";
 import { getApiErrorMessage, isApiFieldError } from "@/shared/api/errors";
-import { ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/model/routes";
 import { Alert, Anchor, Button, PasswordInput, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";

@@ -83,7 +83,7 @@ export const theme = createTheme({
     "'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
   headings: {
     fontFamily:
-      "'Urbanist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      "'Geist Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
     fontWeight: "600",
     sizes: {
       h1: { fontSize: "1.75rem", lineHeight: "1.2" },

@@ -7,25 +7,12 @@ description: Use this skill when you create or update a UI component in this pro
 
 This file defines rules for how we build UI components
 
----
-
-## 1. File layout
-
-- One component per file, kebab-case filename matching the
-  existing sibling files in that folder.
-- Reusable, generic components (not tied to one feature) live in
-  `src/shared/components/<name>/`.
-- Feature-specific components live inside that feature's `ui/` folder and are
-  never imported from outside the feature (only the feature's `*.page.tsx` /
-  `index.ts` is public — enforced by `eslint-plugin-boundaries`).
-- Co-locate the CSS Module next to the component: `<component>.tsx` +
-  `<component>.module.css` in the same folder. Don't put component styles in a
-  shared/global stylesheet.
-- Config/data that's specific to one component lives next to it
+For file layout and naming (where a component lives, when it gets its own
+folder, CSS Module co-location) see `.claude/rules/architecture.md`.
 
 ---
 
-## 2. Compound components
+## 1. Compound components
 
 Default to a simple component built from Mantine's ready-made primitives. Don't reach for the compound pattern unless the Developer asks for it, or
 the component is genuinely complex — several structural pieces that need to
@@ -34,7 +21,7 @@ guidance → pick the simple approach.
 
 ---
 
-## 3. Styling
+## 2. Styling
 
 - **No dark theme.** This app doesn't support dark mode and it's not planned.
   Never use `light-dark()` and never reference `--mantine-color-dark-*` vars.
@@ -52,7 +39,7 @@ guidance → pick the simple approach.
 
 ---
 
-## 4. Touch targets (tablet-first)
+## 3. Touch targets (tablet-first)
 
 The app targets **tablets primarily, laptops secondarily** — not phones, not
 large desktop monitors.
@@ -69,7 +56,7 @@ large desktop monitors.
 
 ---
 
-## 5. Accessibility
+## 4. Accessibility
 
 Only the basics Mantine doesn't already give us for free.
 

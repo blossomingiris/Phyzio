@@ -1,4 +1,4 @@
-import { ROUTES } from "@/shared/config/routes";
+import { ROUTES } from "@/shared/model/routes";
 import { Anchor, Button, Stack, Text, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { IconCircleCheck } from "@tabler/icons-react";

@@ -1,17 +1,17 @@
-import { Breadcrumbs } from "@/shared/components/breadcrumbs/breadcrumbs";
+import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import {
   Navbar,
   NavbarProvider,
   useNavbarState,
-} from "@/shared/components/navbar/navbar";
+} from "@/shared/ui/navbar/navbar";
 import {
   footerNavigationConfig,
   navigationConfig,
-} from "@/shared/components/navbar/navigation.config";
+} from "@/shared/ui/navbar/navigation.config";
 import {
   HeaderActionsProvider,
   HeaderActionsSlot,
-} from "@/shared/hooks/use-header-actions";
+} from "@/shared/lib/use-header-actions";
 
 import { Group, AppShell as MantineAppShell, Paper } from "@mantine/core";
 import { Outlet, useLocation } from "react-router";
