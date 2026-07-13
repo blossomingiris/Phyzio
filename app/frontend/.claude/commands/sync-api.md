@@ -11,9 +11,14 @@ modules to edit. Drift surfaces as type errors at the call sites.
 Arguments, if any: $ARGUMENTS
 
 1. Run `npm run openapi:generate`. It fetches the spec from the backend and rewrites
-   `src/shared/api/generated/{openapi.json,schema.d.ts}`. If the backend is unreachable the
-   script exits non-zero with a clear message — stop and show it. (Backend lives in `app/backend`,
-   started with `npm run server`; override its origin with `API_URL`.)
+   `src/shared/api/generated/{openapi.json,schema.d.ts,validation-schemas.ts}`.
+   `validation-schemas.ts` holds one named Zod schema per POST/PATCH request body (e.g.
+   `patchUsersByIdRole` for `PATCH /users/{id}/role`), with that body's OpenAPI constraints already
+   applied. Forms import the export as-is; to change a field's message, wrap it with
+   `overrideValidationMessages()` (`src/shared/lib/mantine/override-validation-messages.ts`) rather
+   than `schema.extend({...})`, which redeclares — and can silently drop — the field's rules. If the
+   backend is unreachable the script exits non-zero with a clear message — stop and show it. (Backend
+   lives in `app/backend`, started with `npm run server`; override its origin with `API_URL`.)
 
 2. Check the **hand-written** type surface in `src/shared/api/schema.ts` against the fresh spec.
    The backend inlines its DTOs (`components.schemas` is empty), so `ApiError` and any other shared

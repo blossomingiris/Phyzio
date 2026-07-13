@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { jsonSchemaToZod } from "json-schema-to-zod";
 import openapiTS, { astToString } from "openapi-typescript";
 
 const API_URL = process.env.API_URL ?? "http://localhost:3000";
@@ -10,6 +11,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const GENERATED_DIR = resolve(here, "../src/shared/api/generated");
 const DOCS_PATH = resolve(GENERATED_DIR, "openapi.json");
 const TYPES_PATH = resolve(GENERATED_DIR, "schema.d.ts");
+const VALIDATION_SCHEMAS_PATH = resolve(GENERATED_DIR, "validation-schemas.ts");
 
 const HEADER = [
   "/* eslint-disable */",
@@ -21,6 +23,28 @@ const HEADER = [
 function fail(message) {
   console.error(`\n✖ openapi:generate failed\n  ${message}\n`);
   process.exit(1);
+}
+
+function toPascalCase(segment) {
+  return segment
+    .split(/[-_]/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
+}
+
+// Mechanical, collision-free identifier derived from method + path — no
+// guessing at "create"/"update" semantics (the backend has no operationId).
+// e.g. patch /users/{id}/role -> patchUsersByIdRole
+function validationSchemaName(method, path) {
+  const parts = path
+    .split("/")
+    .filter(Boolean)
+    .map((segment) =>
+      segment.startsWith("{") && segment.endsWith("}")
+        ? `By${toPascalCase(segment.slice(1, -1))}`
+        : toPascalCase(segment),
+    );
+  return method + parts.join("");
 }
 
 let docs;
@@ -45,6 +69,42 @@ await writeFile(DOCS_PATH, `${JSON.stringify(docs, null, 2)}\n`, "utf8");
 const ast = await openapiTS(docs);
 await writeFile(TYPES_PATH, `${HEADER}${astToString(ast)}`, "utf8");
 
+const validationSchemaExports = [];
+const usedNames = new Set();
+for (const [path, methods] of Object.entries(docs.paths ?? {})) {
+  for (const [method, operation] of Object.entries(methods)) {
+    if (method !== "post" && method !== "patch") continue;
+    const bodySchema = operation?.requestBody?.content?.["application/json"]?.schema;
+    if (!bodySchema) continue;
+
+    const name = validationSchemaName(method, path);
+    if (usedNames.has(name)) {
+      fail(
+        `Generated validation-schema name "${name}" collides for ${method.toUpperCase()} ${path}.\n` +
+          `  Rename one of the colliding routes, or adjust validationSchemaName() in this script.`,
+      );
+    }
+    usedNames.add(name);
+
+    let zodSrc;
+    try {
+      zodSrc = jsonSchemaToZod(bodySchema, { module: "none", zodVersion: 4 });
+    } catch (err) {
+      fail(
+        `Could not convert request body for ${method.toUpperCase()} ${path} to a Zod schema.\n` +
+          `  (${err instanceof Error ? err.message : String(err)})`,
+      );
+    }
+    validationSchemaExports.push(
+      `// ${method.toUpperCase()} ${path}\nexport const ${name} = ${zodSrc};`,
+    );
+  }
+}
+
+const validationSchemasSrc =
+  `${HEADER}import { z } from "zod";\n\n` + `${validationSchemaExports.join("\n\n")}\n`;
+await writeFile(VALIDATION_SCHEMAS_PATH, validationSchemasSrc, "utf8");
+
 console.log(
-  `✔ openapi:generate\n  docs   → ${DOCS_PATH}\n  types  → ${TYPES_PATH}`,
+  `✔ openapi:generate\n  docs        → ${DOCS_PATH}\n  types       → ${TYPES_PATH}\n  validation  → ${VALIDATION_SCHEMAS_PATH}`,
 );

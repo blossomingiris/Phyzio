@@ -1,24 +1,19 @@
 import { rqClient } from "@/shared/api/client";
 import { getApiErrorMessage, isApiFieldError } from "@/shared/api/errors";
+import { postAuthLogin } from "@/shared/api/generated/validation-schemas";
 import { ROUTES } from "@/shared/model/routes";
 import { Alert, Anchor, Button, PasswordInput, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { Link, useNavigate } from "react-router";
-import { z } from "zod";
 import { AuthLayout } from "./ui/auth-layout";
-
-const loginSchema = z.object({
-  email: z.email("Enter a valid email"),
-  password: z.string().min(1, "Password is required"),
-});
 
 export function LoginPage() {
   const navigate = useNavigate();
 
   const form = useForm({
     initialValues: { email: "", password: "" },
-    validate: schemaResolver(loginSchema),
+    validate: schemaResolver(postAuthLogin),
     onValuesChange: () => login.reset(),
   });
 

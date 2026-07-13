@@ -1,3 +1,7 @@
+import {
+  HeaderActionsProvider,
+  HeaderActionsSlot,
+} from "@/shared/lib/react/use-header-actions";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
 import {
   Navbar,
@@ -8,10 +12,6 @@ import {
   footerNavigationConfig,
   navigationConfig,
 } from "@/shared/ui/navbar/navigation.config";
-import {
-  HeaderActionsProvider,
-  HeaderActionsSlot,
-} from "@/shared/lib/use-header-actions";
 
 import { Group, AppShell as MantineAppShell, Paper } from "@mantine/core";
 import { Outlet, useLocation } from "react-router";

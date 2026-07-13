@@ -1,4 +1,4 @@
-import { useHeaderActions } from "@/shared/lib/use-header-actions";
+import { useHeaderActions } from "@/shared/lib/react/use-header-actions";
 import { AddButton } from "@/shared/ui/add-button";
 import { Title } from "@mantine/core";
 
