@@ -98,6 +98,9 @@ function AppShellLayout() {
             p="md"
             style={{
               flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              minHeight: 0,
               borderRadius:
                 "0 0 var(--mantine-radius-sm) var(--mantine-radius-sm)",
               borderLeft: "1px solid var(--paper-border-color)",

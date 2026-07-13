@@ -17,42 +17,53 @@ export function AsyncWrapper<T, TError = unknown>({
 }: AsyncWrapperProps<T, TError>) {
   const { isPending, isFetching, isError, error, data } = query;
 
-  if (isPending) return loaderRender();
-
-  if (isError) {
-    return (
-      <Alert
-        color="error"
-        title="Error"
-        variant="light"
-        icon={<IconAlertCircle />}
-      >
-        {getApiErrorMessage(error)}
-        {isApiFieldError(error) && error.errors.length > 0 && (
-          <List size="sm" mt="xs">
-            {error.errors.map((fieldError) => (
-              <List.Item key={fieldError.field}>
-                {fieldError.field}: {fieldError.message}
-              </List.Item>
-            ))}
-          </List>
-        )}
-      </Alert>
-    );
-  }
-
   return (
-    <div style={{ position: "relative" }}>
-      <LoadingOverlay visible={isFetching} loaderProps={{ color: "primary" }} />
-      {render(data as T)}
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
+      }}
+    >
+      {isPending ? (
+        loaderRender()
+      ) : isError ? (
+        <Alert
+          color="error"
+          title="Error"
+          variant="light"
+          icon={<IconAlertCircle />}
+        >
+          {getApiErrorMessage(error)}
+          {isApiFieldError(error) && error.errors.length > 0 && (
+            <List size="sm" mt="xs">
+              {error.errors.map((fieldError) => (
+                <List.Item key={fieldError.field}>
+                  {fieldError.field}: {fieldError.message}
+                </List.Item>
+              ))}
+            </List>
+          )}
+        </Alert>
+      ) : (
+        <>
+          <LoadingOverlay
+            visible={isFetching}
+            loaderProps={{ color: "primary" }}
+          />
+          {render(data as T)}
+        </>
+      )}
     </div>
   );
 }
 
 function defaultLoaderRender(): ReactNode {
   return (
-    <Center mih={200}>
-      <Loader />
+    <Center mih={200} style={{ flex: 1 }}>
+      <Loader type="bars" />
     </Center>
   );
 }
