@@ -6,12 +6,14 @@ import { APP_DOMAIN, APP_PORT, APP_PROTOCOL } from "#app/config/app.ts";
 import { LOGGER_OPTIONS } from "#app/config/logger.ts";
 import Fastify from "fastify";
 import { registerGlobalErrorHandler } from "./errors/registerGlobalErrorHandler.ts";
-import cookiePlugin from "./plugins/cookie.plugin.ts";
-import corsPlugin from "./plugins/cors.plugin.ts";
-import databasePlugin from "./plugins/database.plugin.ts";
-import jwtPlugin from "./plugins/jwt.plugin.ts";
-import routes from "./plugins/routes.plugin.ts";
-import swaggerPlugin from "./plugins/swagger.plugin.ts";
+import {
+  cookiePlugin,
+  corsPlugin,
+  databasePlugin,
+  jwtPlugin,
+  routes,
+  swaggerPlugin,
+} from "./plugins/index.ts";
 
 const app = Fastify({
   logger: LOGGER_OPTIONS,
