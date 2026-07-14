@@ -12,73 +12,90 @@ import { TreatmentItemPage } from "@/features/treatments/treatment-item.page";
 import { TreatmentListPage } from "@/features/treatments/treatment-list.page";
 import { UserItemPage } from "@/features/users/user-item.page";
 import { UserListPage } from "@/features/users/user-list.page";
+import { USER_ROLES } from "@/shared/domain/user";
 import { ROUTES } from "@/shared/model/routes";
 import { createBrowserRouter } from "react-router";
 import { App } from "./app";
 import { AppShell } from "./app-shell";
+import { RequireAuth, RequireGuest, RequireRole } from "./route-guards";
 
 export const router = createBrowserRouter([
   {
     element: <App />,
     children: [
       {
-        path: ROUTES.LOGIN,
-        element: <LoginPage />,
+        element: <RequireGuest />,
+        children: [
+          {
+            path: ROUTES.LOGIN,
+            element: <LoginPage />,
+          },
+        ],
       },
       {
         path: ROUTES.FORGOT_PASSWORD,
         element: <ForgotPasswordPage />,
       },
       {
-        element: <AppShell />,
+        element: <RequireAuth />,
         children: [
           {
-            path: ROUTES.HOME,
-            element: <AppointmentListPage />,
-          },
-          {
-            path: ROUTES.USERS,
-            element: <UserListPage />,
-          },
-          {
-            path: ROUTES.USER_ITEM,
-            element: <UserItemPage />,
-          },
-          {
-            path: ROUTES.THERAPISTS,
-            element: <TherapistListPage />,
-          },
-          {
-            path: ROUTES.THERAPIST_ITEM,
-            element: <TherapistItemPage />,
-          },
-          {
-            path: ROUTES.CLIENTS,
-            element: <ClientListPage />,
-          },
-          {
-            path: ROUTES.CLIENT_ITEM,
-            element: <ClientItemPage />,
-          },
-          {
-            path: ROUTES.TREATMENTS,
-            element: <TreatmentListPage />,
-          },
-          {
-            path: ROUTES.TREATMENT_ITEM,
-            element: <TreatmentItemPage />,
-          },
-          {
-            path: ROUTES.TREATMENT_PLANS,
-            element: <TreatmentPlanListPage />,
-          },
-          {
-            path: ROUTES.TREATMENT_PLAN_ITEM,
-            element: <TreatmentPlanItemPage />,
-          },
-          {
-            path: ROUTES.SETTINGS,
-            element: <SettingsPage />,
+            element: <AppShell />,
+            children: [
+              {
+                path: ROUTES.HOME,
+                element: <AppointmentListPage />,
+              },
+              {
+                path: ROUTES.SETTINGS,
+                element: <SettingsPage />,
+              },
+              {
+                element: <RequireRole role={USER_ROLES.ADMIN} />,
+                children: [
+                  {
+                    path: ROUTES.USERS,
+                    element: <UserListPage />,
+                  },
+                  {
+                    path: ROUTES.USER_ITEM,
+                    element: <UserItemPage />,
+                  },
+                  {
+                    path: ROUTES.THERAPISTS,
+                    element: <TherapistListPage />,
+                  },
+                  {
+                    path: ROUTES.THERAPIST_ITEM,
+                    element: <TherapistItemPage />,
+                  },
+                  {
+                    path: ROUTES.CLIENTS,
+                    element: <ClientListPage />,
+                  },
+                  {
+                    path: ROUTES.CLIENT_ITEM,
+                    element: <ClientItemPage />,
+                  },
+                  {
+                    path: ROUTES.TREATMENTS,
+                    element: <TreatmentListPage />,
+                  },
+                  {
+                    path: ROUTES.TREATMENT_ITEM,
+                    element: <TreatmentItemPage />,
+                  },
+                  {
+                    path: ROUTES.TREATMENT_PLANS,
+                    element: <TreatmentPlanListPage />,
+                  },
+                  {
+                    path: ROUTES.TREATMENT_PLAN_ITEM,
+                    element: <TreatmentPlanItemPage />,
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

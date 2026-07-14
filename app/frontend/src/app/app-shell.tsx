@@ -7,6 +7,7 @@ import {
   HeaderActionsSlot,
 } from "@/shared/lib/react/use-header-actions";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
+import { useSessionStore } from "@/services/session";
 import {
   Navbar,
   NavbarProvider,
@@ -39,6 +40,17 @@ function AppShellLayout() {
   const currentNavItem = navItems.find((item) => item.path === pathname);
   const parentNavItem = navItems.find(
     (item) => item.path !== "/" && pathname.startsWith(`${item.path}/`),
+  );
+
+  const currentUser = useSessionStore((state) => state.user);
+  const logout = useSessionStore((state) => state.logout);
+
+  const visibleNavItems = navigationConfig.filter(
+    (item) =>
+      !item.roles || (!!currentUser && item.roles.includes(currentUser.role)),
+  );
+  const footerItems = footerNavigationConfig.map((item) =>
+    item.key === "logout" ? { ...item, onClick: () => void logout() } : item,
   );
 
   const crumbs = currentNavItem
@@ -83,11 +95,15 @@ function AppShellLayout() {
         <Navbar>
           <Navbar.Header>Phyzio</Navbar.Header>
           <Navbar.Section grow>
-            {navigationConfig.map((item) => (
+            {visibleNavItems.map((item) => (
               <Navbar.Link key={item.key} item={item} />
             ))}
           </Navbar.Section>
-          <Navbar.Footer />
+          <Navbar.Footer>
+            {footerItems.map((item) => (
+              <Navbar.Link key={item.key} item={item} />
+            ))}
+          </Navbar.Footer>
         </Navbar>
         <MantineAppShell.Main
           bg="var(--surface-subtle)"

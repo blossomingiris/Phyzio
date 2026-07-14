@@ -97,7 +97,7 @@ Code with no feature ownership lives here, split into groups by responsibility.
 Unlike the app/features/services boundaries, this internal split is **not**
 ESLint-enforced — it's a convention to keep the layer navigable, not a hard rule:
 
-- `api/` — the OpenAPI-typed HTTP client (`client.ts`, `errors.ts`,
+- `api/` — the OpenAPI-typed HTTP client (`http-client.ts`, `errors.ts`,
   `types.ts`) plus `generated/` (regenerated, not hand-edited).
 - `ui/` — generic UI reused across features.
 - `model/` — global data/config (`config.ts`, `routes.ts`). Also where a global
@@ -134,6 +134,7 @@ Don't create a directory for a single file.
   global location.
 - Hooks are named `use-<name>.ts`/`.tsx`.
 
-See `src/features/README.md` for the feature public-API rule, and
+See `src/features/README.md` for the feature public-API rule,
 `.claude/skills/component/SKILL.md` for component-level conventions (styling,
-touch targets, accessibility).
+touch targets, accessibility), and `.claude/skills/authorization/SKILL.md`
+for session/auth state, route guards, and role-gated UI.

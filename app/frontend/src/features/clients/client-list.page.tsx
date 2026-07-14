@@ -1,4 +1,4 @@
-import { rqClient } from "@/shared/api/client";
+import { rqClient } from "@/shared/api/http-client";
 import { useHeaderActions } from "@/shared/lib/react/use-header-actions";
 import { CONSTANTS } from "@/shared/model/constants";
 import { AddButton } from "@/shared/ui/add-button";

@@ -15,10 +15,10 @@ import {
   IconChevronRight,
   type Icon,
 } from "@tabler/icons-react";
+import type { UserRole } from "@/shared/domain/user";
 import { createContext, useContext, type ReactNode } from "react";
 import { Link, useLocation } from "react-router";
 import classes from "./navbar.module.css";
-import { footerNavigationConfig } from "./navigation.config";
 
 export type NavItem = {
   key: string;
@@ -26,6 +26,8 @@ export type NavItem = {
   icon: Icon;
   path?: string;
   count?: number;
+  roles?: UserRole[];
+  onClick?: () => void;
 };
 
 function formatBadgeCount(count: number) {
@@ -163,7 +165,7 @@ function NavbarExpandedLink({
     <>
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.title}</span>
-      {!item.path && (
+      {!item.path && !item.onClick && (
         <Badge
           className={classes.badge}
           variant="light"
@@ -186,15 +188,27 @@ function NavbarExpandedLink({
     </>
   );
 
-  return item.path ? (
-    <Link
-      to={item.path}
-      className={classes.link}
-      data-active={active || undefined}
-    >
-      {content}
-    </Link>
-  ) : (
+  if (item.path) {
+    return (
+      <Link
+        to={item.path}
+        className={classes.link}
+        data-active={active || undefined}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  if (item.onClick) {
+    return (
+      <UnstyledButton onClick={item.onClick} className={classes.link}>
+        {content}
+      </UnstyledButton>
+    );
+  }
+
+  return (
     <div className={classes.link} data-disabled="true">
       {content}
     </div>
@@ -224,18 +238,25 @@ function NavbarCollapsedLink({
     </span>
   );
 
+  const label =
+    item.path || item.onClick ? item.title : `${item.title} — Coming soon`;
+
   return (
-    <Tooltip
-      label={item.path ? item.title : `${item.title} — Coming soon`}
-      position="right"
-      transitionProps={{ duration: 0 }}
-    >
+    <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       {item.path ? (
         <UnstyledButton
           component={Link}
           to={item.path}
           className={classes.railLink}
           data-active={active || undefined}
+          aria-label={item.title}
+        >
+          {iconWithBadge}
+        </UnstyledButton>
+      ) : item.onClick ? (
+        <UnstyledButton
+          onClick={item.onClick}
+          className={classes.railLink}
           aria-label={item.title}
         >
           {iconWithBadge}
@@ -265,14 +286,10 @@ function NavbarLink({ item }: { item: NavItem }) {
   );
 }
 
-function NavbarFooter() {
+function NavbarFooter({ children }: { children: ReactNode }) {
   return (
     <AppShell.Section className={classes.footer}>
-      <NavbarSectionLayout>
-        {footerNavigationConfig.map((item) => (
-          <NavbarLink key={item.key} item={item} />
-        ))}
-      </NavbarSectionLayout>
+      <NavbarSectionLayout>{children}</NavbarSectionLayout>
     </AppShell.Section>
   );
 }

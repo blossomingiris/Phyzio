@@ -17,6 +17,16 @@ export function isApiFieldError(error: unknown): error is ApiFieldError {
   );
 }
 
+/**
+ * Complement to {@link isApiFieldError}: true when there's an error that
+ * wasn't broken down into form field errors and needs a generic alert.
+ * `null`/absent error → `false`.
+ */
+export function isGeneralError(error: unknown): boolean {
+  if (!error) return false;
+  return !isApiFieldError(error);
+}
+
 export function getApiErrorMessage(error: unknown): string {
   if (isApiError(error)) return error.message;
   if (error instanceof Error) return error.message;

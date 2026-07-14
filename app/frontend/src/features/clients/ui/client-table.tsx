@@ -1,4 +1,4 @@
-import { rqClient } from "@/shared/api/client";
+import { rqClient } from "@/shared/api/http-client";
 import { ROUTES } from "@/shared/model/routes";
 import { Group, Pagination, Stack, Table, Text } from "@mantine/core";
 import type { MethodResponse } from "openapi-react-query";

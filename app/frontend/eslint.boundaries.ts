@@ -18,6 +18,12 @@ export const eslintBoundariesConfig = {
         mode: "folder",
         capture: ["feature"],
       },
+      {
+        type: "services",
+        pattern: "src/services/*",
+        mode: "folder",
+        capture: ["service"],
+      },
       { type: "shared", pattern: "src/shared", mode: "folder" },
     ],
   },
@@ -41,6 +47,17 @@ export const eslintBoundariesConfig = {
             message:
               "A feature may only be imported through its public API (index / *.page.tsx). Direct import from ${dependency.source} is not allowed",
           },
+          {
+            from: { type: "app" },
+            allow: {
+              to: {
+                type: "services",
+                internalPath: ["index.ts", "index.tsx"],
+              },
+            },
+            message:
+              "A service may only be imported through its public API (index.ts). Direct import from ${dependency.source} is not allowed",
+          },
           { from: { type: "features" }, allow: { to: { type: "shared" } } },
           {
             from: { type: "features" },
@@ -48,6 +65,27 @@ export const eslintBoundariesConfig = {
               to: {
                 type: "features",
                 captured: { feature: "{{from.feature}}" },
+              },
+            },
+          },
+          {
+            from: { type: "features" },
+            allow: {
+              to: {
+                type: "services",
+                internalPath: ["index.ts", "index.tsx"],
+              },
+            },
+            message:
+              "A service may only be imported through its public API (index.ts). Direct import from ${dependency.source} is not allowed",
+          },
+          { from: { type: "services" }, allow: { to: { type: "shared" } } },
+          {
+            from: { type: "services" },
+            allow: {
+              to: {
+                type: "services",
+                captured: { service: "{{from.service}}" },
               },
             },
           },

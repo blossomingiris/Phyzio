@@ -1,15 +1,16 @@
-import { rqClient } from "@/shared/api/client";
-import { getApiErrorMessage, isApiFieldError } from "@/shared/api/errors";
+import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { postAuthLogin } from "@/shared/api/generated/validation-schemas";
+import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
 import { ROUTES } from "@/shared/model/routes";
 import { Alert, Anchor, Button, PasswordInput, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
+import { useLogin } from "./use-login";
 import { AuthLayout } from "./ui/auth-layout";
 
 export function LoginPage() {
-  const navigate = useNavigate();
+  const login = useLogin();
 
   const form = useForm({
     initialValues: { email: "", password: "" },
@@ -17,18 +18,12 @@ export function LoginPage() {
     onValuesChange: () => login.reset(),
   });
 
-  const login = rqClient.useMutation("post", "/auth/login", {
-    onSuccess: (data) => {
-      localStorage.setItem("phyzio-auth-token", data.token);
-      navigate(ROUTES.HOME);
-    },
-    onError: (error) => {
-      if (isApiFieldError(error)) {
-        form.setErrors(
-          Object.fromEntries(error.errors.map((e) => [e.field, e.message])),
-        );
-      }
-    },
+  const handleSubmit = form.onSubmit(async (values) => {
+    try {
+      await login.mutateAsync(values);
+    } catch (error) {
+      applyApiFieldErrors(form, error);
+    }
   });
 
   return (
@@ -41,10 +36,8 @@ export function LoginPage() {
         </Anchor>
       }
     >
-      <form
-        onSubmit={form.onSubmit((values) => login.mutate({ body: values }))}
-      >
-        {login.isError && !isApiFieldError(login.error) && (
+      <form onSubmit={handleSubmit}>
+        {isGeneralError(login.error) && (
           <Alert
             color="error"
             variant="light"
