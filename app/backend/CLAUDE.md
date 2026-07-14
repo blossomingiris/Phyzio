@@ -38,7 +38,9 @@ Every endpoint must be fully documented before or alongside implementation. Type
 
 - Never read the real `.env`. It contains real secrets.
 - `.env.example` is the source of truth for environment variables.
-- Keep `.env.example` up to date with placeholder values only.
+- Keep `.env.example` up to date with placeholder values only — never real domains,
+  ports, credentials, or secrets. Use `your_<variable_name>` as the placeholder
+  value for every entry (e.g. `DATABASE_PORT=your_db_port`).
 - When adding a new variable:
   1. Add it to `.env.example`.
   2. Never change the real `.env`.
