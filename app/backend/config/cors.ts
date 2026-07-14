@@ -1,2 +1,2 @@
-export const APP_CORS_ALLOWED_ORIGINS: string =
-  process.env.CORS_ALLOWED_ORIGINS!;
+export const APP_CORS_ALLOWED_ORIGINS: string[] =
+  process.env.CORS_ALLOWED_ORIGINS!.split(",").map((origin) => origin.trim());
