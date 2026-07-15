@@ -1,71 +1,91 @@
-import { rqClient } from "@/shared/api/http-client";
+import type { PaginatedData } from "@/shared/api/types";
+import type { Client } from "@/shared/domain/client";
+import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
+import { formatDate } from "@/shared/lib/date/format-date";
 import { ROUTES } from "@/shared/model/routes";
-import { Group, Pagination, Stack, Table, Text } from "@mantine/core";
-import type { MethodResponse } from "openapi-react-query";
+import { DataTable } from "@/shared/ui/data-table/data-table";
+import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
+import { Badge, Group, Stack, Text } from "@mantine/core";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { MRT_ColumnDef } from "mantine-react-table-open";
 import { useNavigate } from "react-router";
 
-type ClientListResponse = MethodResponse<
-  typeof rqClient,
-  "get",
-  "/clients/"
->;
-type Client = ClientListResponse["data"][number];
+const columns: MRT_ColumnDef<Client>[] = [
+  {
+    id: "lastName",
+    header: "Name",
+    accessorFn: (client) => `${client.firstName} ${client.lastName}`,
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+    enableSorting: false,
+    Cell: ({ cell }) => cell.getValue<string | null>() ?? "—",
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    enableSorting: false,
+    Cell: ({ cell }) => cell.getValue<string | null>() ?? "—",
+  },
+  {
+    accessorKey: "birthDate",
+    header: "Birth Date",
+    enableSorting: false,
+    Cell: ({ cell }) => formatDate(cell.getValue<string | null>()),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created",
+    Cell: ({ cell }) => formatDate(cell.getValue<string>()),
+  },
+  {
+    id: "therapist",
+    header: "Therapist",
+    enableSorting: false,
+    accessorFn: (client) =>
+      client.therapist
+        ? `${client.therapist.firstName} ${client.therapist.lastName}`
+        : "—",
+    Cell: ({ row }) => {
+      const therapist = row.original.therapist;
+      if (!therapist) return "—";
+      return (
+        <Stack gap={2}>
+          <Group gap={6}>
+            <Text size="sm">
+              {therapist.firstName} {therapist.lastName}
+            </Text>
+            {!therapist.isActive && (
+              <Badge color="accent" size="xs">
+                Inactive
+              </Badge>
+            )}
+          </Group>
+          <Text size="xs" c="dimmed">
+            {SPECIALITY_LABELS[therapist.speciality]}
+          </Text>
+        </Stack>
+      );
+    },
+  },
+];
 
 export function ClientTable({
-  clients,
-  page,
-  totalPages,
-  onPageChange,
+  query,
+  table,
 }: {
-  clients: Client[];
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
+  query: UseQueryResult<PaginatedData<Client>, unknown>;
+  table: ServerTableState;
 }) {
   const navigate = useNavigate();
 
   return (
-    <Stack>
-      <Table highlightOnHover>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Phone</Table.Th>
-            <Table.Th>Email</Table.Th>
-            <Table.Th>Therapist</Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          {clients.map((client) => (
-            <Table.Tr
-              key={client.id}
-              onClick={() => navigate(`${ROUTES.CLIENTS}/${client.id}`)}
-              style={{ cursor: "pointer" }}
-            >
-              <Table.Td>
-                {client.firstName} {client.lastName}
-              </Table.Td>
-              <Table.Td>{client.phone ?? "—"}</Table.Td>
-              <Table.Td>{client.email ?? "—"}</Table.Td>
-              <Table.Td>
-                {client.therapist
-                  ? `${client.therapist.firstName} ${client.therapist.lastName}`
-                  : "—"}
-              </Table.Td>
-            </Table.Tr>
-          ))}
-        </Table.Tbody>
-      </Table>
-      {clients.length === 0 && (
-        <Text c="dimmed" ta="center">
-          No clients found
-        </Text>
-      )}
-      {totalPages > 1 && (
-        <Group justify="center">
-          <Pagination value={page} onChange={onPageChange} total={totalPages} />
-        </Group>
-      )}
-    </Stack>
+    <DataTable
+      columns={columns}
+      query={query}
+      table={table}
+      onRowClick={(client) => navigate(`${ROUTES.CLIENTS}/${client.id}`)}
+    />
   );
 }
