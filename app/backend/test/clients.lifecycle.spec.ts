@@ -187,6 +187,44 @@ describe("clients lifecycle", () => {
     expect(body.therapist).toBeNull();
   });
 
+  it("keeps the assigned therapist visible once a client is deleted (not personal data)", async () => {
+    const therapistRes = await h.inject({
+      method: "POST",
+      url: "/therapists",
+      headers: auth(),
+      payload: {
+        firstName: "Redact",
+        lastName: "Keeper",
+        email: "redact-keeper@clients.test",
+        password: ADMIN_PASSWORD,
+        speciality: "orthopedic",
+        phone: "+1234567890",
+        workingHours: {},
+      },
+    });
+    expect(therapistRes.statusCode).toBe(201);
+    const therapistId = therapistRes.json<{ id: number }>().id;
+
+    const { id } = await createClient({ email: "redact-therapist@clients.test", therapistId });
+
+    await h.inject({ method: "DELETE", url: `/clients/${id}`, headers: auth() });
+
+    const res = await h.inject({
+      method: "GET",
+      url: `/clients/${id}?deleted=true`,
+      headers: auth(),
+    });
+    expect(res.statusCode).toBe(200);
+    const body = res.json<{
+      phone: string | null;
+      therapist: { id: number } | null;
+    }>();
+
+    expect(body.phone).toBeNull();
+    expect(body.therapist).not.toBeNull();
+    expect(body.therapist?.id).toBe(therapistId);
+  });
+
   it("keeps the assigned therapist visible on a client after the therapist is soft-deleted", async () => {
     // History is preserved: the client's therapist summary is populated from a
     // leftJoin that intentionally does NOT filter the therapist's deletedAt.

@@ -193,6 +193,19 @@ export class ClientsService {
       ...client
     } = row;
 
+    const therapist =
+      client.therapistId !== null
+        ? {
+            id: client.therapistId,
+            firstName: therapistFirstName!,
+            lastName: therapistLastName!,
+            email: therapistEmail!,
+            speciality: therapistSpeciality!,
+            phone: therapistPhone!,
+            isActive: therapistIsActive!,
+          }
+        : null;
+
     if (client.deletedAt) {
       return {
         ...client,
@@ -202,25 +215,11 @@ export class ClientsService {
         origin: null,
         preferredCommunication: null,
         medicalNotes: null,
-        therapist: null,
+        therapist,
       };
     }
 
-    return {
-      ...client,
-      therapist:
-        client.therapistId !== null
-          ? {
-              id: client.therapistId,
-              firstName: therapistFirstName!,
-              lastName: therapistLastName!,
-              email: therapistEmail!,
-              speciality: therapistSpeciality!,
-              phone: therapistPhone!,
-              isActive: therapistIsActive!,
-            }
-          : null,
-    };
+    return { ...client, therapist };
   }
 
   private buildWhere(filters: ClientFilters) {
