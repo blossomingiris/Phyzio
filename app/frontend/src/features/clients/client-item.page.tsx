@@ -3,7 +3,7 @@ import { ROUTES } from "@/shared/model/routes";
 import { AsyncWrapper } from "@/shared/ui/async-wrapper";
 import { BackButton } from "@/shared/ui/back-button";
 import { Tabs } from "@/shared/ui/tabs/tabs";
-import { Stack, Text, Title } from "@mantine/core";
+import { Badge, Group, Stack, Text, Title } from "@mantine/core";
 import {
   IconCalendar,
   IconClipboardList,
@@ -24,9 +24,16 @@ export function ClientItemPage() {
   return (
     <Stack gap="sm" align="flex-start" style={{ width: "100%" }}>
       <BackButton to={ROUTES.CLIENTS} />
-      <Title>
-        {client ? `${client.firstName} ${client.lastName}` : "Client"}
-      </Title>
+      <Group gap="xs">
+        <Title>
+          {client ? `${client.firstName} ${client.lastName}` : "Client"}
+        </Title>
+        {client?.deletedAt && (
+          <Badge color="error" variant="light">
+            Deleted
+          </Badge>
+        )}
+      </Group>
       <AsyncWrapper
         query={query}
         render={(client) => (

@@ -6,7 +6,7 @@ import { Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconUserCheck, IconUsers } from "@tabler/icons-react";
 import { ClientCreateModal } from "./ui/client-create-modal";
-import { ClientListTable } from "./ui/client-list-table";
+import { ClientTable } from "./ui/client-table";
 
 export function ClientListPage() {
   const table = useServerTable();
@@ -37,11 +37,11 @@ export function ClientListPage() {
         </Tabs.List>
 
         <Tabs.Panel value="active" pt="md" style={{ flex: 1, minHeight: 0 }}>
-          <ClientListTable table={table} deleted={false} />
+          <ClientTable table={table} deleted={false} />
         </Tabs.Panel>
 
         <Tabs.Panel value="all" pt="md" style={{ flex: 1, minHeight: 0 }}>
-          <ClientListTable table={table} deleted />
+          <ClientTable table={table} deleted />
         </Tabs.Panel>
       </Tabs>
 

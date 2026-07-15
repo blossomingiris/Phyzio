@@ -1,4 +1,3 @@
-import type { PaginatedData } from "@/shared/api/types";
 import type { Client } from "@/shared/domain/client";
 import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
 import { formatDate } from "@/shared/lib/date/format-date";
@@ -6,9 +5,9 @@ import { ROUTES } from "@/shared/model/routes";
 import { DataTable } from "@/shared/ui/data-table/data-table";
 import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
 import { Badge, Group, Stack, Text } from "@mantine/core";
-import type { UseQueryResult } from "@tanstack/react-query";
 import type { MRT_ColumnDef } from "mantine-react-table-open";
 import { useNavigate } from "react-router";
+import { useClientsQuery } from "../model/use-clients-query";
 
 const columns: MRT_ColumnDef<Client>[] = [
   {
@@ -37,19 +36,24 @@ const columns: MRT_ColumnDef<Client>[] = [
     accessorKey: "phone",
     header: "Phone",
     enableSorting: false,
-    Cell: ({ cell }) => cell.getValue<string | null>() ?? "—",
+    Cell: ({ cell, row }) =>
+      row.original.deletedAt ? "—" : (cell.getValue<string | null>() ?? "—"),
   },
   {
     accessorKey: "email",
     header: "Email",
     enableSorting: false,
-    Cell: ({ cell }) => cell.getValue<string | null>() ?? "—",
+    Cell: ({ cell, row }) =>
+      row.original.deletedAt ? "—" : (cell.getValue<string | null>() ?? "—"),
   },
   {
     accessorKey: "birthDate",
     header: "Birth Date",
     enableSorting: false,
-    Cell: ({ cell }) => formatDate(cell.getValue<string | null>()),
+    Cell: ({ cell, row }) =>
+      row.original.deletedAt
+        ? "—"
+        : formatDate(cell.getValue<string | null>()),
   },
   {
     accessorKey: "createdAt",
@@ -89,13 +93,14 @@ const columns: MRT_ColumnDef<Client>[] = [
 ];
 
 export function ClientTable({
-  query,
   table,
+  deleted,
 }: {
-  query: UseQueryResult<PaginatedData<Client>, unknown>;
   table: ServerTableState;
+  deleted: boolean;
 }) {
   const navigate = useNavigate();
+  const query = useClientsQuery(table, deleted);
 
   return (
     <DataTable
