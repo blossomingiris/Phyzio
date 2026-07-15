@@ -6,10 +6,11 @@ import { DataTable } from "@/shared/ui/data-table/data-table";
 import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
 import { Badge, Group, Stack, Text } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table-open";
+import { useMemo } from "react";
 import { useNavigate } from "react-router";
 import { useClientsQuery } from "../model/use-clients-query";
 
-const columns: MRT_ColumnDef<Client>[] = [
+const baseColumns: MRT_ColumnDef<Client>[] = [
   {
     accessorKey: "firstName",
     header: "First Name",
@@ -92,6 +93,13 @@ const columns: MRT_ColumnDef<Client>[] = [
   },
 ];
 
+const deletedAtColumn: MRT_ColumnDef<Client> = {
+  accessorKey: "deletedAt",
+  header: "Deleted",
+  enableSorting: false,
+  Cell: ({ cell }) => formatDate(cell.getValue<string | null>()),
+};
+
 export function ClientTable({
   table,
   status,
@@ -101,6 +109,10 @@ export function ClientTable({
 }) {
   const navigate = useNavigate();
   const query = useClientsQuery(table, status);
+  const columns = useMemo(
+    () => (status === "deleted" ? [...baseColumns, deletedAtColumn] : baseColumns),
+    [status],
+  );
 
   return (
     <DataTable

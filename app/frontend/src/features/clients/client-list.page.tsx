@@ -4,7 +4,7 @@ import { useServerTable } from "@/shared/ui/data-table/use-server-table";
 import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconUserCheck, IconUserOff, IconUsers } from "@tabler/icons-react";
+import { IconUserOff, IconUsers, IconUserX } from "@tabler/icons-react";
 import { ClientCreateModal } from "./ui/client-create-modal";
 import { ClientTable } from "./ui/client-table";
 
@@ -25,10 +25,15 @@ export function ClientListPage() {
         defaultValue="active"
         onChange={resetPage}
         keepMounted={false}
-        style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
       >
         <Tabs.List>
-          <Tabs.Tab value="active" leftSection={<IconUserCheck size={16} />}>
+          <Tabs.Tab value="active" leftSection={<IconUserX size={16} />}>
             Active
           </Tabs.Tab>
           <Tabs.Tab value="all" leftSection={<IconUsers size={16} />}>
