@@ -1,7 +1,7 @@
 import { ROUTES } from "@/shared/model/routes";
 import { Anchor, Button, Stack, Text, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
-import { IconCircleCheck } from "@tabler/icons-react";
+import { IconExclamationCircle } from "@tabler/icons-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import { z } from "zod";
@@ -33,7 +33,10 @@ export function ForgotPasswordPage() {
     >
       {submitted ? (
         <Stack align="center" gap="xs">
-          <IconCircleCheck size={50} color="var(--mantine-color-success-6)" />
+          <IconExclamationCircle
+            size={50}
+            color="var(--mantine-color-dimmed)"
+          />
           <Text ta="center" size="sm" c="dimmed">
             If an account exists for <b>{form.values.email}</b>, you'll receive
             an email shortly.

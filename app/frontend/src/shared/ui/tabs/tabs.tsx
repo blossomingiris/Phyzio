@@ -17,6 +17,7 @@ function TabsRoot({
   defaultValue,
   classNames,
   onChange,
+  style,
   ...props
 }: TabsProps) {
   const [value, setValue] = useTabSearchParam(param, defaultValue);
@@ -30,6 +31,10 @@ function TabsRoot({
         onChange?.(resolved);
       }}
       classNames={{ tab: classes.tab, ...classNames }}
+      style={{
+        "--tab-border-color": "var(--mantine-color-accent-2)",
+        ...style,
+      }}
       {...props}
     />
   );
