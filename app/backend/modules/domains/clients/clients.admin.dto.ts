@@ -40,9 +40,12 @@ export const listClientsQuery = Type.Object(
     ),
     therapistId: Type.Optional(Type.Integer({ minimum: 1 })),
     deleted: Type.Optional(
-      Type.Boolean({
-        default: false,
-        description: "Include soft-deleted clients",
+      Type.Unsafe<"active" | "all" | "deleted">({
+        type: "string",
+        enum: ["active", "all", "deleted"],
+        default: "active",
+        description:
+          "active: exclude soft-deleted clients; all: include both; deleted: soft-deleted clients only",
       }),
     ),
     sortBy: clientSortBySchema,

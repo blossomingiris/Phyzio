@@ -15,7 +15,7 @@ type ClientFilters = {
   id?: number;
   therapistId?: number;
   search?: string;
-  deleted?: boolean;
+  status?: "active" | "all" | "deleted";
 };
 
 type ClientQueryRow = typeof clients.$inferSelect & {
@@ -225,7 +225,11 @@ export class ClientsService {
 
   private buildWhere(filters: ClientFilters) {
     return and(
-      filters.deleted ? undefined : isNull(clients.deletedAt),
+      filters.status === "deleted"
+        ? not(isNull(clients.deletedAt))
+        : filters.status === "all"
+          ? undefined
+          : isNull(clients.deletedAt),
       filters.id !== undefined ? eq(clients.id, filters.id) : undefined,
       filters.therapistId !== undefined
         ? eq(clients.therapistId, filters.therapistId)

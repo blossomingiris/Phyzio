@@ -26,7 +26,7 @@ export default async function clientsAdminController(app: FastifyInstance) {
       const { page, limit, search, therapistId, deleted, sortBy, sortOrder } =
         req.query;
       return service.all(
-        { search, therapistId, deleted },
+        { search, therapistId, status: deleted },
         { page, limit },
         { sortBy, sortOrder },
       );
@@ -37,7 +37,9 @@ export default async function clientsAdminController(app: FastifyInstance) {
     "/:id",
     { schema: findClientSchema },
     async (req) => {
-      return service.findOrFail(req.params.id, { deleted: req.query.deleted });
+      return service.findOrFail(req.params.id, {
+        status: req.query.deleted ? "all" : "active",
+      });
     },
   );
 

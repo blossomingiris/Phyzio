@@ -109,6 +109,39 @@ describe("clients lifecycle", () => {
     expect(shown.json<{ deletedAt: string | null }>().deletedAt).not.toBeNull();
   });
 
+  it("filters the client list by deleted status: active / all / deleted", async () => {
+    const { id: activeId } = await createClient({ email: "status-active@clients.test" });
+    const { id: deletedId } = await createClient({ email: "status-deleted@clients.test" });
+    await h.inject({ method: "DELETE", url: `/clients/${deletedId}`, headers: auth() });
+
+    const active = await h.inject({
+      method: "GET",
+      url: "/clients?deleted=active&limit=100",
+      headers: auth(),
+    });
+    const activeIds = active.json<{ data: { id: number }[] }>().data.map((c) => c.id);
+    expect(activeIds).toContain(activeId);
+    expect(activeIds).not.toContain(deletedId);
+
+    const all = await h.inject({
+      method: "GET",
+      url: "/clients?deleted=all&limit=100",
+      headers: auth(),
+    });
+    const allIds = all.json<{ data: { id: number }[] }>().data.map((c) => c.id);
+    expect(allIds).toContain(activeId);
+    expect(allIds).toContain(deletedId);
+
+    const deletedOnly = await h.inject({
+      method: "GET",
+      url: "/clients?deleted=deleted&limit=100",
+      headers: auth(),
+    });
+    const deletedIds = deletedOnly.json<{ data: { id: number }[] }>().data.map((c) => c.id);
+    expect(deletedIds).toContain(deletedId);
+    expect(deletedIds).not.toContain(activeId);
+  });
+
   it("redacts personal fields once a client is deleted, keeping name and timestamps", async () => {
     const { id } = await createClient({
       email: "redact@clients.test",
