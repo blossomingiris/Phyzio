@@ -193,6 +193,19 @@ export class ClientsService {
       ...client
     } = row;
 
+    if (client.deletedAt) {
+      return {
+        ...client,
+        phone: null,
+        email: null,
+        birthDate: null,
+        origin: null,
+        preferredCommunication: null,
+        medicalNotes: null,
+        therapist: null,
+      };
+    }
+
     return {
       ...client,
       therapist:

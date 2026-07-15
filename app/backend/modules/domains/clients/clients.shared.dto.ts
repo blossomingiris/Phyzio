@@ -22,7 +22,7 @@ export const clientBaseResponse = Type.Object({
   phone: Type.Union([Type.String(), Type.Null()]),
   email: Type.Union([Type.String({ format: "email" }), Type.Null()]),
   origin: Type.Union([originSchema, Type.Null()]),
-  preferredCommunication: communicationSchema,
+  preferredCommunication: Type.Union([communicationSchema, Type.Null()]),
   medicalNotes: Type.Union([Type.String(), Type.Null()]),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
