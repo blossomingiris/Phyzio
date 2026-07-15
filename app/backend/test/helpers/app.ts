@@ -7,6 +7,7 @@ import corsPlugin from "#app/plugins/cors.plugin.ts";
 import databasePlugin from "#app/plugins/database.plugin.ts";
 import jwtPlugin from "#app/plugins/jwt.plugin.ts";
 import routes from "#app/plugins/routes.plugin.ts";
+import swaggerPlugin from "#app/plugins/swagger.plugin.ts";
 import { type TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import bcrypt from "bcrypt";
 import { sql } from "drizzle-orm";
@@ -40,6 +41,7 @@ export async function createTestApp() {
   app.register(databasePlugin);
   app.register(cookiePlugin);
   app.register(jwtPlugin);
+  app.register(swaggerPlugin);
   app.register(routes);
 
   await app.ready();
