@@ -1,17 +1,3 @@
-import { AppointmentListPage } from "@/features/appointments/appointment-list.page";
-import { ForgotPasswordPage } from "@/features/auth/forgot-password.page";
-import { LoginPage } from "@/features/auth/login.page";
-import { ClientItemPage } from "@/features/clients/client-item.page";
-import { ClientListPage } from "@/features/clients/client-list.page";
-import { SettingsPage } from "@/features/settings/settings.page";
-import { TherapistItemPage } from "@/features/therapists/therapist-item.page";
-import { TherapistListPage } from "@/features/therapists/therapist-list.page";
-import { TreatmentPlanItemPage } from "@/features/treatment-plans/treatment-plan-item.page";
-import { TreatmentPlanListPage } from "@/features/treatment-plans/treatment-plan-list.page";
-import { TreatmentItemPage } from "@/features/treatments/treatment-item.page";
-import { TreatmentListPage } from "@/features/treatments/treatment-list.page";
-import { UserItemPage } from "@/features/users/user-item.page";
-import { UserListPage } from "@/features/users/user-list.page";
 import { USER_ROLES } from "@/shared/domain/user";
 import { ROUTES } from "@/shared/model/routes";
 import { createBrowserRouter } from "react-router";
@@ -28,13 +14,19 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ROUTES.LOGIN,
-            element: <LoginPage />,
+            lazy: () =>
+              import("@/features/auth/login.page").then((module) => ({
+                Component: module.LoginPage,
+              })),
           },
         ],
       },
       {
         path: ROUTES.FORGOT_PASSWORD,
-        element: <ForgotPasswordPage />,
+        lazy: () =>
+          import("@/features/auth/forgot-password.page").then((module) => ({
+            Component: module.ForgotPasswordPage,
+          })),
       },
       {
         element: <RequireAuth />,
@@ -44,54 +36,94 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: ROUTES.HOME,
-                element: <AppointmentListPage />,
+                lazy: () =>
+                  import("@/features/appointments/appointment-list.page").then(
+                    (module) => ({ Component: module.AppointmentListPage }),
+                  ),
               },
               {
                 path: ROUTES.SETTINGS,
-                element: <SettingsPage />,
+                lazy: () =>
+                  import("@/features/settings/settings.page").then(
+                    (module) => ({ Component: module.SettingsPage }),
+                  ),
               },
               {
                 element: <RequireRole role={USER_ROLES.ADMIN} />,
                 children: [
                   {
                     path: ROUTES.USERS,
-                    element: <UserListPage />,
+                    lazy: () =>
+                      import("@/features/users/user-list.page").then(
+                        (module) => ({ Component: module.UserListPage }),
+                      ),
                   },
                   {
                     path: ROUTES.USER_ITEM,
-                    element: <UserItemPage />,
+                    lazy: () =>
+                      import("@/features/users/user-item.page").then(
+                        (module) => ({ Component: module.UserItemPage }),
+                      ),
                   },
                   {
                     path: ROUTES.THERAPISTS,
-                    element: <TherapistListPage />,
+                    lazy: () =>
+                      import("@/features/therapists/therapist-list.page").then(
+                        (module) => ({ Component: module.TherapistListPage }),
+                      ),
                   },
                   {
                     path: ROUTES.THERAPIST_ITEM,
-                    element: <TherapistItemPage />,
+                    lazy: () =>
+                      import("@/features/therapists/therapist-item.page").then(
+                        (module) => ({ Component: module.TherapistItemPage }),
+                      ),
                   },
                   {
                     path: ROUTES.CLIENTS,
-                    element: <ClientListPage />,
+                    lazy: () =>
+                      import("@/features/clients/client-list.page").then(
+                        (module) => ({ Component: module.ClientListPage }),
+                      ),
                   },
                   {
                     path: ROUTES.CLIENT_ITEM,
-                    element: <ClientItemPage />,
+                    lazy: () =>
+                      import("@/features/clients/client-item.page").then(
+                        (module) => ({ Component: module.ClientItemPage }),
+                      ),
                   },
                   {
                     path: ROUTES.TREATMENTS,
-                    element: <TreatmentListPage />,
+                    lazy: () =>
+                      import("@/features/treatments/treatment-list.page").then(
+                        (module) => ({ Component: module.TreatmentListPage }),
+                      ),
                   },
                   {
                     path: ROUTES.TREATMENT_ITEM,
-                    element: <TreatmentItemPage />,
+                    lazy: () =>
+                      import("@/features/treatments/treatment-item.page").then(
+                        (module) => ({ Component: module.TreatmentItemPage }),
+                      ),
                   },
                   {
                     path: ROUTES.TREATMENT_PLANS,
-                    element: <TreatmentPlanListPage />,
+                    lazy: () =>
+                      import(
+                        "@/features/treatment-plans/treatment-plan-list.page"
+                      ).then((module) => ({
+                        Component: module.TreatmentPlanListPage,
+                      })),
                   },
                   {
                     path: ROUTES.TREATMENT_PLAN_ITEM,
-                    element: <TreatmentPlanItemPage />,
+                    lazy: () =>
+                      import(
+                        "@/features/treatment-plans/treatment-plan-item.page"
+                      ).then((module) => ({
+                        Component: module.TreatmentPlanItemPage,
+                      })),
                   },
                 ],
               },
