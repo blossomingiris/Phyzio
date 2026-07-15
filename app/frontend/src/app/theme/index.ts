@@ -120,7 +120,7 @@ export const theme = createTheme({
   components: {
     Card: { defaultProps: { radius: "lg" } },
     Paper: { defaultProps: { radius: "xl" } },
-    Modal: { defaultProps: { radius: "lg" } },
+    Modal: { defaultProps: { radius: "lg", centered: true } },
     Drawer: { defaultProps: { radius: "lg" } },
     Input: {
       defaultProps: { size: "sm" },

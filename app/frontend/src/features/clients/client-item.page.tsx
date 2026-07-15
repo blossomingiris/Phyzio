@@ -12,7 +12,7 @@ import {
 import { useParams } from "react-router";
 import { ClientAppointmentsTable } from "./ui/client-appointments-table";
 import { ClientOverview } from "./ui/client-overview";
-import { useClientQuery } from "./use-client-query";
+import { useClientQuery } from "./model/use-client-query";
 
 export function ClientItemPage() {
   const { id } = useParams<{ id: string }>();

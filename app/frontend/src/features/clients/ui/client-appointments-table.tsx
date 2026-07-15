@@ -8,7 +8,7 @@ import { DataTable } from "@/shared/ui/data-table/data-table";
 import { useServerTable } from "@/shared/ui/data-table/use-server-table";
 import { Badge } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table-open";
-import { useClientAppointmentsQuery } from "../use-client-appointments-query";
+import { useClientAppointmentsQuery } from "../model/use-client-appointments-query";
 
 const columns: MRT_ColumnDef<Appointment>[] = [
   {

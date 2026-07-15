@@ -1,5 +1,5 @@
 import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
-import { useClientsQuery } from "../use-clients-query";
+import { useClientsQuery } from "../model/use-clients-query";
 import { ClientTable } from "./client-table";
 
 export function ClientListTable({

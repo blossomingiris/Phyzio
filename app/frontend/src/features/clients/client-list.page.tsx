@@ -3,13 +3,17 @@ import { AddButton } from "@/shared/ui/add-button";
 import { useServerTable } from "@/shared/ui/data-table/use-server-table";
 import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Stack, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconUserCheck, IconUsers } from "@tabler/icons-react";
+import { ClientCreateModal } from "./ui/client-create-modal";
 import { ClientListTable } from "./ui/client-list-table";
 
 export function ClientListPage() {
   const table = useServerTable();
+  const [createOpened, { open: openCreate, close: closeCreate }] =
+    useDisclosure(false);
 
-  useHeaderActions(<AddButton label="New Client" />);
+  useHeaderActions(<AddButton label="New Client" onClick={openCreate} />);
 
   const resetPage = () =>
     table.onPaginationChange((prev) => ({ ...prev, pageIndex: 0 }));
@@ -40,6 +44,8 @@ export function ClientListPage() {
           <ClientListTable table={table} deleted />
         </Tabs.Panel>
       </Tabs>
+
+      <ClientCreateModal opened={createOpened} onClose={closeCreate} />
     </Stack>
   );
 }

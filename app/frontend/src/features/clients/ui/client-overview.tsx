@@ -4,22 +4,11 @@ import {
   type ClientDetail,
 } from "@/shared/domain/client";
 import { calculateAge, formatDate } from "@/shared/lib/date/format-date";
-import {
-  Button,
-  Card,
-  Divider,
-  Group,
-  Select,
-  Stack,
-  Text,
-  Textarea,
-  TextInput,
-} from "@mantine/core";
-import { DateInput } from "@mantine/dates";
+import { Button, Card, Divider, Group, Stack, Text } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import {
   IconCake,
   IconCalendarPlus,
-  IconCheck,
   IconMail,
   IconMessageCircle,
   IconPencil,
@@ -28,33 +17,32 @@ import {
   IconStethoscope,
   type Icon,
 } from "@tabler/icons-react";
-import { useState } from "react";
-import { useTherapistsQuery } from "../use-therapists-query";
-
-const PREFERRED_COMMUNICATION_OPTIONS = Object.entries(
-  PREFERRED_COMMUNICATION_LABELS,
-).map(([value, label]) => ({ value, label }));
-
-const CLIENT_ORIGIN_OPTIONS = Object.entries(CLIENT_ORIGIN_LABELS).map(
-  ([value, label]) => ({ value, label }),
-);
+import { ClientEditModal } from "./client-edit-modal";
 
 function Field({
   icon: FieldIcon,
   label,
   value,
+  empty,
 }: {
   icon: Icon;
   label: string;
   value: string;
+  empty?: boolean;
 }) {
   return (
     <Group gap="xs" wrap="nowrap">
       <FieldIcon size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
-      <Text size="sm" w={160} c="dimmed">
+      <Text size="sm" w={200} c="dimmed" style={{ whiteSpace: "nowrap" }}>
         {label}
       </Text>
-      <Text size="sm">{value}</Text>
+      <Text
+        size="sm"
+        c={empty ? "dimmed" : undefined}
+        fs={empty ? "italic" : undefined}
+      >
+        {value}
+      </Text>
     </Group>
   );
 }
@@ -67,13 +55,25 @@ function SectionLabel({ children }: { children: string }) {
   );
 }
 
+const NOT_PROVIDED = "Not provided";
+
 function ClientOverviewDetails({ client }: { client: ClientDetail }) {
   return (
     <Stack gap="lg">
       <Stack gap="xs">
         <SectionLabel>Contact</SectionLabel>
-        <Field icon={IconPhone} label="Phone" value={client.phone ?? "—"} />
-        <Field icon={IconMail} label="Email" value={client.email ?? "—"} />
+        <Field
+          icon={IconPhone}
+          label="Phone"
+          value={client.phone ?? NOT_PROVIDED}
+          empty={!client.phone}
+        />
+        <Field
+          icon={IconMail}
+          label="Email"
+          value={client.email ?? NOT_PROVIDED}
+          empty={!client.email}
+        />
         <Field
           icon={IconMessageCircle}
           label="Preferred Communication"
@@ -82,7 +82,10 @@ function ClientOverviewDetails({ client }: { client: ClientDetail }) {
         <Field
           icon={IconRoute}
           label="Source"
-          value={client.origin ? CLIENT_ORIGIN_LABELS[client.origin] : "—"}
+          value={
+            client.origin ? CLIENT_ORIGIN_LABELS[client.origin] : NOT_PROVIDED
+          }
+          empty={!client.origin}
         />
       </Stack>
 
@@ -96,8 +99,9 @@ function ClientOverviewDetails({ client }: { client: ClientDetail }) {
           value={
             client.birthDate
               ? `${formatDate(client.birthDate)} (${calculateAge(client.birthDate)} y.o.)`
-              : "—"
+              : NOT_PROVIDED
           }
+          empty={!client.birthDate}
         />
         <Field
           icon={IconStethoscope}
@@ -105,8 +109,9 @@ function ClientOverviewDetails({ client }: { client: ClientDetail }) {
           value={
             client.therapist
               ? `${client.therapist.firstName} ${client.therapist.lastName}`
-              : "—"
+              : NOT_PROVIDED
           }
+          empty={!client.therapist}
         />
       </Stack>
 
@@ -114,144 +119,63 @@ function ClientOverviewDetails({ client }: { client: ClientDetail }) {
 
       <Stack gap="xs">
         <SectionLabel>Medical Notes</SectionLabel>
-        <Text size="sm">{client.medicalNotes ?? "—"}</Text>
-      </Stack>
-    </Stack>
-  );
-}
-
-function ClientOverviewForm({ client }: { client: ClientDetail }) {
-  const { data } = useTherapistsQuery();
-  const therapistOptions = (data?.data ?? []).map((therapist) => ({
-    value: String(therapist.id),
-    label: therapist.isActive
-      ? `${therapist.firstName} ${therapist.lastName}`
-      : `${therapist.firstName} ${therapist.lastName} (Inactive)`,
-    disabled: !therapist.isActive,
-  }));
-
-  return (
-    <Stack gap="lg">
-      <Stack gap="xs">
-        <SectionLabel>Contact</SectionLabel>
-        <TextInput
-          label="Phone"
-          leftSection={<IconPhone size={16} />}
-          defaultValue={client.phone ?? ""}
-        />
-        <TextInput
-          label="Email"
-          leftSection={<IconMail size={16} />}
-          defaultValue={client.email ?? ""}
-        />
-        <Select
-          label="Preferred Communication"
-          leftSection={<IconMessageCircle size={16} />}
-          data={PREFERRED_COMMUNICATION_OPTIONS}
-          defaultValue={client.preferredCommunication}
-          allowDeselect={false}
-        />
-        <Select
-          label="Source"
-          leftSection={<IconRoute size={16} />}
-          data={CLIENT_ORIGIN_OPTIONS}
-          defaultValue={client.origin}
-        />
-      </Stack>
-
-      <Divider />
-
-      <Stack gap="xs">
-        <SectionLabel>Personal</SectionLabel>
-        <DateInput
-          label="Birth Date"
-          leftSection={<IconCake size={16} />}
-          defaultValue={client.birthDate ?? null}
-        />
-        <Select
-          label="Therapist"
-          leftSection={<IconStethoscope size={16} />}
-          data={therapistOptions}
-          defaultValue={client.therapist ? String(client.therapist.id) : null}
-          searchable
-          clearable
-        />
-      </Stack>
-
-      <Divider />
-
-      <Stack gap="xs">
-        <SectionLabel>Medical Notes</SectionLabel>
-        <Textarea
-          minRows={3}
-          defaultValue={client.medicalNotes ?? ""}
-          description="Only the treating therapist can edit medical notes"
-          disabled
-        />
+        <Text
+          size="sm"
+          c={client.medicalNotes ? undefined : "dimmed"}
+          fs={client.medicalNotes ? undefined : "italic"}
+        >
+          {client.medicalNotes ?? NOT_PROVIDED}
+        </Text>
       </Stack>
     </Stack>
   );
 }
 
 export function ClientOverview({ client }: { client: ClientDetail }) {
-  const [isEditing, setIsEditing] = useState(false);
+  const [editOpened, { open: openEdit, close: closeEdit }] =
+    useDisclosure(false);
 
   return (
-    <Card withBorder shadow="md" padding="xl" maw={640}>
-      <Card.Section
-        withBorder
-        inheritPadding
-        py="sm"
-        mb="lg"
-        pr="sm"
-        bg="var(--surface-subtle)"
-      >
-        <Group justify="space-between">
-          <Text fw={600}>Client Details</Text>
-          {isEditing ? (
-            <Group gap="xs">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => setIsEditing(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                leftSection={<IconCheck size={16} />}
-                onClick={() => setIsEditing(false)}
-              >
-                Save
-              </Button>
-            </Group>
-          ) : (
+    <>
+      <Card withBorder shadow="md" padding="xl" maw={640}>
+        <Card.Section
+          withBorder
+          inheritPadding
+          py="sm"
+          mb="lg"
+          pr="sm"
+          bg="var(--surface-subtle)"
+        >
+          <Group justify="space-between">
+            <Text fw={600}>Client Details</Text>
             <Button
               size="sm"
               leftSection={<IconPencil size={16} />}
-              onClick={() => setIsEditing(true)}
+              onClick={openEdit}
             >
               Edit
             </Button>
-          )}
-        </Group>
-      </Card.Section>
+          </Group>
+        </Card.Section>
 
-      <Stack gap="lg">
-        {isEditing ? (
-          <ClientOverviewForm client={client} />
-        ) : (
+        <Stack gap="lg">
           <ClientOverviewDetails client={client} />
-        )}
 
-        <Divider />
+          <Divider />
 
-        <Field
-          icon={IconCalendarPlus}
-          label="Created"
-          value={formatDate(client.createdAt)}
-        />
-      </Stack>
-    </Card>
+          <Field
+            icon={IconCalendarPlus}
+            label="Created"
+            value={formatDate(client.createdAt)}
+          />
+        </Stack>
+      </Card>
+
+      <ClientEditModal
+        client={client}
+        opened={editOpened}
+        onClose={closeEdit}
+      />
+    </>
   );
 }
