@@ -11,8 +11,6 @@ export const fetchClient = createFetchClient<ApiPaths>({
   credentials: "include",
 });
 
-// Keyed by openapi-fetch's per-call `id`; holds a pristine clone taken before
-// the request body (if any) is disturbed, so a 401 can be retried safely.
 const pendingRetries = new Map<string, Request>();
 
 fetchClient.use({
@@ -21,7 +19,7 @@ fetchClient.use({
     if (token) request.headers.set("Authorization", `Bearer ${token}`);
     pendingRetries.set(id, request.clone());
   },
-  async onResponse({ request, response, id, options }) {
+  async onResponse({ request, response, id }) {
     const retryRequest = pendingRetries.get(id);
     pendingRetries.delete(id);
 
@@ -34,7 +32,7 @@ fetchClient.use({
       return;
     }
     retryRequest.headers.set("Authorization", `Bearer ${newToken}`);
-    return options.fetch(retryRequest);
+    return globalThis.fetch(retryRequest);
   },
   onError({ id }) {
     pendingRetries.delete(id);
