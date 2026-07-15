@@ -12,9 +12,26 @@ import { useNavigate } from "react-router";
 
 const columns: MRT_ColumnDef<Client>[] = [
   {
-    id: "lastName",
-    header: "Name",
-    accessorFn: (client) => `${client.firstName} ${client.lastName}`,
+    accessorKey: "firstName",
+    header: "First Name",
+    enableSorting: false,
+  },
+  {
+    accessorKey: "lastName",
+    header: "Last Name",
+    Cell: ({ row }) => {
+      const client = row.original;
+      return (
+        <Group gap={6}>
+          <Text size="sm">{client.lastName}</Text>
+          {client.deletedAt && (
+            <Badge color="error" variant="light" size="xs">
+              Deleted
+            </Badge>
+          )}
+        </Group>
+      );
+    },
   },
   {
     accessorKey: "phone",

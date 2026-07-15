@@ -67,6 +67,7 @@ const error = buildColorTuple({
 const foreground = "oklch(0.399 0.018 290)";
 const surfaceSubtle = "oklch(0.97 0 0)";
 const surfaceSubtleHover = "oklch(0.93 0 0)";
+const surfaceInput = "oklch(0.985 0 0)";
 
 export const theme = createTheme({
   primaryColor: "primary",
@@ -117,7 +118,7 @@ export const theme = createTheme({
     xl: "oklch(0 0 0 / 0.10) 0 8px 24px, oklch(0 0 0 / 0.06) 0 12px 32px",
   },
   components: {
-    Card: { defaultProps: { radius: "xl" } },
+    Card: { defaultProps: { radius: "lg" } },
     Paper: { defaultProps: { radius: "xl" } },
     Modal: { defaultProps: { radius: "lg" } },
     Drawer: { defaultProps: { radius: "lg" } },
@@ -135,6 +136,7 @@ export const cssVariablesResolver: CSSVariablesResolver = () => ({
   variables: {
     "--surface-subtle": surfaceSubtle,
     "--surface-subtle-hover": surfaceSubtleHover,
+    "--surface-input": surfaceInput,
   },
   light: {
     "--mantine-color-dimmed": "oklch(0.55 0.015 290)",

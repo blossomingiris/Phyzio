@@ -1,50 +1,18 @@
-import {
-  PREFERRED_COMMUNICATION_LABELS,
-  type ClientDetail,
-} from "@/shared/domain/client";
-import { formatDate } from "@/shared/lib/date/format-date";
 import { useBreadcrumb } from "@/shared/lib/react/use-breadcrumb";
 import { ROUTES } from "@/shared/model/routes";
 import { AsyncWrapper } from "@/shared/ui/async-wrapper";
 import { BackButton } from "@/shared/ui/back-button";
-import { Group, Stack, Text, Title } from "@mantine/core";
+import { Tabs } from "@/shared/ui/tabs/tabs";
+import { Stack, Text, Title } from "@mantine/core";
+import {
+  IconCalendar,
+  IconClipboardList,
+  IconUserCircle,
+} from "@tabler/icons-react";
 import { useParams } from "react-router";
+import { ClientAppointmentsTable } from "./ui/client-appointments-table";
+import { ClientOverview } from "./ui/client-overview";
 import { useClientQuery } from "./use-client-query";
-
-function Field({ label, value }: { label: string; value: string }) {
-  return (
-    <Group gap="xs">
-      <Text size="sm" c="dimmed" w={160}>
-        {label}
-      </Text>
-      <Text size="sm">{value}</Text>
-    </Group>
-  );
-}
-
-function ClientOverview({ client }: { client: ClientDetail }) {
-  return (
-    <Stack gap="xs">
-      <Field label="Phone" value={client.phone ?? "—"} />
-      <Field label="Email" value={client.email ?? "—"} />
-      <Field label="Birth Date" value={formatDate(client.birthDate)} />
-      <Field
-        label="Preferred Communication"
-        value={PREFERRED_COMMUNICATION_LABELS[client.preferredCommunication]}
-      />
-      <Field
-        label="Therapist"
-        value={
-          client.therapist
-            ? `${client.therapist.firstName} ${client.therapist.lastName}`
-            : "—"
-        }
-      />
-      <Field label="Medical Notes" value={client.medicalNotes ?? "—"} />
-      <Field label="Created" value={formatDate(client.createdAt)} />
-    </Stack>
-  );
-}
 
 export function ClientItemPage() {
   const { id } = useParams<{ id: string }>();
@@ -61,7 +29,48 @@ export function ClientItemPage() {
       </Title>
       <AsyncWrapper
         query={query}
-        render={(client) => <ClientOverview client={client} />}
+        render={(client) => (
+          <Tabs
+            defaultValue="overview"
+            keepMounted={false}
+            style={{ width: "100%" }}
+          >
+            <Tabs.List>
+              <Tabs.Tab
+                value="overview"
+                leftSection={<IconUserCircle size={16} />}
+              >
+                Overview
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="appointments"
+                leftSection={<IconCalendar size={16} />}
+              >
+                Appointments
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="treatment-plans"
+                leftSection={<IconClipboardList size={16} />}
+              >
+                Treatment Plans
+              </Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="overview" pt="md">
+              <ClientOverview client={client} />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="appointments" pt="md">
+              <ClientAppointmentsTable clientId={client.id} />
+            </Tabs.Panel>
+
+            <Tabs.Panel value="treatment-plans" pt="md">
+              <Text size="sm" c="dimmed">
+                No treatment plans yet.
+              </Text>
+            </Tabs.Panel>
+          </Tabs>
+        )}
       />
     </Stack>
   );

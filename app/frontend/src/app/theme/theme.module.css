@@ -1,5 +1,5 @@
 .input {
-  background-color: var(--surface-subtle);
+  background-color: var(--surface-input);
   box-shadow: var(--mantine-shadow-xs);
   transition:
     border-color 100ms ease,
