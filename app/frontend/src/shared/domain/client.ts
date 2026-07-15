@@ -8,7 +8,7 @@ export type Client = ClientListResponse["data"][number];
 export type ClientDetail = MethodResponse<typeof rqClient, "get", "/clients/{id}">;
 
 export const PREFERRED_COMMUNICATION_LABELS: Record<
-  ClientDetail["preferredCommunication"],
+  NonNullable<ClientDetail["preferredCommunication"]>,
   string
 > = {
   whats_up: "WhatsApp",

@@ -76,7 +76,12 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
         <Field
           icon={IconMessageCircle}
           label="Preferred Communication"
-          value={PREFERRED_COMMUNICATION_LABELS[client.preferredCommunication]}
+          value={
+            client.preferredCommunication
+              ? PREFERRED_COMMUNICATION_LABELS[client.preferredCommunication]
+              : NOT_PROVIDED
+          }
+          empty={!client.preferredCommunication}
         />
         <Field
           icon={IconRoute}

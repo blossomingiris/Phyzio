@@ -94,13 +94,13 @@ const columns: MRT_ColumnDef<Client>[] = [
 
 export function ClientTable({
   table,
-  deleted,
+  status,
 }: {
   table: ServerTableState;
-  deleted: boolean;
+  status: "active" | "all" | "deleted";
 }) {
   const navigate = useNavigate();
-  const query = useClientsQuery(table, deleted);
+  const query = useClientsQuery(table, status);
 
   return (
     <DataTable

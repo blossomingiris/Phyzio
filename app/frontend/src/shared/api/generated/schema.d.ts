@@ -1287,8 +1287,8 @@ export interface paths {
                     /** @description Partial match on first name, last name, or phone */
                     search?: string;
                     therapistId?: number;
-                    /** @description Include soft-deleted clients */
-                    deleted?: boolean;
+                    /** @description active: exclude soft-deleted clients; all: include both; deleted: soft-deleted clients only */
+                    deleted?: "active" | "all" | "deleted";
                     sortBy?: "createdAt" | "lastName";
                     /** @description Sort direction */
                     sortOrder?: "asc" | "desc";
@@ -1314,8 +1314,7 @@ export interface paths {
                                 phone: string | null;
                                 email: string | null;
                                 origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                                /** @enum {string} */
-                                preferredCommunication: "whats_up" | "phone" | "email";
+                                preferredCommunication: ("whats_up" | "phone" | "email") | null;
                                 medicalNotes: string | null;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -1411,8 +1410,7 @@ export interface paths {
                             phone: string | null;
                             email: string | null;
                             origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                            /** @enum {string} */
-                            preferredCommunication: "whats_up" | "phone" | "email";
+                            preferredCommunication: ("whats_up" | "phone" | "email") | null;
                             medicalNotes: string | null;
                             /** Format: date-time */
                             createdAt: string;
@@ -1523,8 +1521,7 @@ export interface paths {
                             phone: string | null;
                             email: string | null;
                             origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                            /** @enum {string} */
-                            preferredCommunication: "whats_up" | "phone" | "email";
+                            preferredCommunication: ("whats_up" | "phone" | "email") | null;
                             medicalNotes: string | null;
                             /** Format: date-time */
                             createdAt: string;
@@ -1693,8 +1690,7 @@ export interface paths {
                             phone: string | null;
                             email: string | null;
                             origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                            /** @enum {string} */
-                            preferredCommunication: "whats_up" | "phone" | "email";
+                            preferredCommunication: ("whats_up" | "phone" | "email") | null;
                             medicalNotes: string | null;
                             /** Format: date-time */
                             createdAt: string;
@@ -3749,8 +3745,7 @@ export interface paths {
                                 phone: string | null;
                                 email: string | null;
                                 origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                                /** @enum {string} */
-                                preferredCommunication: "whats_up" | "phone" | "email";
+                                preferredCommunication: ("whats_up" | "phone" | "email") | null;
                                 medicalNotes: string | null;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -3822,8 +3817,7 @@ export interface paths {
                             phone: string | null;
                             email: string | null;
                             origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                            /** @enum {string} */
-                            preferredCommunication: "whats_up" | "phone" | "email";
+                            preferredCommunication: ("whats_up" | "phone" | "email") | null;
                             medicalNotes: string | null;
                             /** Format: date-time */
                             createdAt: string;
@@ -3905,8 +3899,7 @@ export interface paths {
                             phone: string | null;
                             email: string | null;
                             origin: ("whats_up" | "phone" | "walk_in" | "other") | null;
-                            /** @enum {string} */
-                            preferredCommunication: "whats_up" | "phone" | "email";
+                            preferredCommunication: ("whats_up" | "phone" | "email") | null;
                             medicalNotes: string | null;
                             /** Format: date-time */
                             createdAt: string;

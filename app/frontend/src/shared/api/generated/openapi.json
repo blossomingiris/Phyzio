@@ -2643,13 +2643,18 @@
           },
           {
             "schema": {
-              "type": "boolean",
-              "default": false
+              "type": "string",
+              "enum": [
+                "active",
+                "all",
+                "deleted"
+              ],
+              "default": "active"
             },
             "in": "query",
             "name": "deleted",
             "required": false,
-            "description": "Include soft-deleted clients"
+            "description": "active: exclude soft-deleted clients; all: include both; deleted: soft-deleted clients only"
           },
           {
             "schema": {
@@ -2768,11 +2773,18 @@
                             ]
                           },
                           "preferredCommunication": {
-                            "type": "string",
-                            "enum": [
-                              "whats_up",
-                              "phone",
-                              "email"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "whats_up",
+                                  "phone",
+                                  "email"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
                             ]
                           },
                           "medicalNotes": {
@@ -3044,11 +3056,18 @@
                       ]
                     },
                     "preferredCommunication": {
-                      "type": "string",
-                      "enum": [
-                        "whats_up",
-                        "phone",
-                        "email"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "whats_up",
+                            "phone",
+                            "email"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
                       ]
                     },
                     "medicalNotes": {
@@ -3292,11 +3311,18 @@
                       ]
                     },
                     "preferredCommunication": {
-                      "type": "string",
-                      "enum": [
-                        "whats_up",
-                        "phone",
-                        "email"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "whats_up",
+                            "phone",
+                            "email"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
                       ]
                     },
                     "medicalNotes": {
@@ -3578,11 +3604,18 @@
                       ]
                     },
                     "preferredCommunication": {
-                      "type": "string",
-                      "enum": [
-                        "whats_up",
-                        "phone",
-                        "email"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "whats_up",
+                            "phone",
+                            "email"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
                       ]
                     },
                     "medicalNotes": {
@@ -8985,11 +9018,18 @@
                             ]
                           },
                           "preferredCommunication": {
-                            "type": "string",
-                            "enum": [
-                              "whats_up",
-                              "phone",
-                              "email"
+                            "anyOf": [
+                              {
+                                "type": "string",
+                                "enum": [
+                                  "whats_up",
+                                  "phone",
+                                  "email"
+                                ]
+                              },
+                              {
+                                "type": "null"
+                              }
                             ]
                           },
                           "medicalNotes": {
@@ -9140,11 +9180,18 @@
                       ]
                     },
                     "preferredCommunication": {
-                      "type": "string",
-                      "enum": [
-                        "whats_up",
-                        "phone",
-                        "email"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "whats_up",
+                            "phone",
+                            "email"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
                       ]
                     },
                     "medicalNotes": {
@@ -9336,11 +9383,18 @@
                       ]
                     },
                     "preferredCommunication": {
-                      "type": "string",
-                      "enum": [
-                        "whats_up",
-                        "phone",
-                        "email"
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "whats_up",
+                            "phone",
+                            "email"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
                       ]
                     },
                     "medicalNotes": {

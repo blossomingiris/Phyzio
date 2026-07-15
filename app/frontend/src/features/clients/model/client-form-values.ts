@@ -9,7 +9,7 @@ export type ClientFormValues = {
   email: string;
   birthDate: string | null;
   origin: NonNullable<ClientDetail["origin"]> | null;
-  preferredCommunication: ClientDetail["preferredCommunication"];
+  preferredCommunication: NonNullable<ClientDetail["preferredCommunication"]>;
   therapistId: string | null;
 };
 
@@ -32,7 +32,8 @@ export function clientToFormValues(client: ClientDetail): ClientFormValues {
     email: client.email ?? "",
     birthDate: client.birthDate ?? null,
     origin: client.origin ?? null,
-    preferredCommunication: client.preferredCommunication,
+    // Only null on a deleted (redacted) client, which the edit form never opens for.
+    preferredCommunication: client.preferredCommunication ?? "phone",
     therapistId: client.therapist ? String(client.therapist.id) : null,
   };
 }

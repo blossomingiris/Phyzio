@@ -4,7 +4,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 
 export function useClientsQuery(
   { pagination, sorting, globalFilter }: ServerTableState,
-  deleted: boolean,
+  status: "active" | "all" | "deleted",
 ) {
   const sort = sorting[0];
 
@@ -17,7 +17,7 @@ export function useClientsQuery(
           page: pagination.pageIndex + 1,
           limit: pagination.pageSize,
           search: globalFilter || undefined,
-          deleted,
+          deleted: status,
           ...(sort && {
             sortBy: sort.id as "createdAt" | "lastName",
             sortOrder: sort.desc ? "desc" : "asc",
