@@ -3,7 +3,7 @@ import type { TreatmentCategory } from "#app/database/types.ts";
 import {
   errorResponse,
   paramId,
-  paginationMeta,
+  paginationMetaResponse,
   sortOrderSchema,
   fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
@@ -45,7 +45,7 @@ export const treatmentResponse = Type.Object({
 
 export const treatmentListResponse = Type.Object({
   data: Type.Array(treatmentResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const createTreatmentBody = Type.Object(

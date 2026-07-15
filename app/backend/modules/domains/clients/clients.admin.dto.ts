@@ -1,7 +1,7 @@
 import {
   errorResponse,
   fieldErrorResponse,
-  paginationMeta,
+  paginationMetaResponse,
   paramId,
   sortOrderSchema,
   therapistSummarySchema,
@@ -24,7 +24,7 @@ export const clientResponse = Type.Object({
 
 export const clientListResponse = Type.Object({
   data: Type.Array(clientResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const listClientsQuery = Type.Object(

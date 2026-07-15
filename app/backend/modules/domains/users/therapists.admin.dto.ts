@@ -3,7 +3,7 @@ import type { Speciality } from "#app/database/types.ts";
 import {
   errorResponse,
   fieldErrorResponse,
-  paginationMeta,
+  paginationMetaResponse,
   paramId,
   sortOrderSchema,
   sortParamsSchema,
@@ -56,7 +56,7 @@ export const therapistResponse = Type.Object({
 
 const therapistListResponse = Type.Object({
   data: Type.Array(therapistResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const createTherapistBody = Type.Object(

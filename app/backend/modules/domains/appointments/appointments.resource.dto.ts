@@ -1,7 +1,7 @@
 import {
   errorResponse,
   paramId,
-  paginationMeta,
+  paginationMetaResponse,
   sortOrderSchema,
   fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
@@ -17,7 +17,7 @@ import {
 
 export const myAppointmentListResponse = Type.Object({
   data: Type.Array(appointmentBaseResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const listMyAppointmentsQuery = Type.Object(

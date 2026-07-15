@@ -3,7 +3,10 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 
-import { errorSchemas } from "#app/modules/general/dto/index.ts";
+import {
+  errorSchemas,
+  sharedSchemas,
+} from "#app/modules/general/dto/index.ts";
 
 export default fp(async function swaggerPlugin(app: FastifyInstance) {
   await app.register(fastifySwagger, {
@@ -31,7 +34,7 @@ export default fp(async function swaggerPlugin(app: FastifyInstance) {
     },
   });
 
-  for (const schema of errorSchemas) {
+  for (const schema of [...errorSchemas, ...sharedSchemas]) {
     app.addSchema(schema);
   }
 

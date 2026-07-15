@@ -1,7 +1,7 @@
 import {
   clientSummarySchema,
   errorResponse,
-  paginationMeta,
+  paginationMetaResponse,
   paramId,
   sortOrderSchema,
   therapistSummarySchema,
@@ -46,7 +46,7 @@ const treatmentPlanAdminSummaryResponse = Type.Object({
 
 export const treatmentPlanAdminListResponse = Type.Object({
   data: Type.Array(treatmentPlanAdminSummaryResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const updateTreatmentPlanAdminBody = Type.Object(

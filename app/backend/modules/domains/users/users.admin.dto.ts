@@ -3,7 +3,7 @@ import type { UserRole } from "#app/database/types.ts";
 import {
   errorResponse,
   fieldErrorResponse,
-  paginationMeta,
+  paginationMetaResponse,
   paramId,
   sortOrderSchema,
   sortParamsSchema,
@@ -37,7 +37,7 @@ export const userResponse = Type.Object({
 
 const userListResponse = Type.Object({
   data: Type.Array(userResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const createUserBody = Type.Object(

@@ -1,7 +1,7 @@
 import {
   clientSummarySchema,
   errorResponse,
-  paginationMeta,
+  paginationMetaResponse,
   paramId,
   sortOrderSchema,
   fieldErrorResponse,
@@ -44,7 +44,7 @@ const treatmentPlanResourceSummaryResponse = Type.Object({
 
 export const treatmentPlanResourceListResponse = Type.Object({
   data: Type.Array(treatmentPlanResourceSummaryResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const createTreatmentPlanBody = Type.Object(

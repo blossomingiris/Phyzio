@@ -1,7 +1,7 @@
 import {
   errorResponse,
   paramId,
-  paginationMeta,
+  paginationMetaResponse,
   sortOrderSchema,
   fieldErrorResponse,
 } from "#app/modules/general/dto/index.ts";
@@ -15,7 +15,7 @@ import {
 
 export const myClientListResponse = Type.Object({
   data: Type.Array(clientBaseResponse),
-  pagination: Type.Object(paginationMeta),
+  pagination: paginationMetaResponse,
 });
 
 export const listMyClientsQuery = Type.Object(

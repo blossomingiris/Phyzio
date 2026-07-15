@@ -18,12 +18,19 @@ export const paginationQueryParams = Type.Object(
   { additionalProperties: false },
 );
 
-export const paginationMeta = {
-  total: Type.Integer(),
-  page: Type.Integer(),
-  limit: Type.Integer(),
-  totalPages: Type.Integer(),
-};
+const paginationMetaSchema = Type.Object(
+  {
+    total: Type.Integer(),
+    page: Type.Integer(),
+    limit: Type.Integer(),
+    totalPages: Type.Integer(),
+  },
+  { $id: "PaginationMeta" },
+);
+
+export const paginationMetaResponse = Type.Ref("PaginationMeta");
+
+export const sharedSchemas: TSchema[] = [paginationMetaSchema];
 
 export const sortOrderSchema = Type.Optional(
   Type.Unsafe<"asc" | "desc">({

@@ -25,7 +25,7 @@ This file defines rules for how we design DTOs in this project.
   `{ body, params, querystring, response }`
 
 - **Schema part**: reusable fragment used inside route schemas.
-  - Used by **multiple domains** → `domains/shared/dto/index.ts` (e.g. `paramId`, `paginationQueryParams`, `paginationMeta`)
+  - Used by **multiple domains** → `domains/shared/dto/index.ts` (e.g. `paramId`, `paginationQueryParams`, `paginationMetaResponse`)
   - Build route schemas from schema parts only
 
 ---

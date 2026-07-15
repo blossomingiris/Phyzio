@@ -202,12 +202,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -693,12 +688,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -1345,12 +1335,7 @@ export interface paths {
                                 /** Format: date-time */
                                 deletedAt?: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -1864,12 +1849,7 @@ export interface paths {
                                     isActive: boolean;
                                 } | null;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -2495,12 +2475,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -2869,12 +2844,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -3787,12 +3757,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -4042,12 +4007,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -4338,12 +4298,7 @@ export interface paths {
                                 /** Format: date-time */
                                 updatedAt: string;
                             }[];
-                            pagination: {
-                                total: number;
-                                page: number;
-                                limit: number;
-                                totalPages: number;
-                            };
+                            pagination: components["schemas"]["PaginationMeta"];
                         };
                     };
                 };
@@ -5111,6 +5066,12 @@ export interface components {
                 field: string;
                 message: string;
             }[];
+        };
+        PaginationMeta: {
+            total: number;
+            page: number;
+            limit: number;
+            totalPages: number;
         };
     };
     responses: never;
