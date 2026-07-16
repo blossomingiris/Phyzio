@@ -7,7 +7,7 @@ import {
   HeaderActionsSlot,
 } from "@/shared/lib/react/use-header-actions";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { useSessionStore } from "@/services/session";
+import { useLogout, useSessionStore } from "@/services/session";
 import {
   Navbar,
   NavbarProvider,
@@ -43,7 +43,7 @@ function AppShellLayout() {
   );
 
   const currentUser = useSessionStore((state) => state.user);
-  const logout = useSessionStore((state) => state.logout);
+  const logout = useLogout();
 
   const visibleNavItems = navigationConfig.filter(
     (item) =>
