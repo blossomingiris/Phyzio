@@ -130,6 +130,75 @@ describe("treatment plans lifecycle", () => {
     expect(res.statusCode).toBe(200);
   });
 
+  it("includes items with treatment progress in the list response, grouped correctly per plan", async () => {
+    const treatment2Res = await h.inject({
+      method: "POST",
+      url: "/treatments",
+      headers: adminAuth(),
+      payload: { category: "neuro_vestibular", pricePerUnit: "50.00", quantity: 5, durationMinutes: 30 },
+    });
+    if (treatment2Res.statusCode !== 201) throw new Error(`treatment2 setup failed: ${treatment2Res.body}`);
+    const treatment2Id = treatment2Res.json<{ id: number }>().id;
+
+    const planARes = await h.inject({
+      method: "POST",
+      url: "/me/treatment-plans",
+      headers: therapistAuth(),
+      payload: {
+        clientId,
+        primaryDiagnostic: "Plan A diagnostic",
+        clinicalGoals: "Goal A",
+        startDate: new Date().toISOString(),
+        items: [{ treatmentId }],
+      },
+    });
+    if (planARes.statusCode !== 201) throw new Error(`planA setup failed: ${planARes.body}`);
+    const planAId = planARes.json<{ id: number }>().id;
+
+    const planBRes = await h.inject({
+      method: "POST",
+      url: "/me/treatment-plans",
+      headers: therapistAuth(),
+      payload: {
+        clientId,
+        primaryDiagnostic: "Plan B diagnostic",
+        clinicalGoals: "Goal B",
+        startDate: new Date().toISOString(),
+        items: [{ treatmentId: treatment2Id }],
+      },
+    });
+    if (planBRes.statusCode !== 201) throw new Error(`planB setup failed: ${planBRes.body}`);
+    const planBId = planBRes.json<{ id: number }>().id;
+
+    const listRes = await h.inject({
+      method: "GET",
+      url: `/treatment-plans?clientId=${clientId}&limit=100`,
+      headers: adminAuth(),
+    });
+    expect(listRes.statusCode).toBe(200);
+    const body = listRes.json<{
+      data: {
+        id: number;
+        primaryDiagnostic: string;
+        items: { treatment: { id: number; quantity: number }; quantityCompleted: number }[];
+      }[];
+    }>();
+
+    const planA = body.data.find((p) => p.id === planAId);
+    const planB = body.data.find((p) => p.id === planBId);
+    expect(planA).toBeDefined();
+    expect(planB).toBeDefined();
+
+    expect(planA!.items).toHaveLength(1);
+    expect(planA!.items[0]!.treatment.id).toBe(treatmentId);
+    expect(planA!.items[0]!.treatment.quantity).toBe(10);
+    expect(planA!.items[0]!.quantityCompleted).toBe(0);
+
+    expect(planB!.items).toHaveLength(1);
+    expect(planB!.items[0]!.treatment.id).toBe(treatment2Id);
+    expect(planB!.items[0]!.treatment.quantity).toBe(5);
+  });
+
   it("completing an appointment auto-advances plan open → in_progress, then therapist can pause", async () => {
     const { id: planId } = await createPlan();
 

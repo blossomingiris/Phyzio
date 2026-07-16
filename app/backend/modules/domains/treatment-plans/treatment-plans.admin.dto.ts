@@ -37,9 +37,11 @@ const treatmentPlanAdminSummaryResponse = Type.Object({
   id: Type.Integer(),
   therapist: therapistSummarySchema,
   client: clientSummarySchema,
+  primaryDiagnostic: Type.String(),
   status: planStatusSchema,
   startDate: Type.String({ format: "date-time" }),
   endDate: Type.Union([Type.String({ format: "date-time" }), Type.Null()]),
+  items: Type.Array(treatmentPlanItemResponse),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
 });

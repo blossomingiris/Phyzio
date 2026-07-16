@@ -172,8 +172,28 @@ export class TreatmentPlansService {
       .limit(limit)
       .offset((page - 1) * limit);
 
+    const planIds = rows.map((row) => row.id);
+    const itemRows = planIds.length
+      ? await this.db
+          .select(planItemSelect)
+          .from(treatmentPlanItems)
+          .innerJoin(treatments, eq(treatmentPlanItems.treatmentId, treatments.id))
+          .where(inArray(treatmentPlanItems.treatmentPlanId, planIds))
+      : [];
+
+    const itemsByPlanId = new Map<number, ReturnType<typeof this.mapItemRow>[]>();
+    for (const itemRow of itemRows) {
+      const row = itemRow as PlanItemRow;
+      const list = itemsByPlanId.get(row.treatmentPlanId) ?? [];
+      list.push(this.mapItemRow(row));
+      itemsByPlanId.set(row.treatmentPlanId, list);
+    }
+
     return {
-      data: rows.map((row) => this.mapHeaderRow(row as PlanHeaderRow)),
+      data: rows.map((row) => ({
+        ...this.mapHeaderRow(row as PlanHeaderRow),
+        items: itemsByPlanId.get(row.id) ?? [],
+      })),
       pagination: {
         page,
         limit,
