@@ -27,7 +27,7 @@ export function ConfirmationDialog({
       }
     >
       <Stack gap="lg">
-        <Text size="sm">{description}</Text>
+        <Text size="md">{description}</Text>
 
         <Group justify="flex-end">
           <Button variant="default" onClick={onCancel}>
