@@ -4,7 +4,8 @@ import {
   type ClientDetail,
 } from "@/shared/domain/client";
 import { calculateAge, formatDate } from "@/shared/lib/date/format-date";
-import { Divider, Group, Stack, Text } from "@mantine/core";
+import { ROUTES } from "@/shared/model/routes";
+import { Anchor, Box, Divider, Stack, Text } from "@mantine/core";
 import {
   IconCake,
   IconCalendarPlus,
@@ -17,6 +18,8 @@ import {
   IconUserX,
   type Icon,
 } from "@tabler/icons-react";
+import type { ReactNode } from "react";
+import { Link } from "react-router";
 
 function Field({
   icon: FieldIcon,
@@ -26,13 +29,20 @@ function Field({
 }: {
   icon: Icon;
   label: string;
-  value: string;
+  value: ReactNode;
   empty?: boolean;
 }) {
   return (
-    <Group gap="xs" wrap="nowrap">
+    <Box
+      style={{
+        display: "grid",
+        gridTemplateColumns: "20px 200px max-content",
+        columnGap: "var(--mantine-spacing-xs)",
+        alignItems: "center",
+      }}
+    >
       <FieldIcon size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
-      <Text size="sm" w={200} c="dimmed" style={{ whiteSpace: "nowrap" }}>
+      <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
         {label}
       </Text>
       <Text
@@ -42,7 +52,7 @@ function Field({
       >
         {value}
       </Text>
-    </Group>
+    </Box>
   );
 }
 
@@ -111,9 +121,18 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
           icon={IconStethoscope}
           label="Therapist"
           value={
-            client.therapist
-              ? `${client.therapist.firstName} ${client.therapist.lastName}`
-              : NOT_PROVIDED
+            client.therapist ? (
+              <Anchor
+                component={Link}
+                to={`${ROUTES.THERAPISTS}/${client.therapist.id}`}
+                size="sm"
+                underline="always"
+              >
+                {client.therapist.firstName} {client.therapist.lastName}
+              </Anchor>
+            ) : (
+              NOT_PROVIDED
+            )
           }
           empty={!client.therapist}
         />
@@ -139,11 +158,7 @@ function ClientDeletedSummary({ client }: { client: ClientDetail }) {
   return (
     <Stack gap="lg">
       <Stack align="center" gap="xs" py="md">
-        <IconUserX
-          size={32}
-          stroke={1.5}
-          color="var(--mantine-color-dimmed)"
-        />
+        <IconUserX size={32} stroke={1.5} color="var(--mantine-color-dimmed)" />
         <Text size="sm" c="dimmed" ta="center">
           This client was deleted. Details are no longer shown.
         </Text>

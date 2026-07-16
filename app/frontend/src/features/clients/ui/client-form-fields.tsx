@@ -41,7 +41,7 @@ export function ClientFormFields({
 
   return (
     <>
-      <SimpleGrid cols={2}>
+      <SimpleGrid cols={2} spacing="lg">
         <TextInput
           label="First Name"
           placeholder="Jane"
@@ -58,7 +58,7 @@ export function ClientFormFields({
         />
       </SimpleGrid>
 
-      <SimpleGrid cols={2}>
+      <SimpleGrid cols={2} spacing="lg">
         <TextInput
           label="Phone"
           placeholder="+1 234 567 8900"
@@ -88,7 +88,7 @@ export function ClientFormFields({
         />
       </SimpleGrid>
 
-      <SimpleGrid cols={2}>
+      <SimpleGrid cols={2} spacing="lg">
         <DateInput
           label="Birth Date"
           placeholder="Select a date"

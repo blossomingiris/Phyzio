@@ -120,15 +120,16 @@ export const theme = createTheme({
   components: {
     Card: { defaultProps: { radius: "lg" } },
     Paper: { defaultProps: { radius: "xl" } },
-    Modal: { defaultProps: { radius: "lg", centered: true } },
+    Modal: { defaultProps: { radius: "lg", centered: true, padding: "lg" } },
     Drawer: { defaultProps: { radius: "lg" } },
     Input: {
-      defaultProps: { size: "sm" },
+      defaultProps: { size: "md" },
       classNames: { input: classes.input },
     },
-    Checkbox: { defaultProps: { color: "accent" } },
-    Button: { defaultProps: { radius: "xs" } },
+    Checkbox: { defaultProps: { color: "accent", size: "md" } },
+    Button: { defaultProps: { radius: "xs", size: "md" } },
     Tooltip: { defaultProps: { radius: "xs" } },
+    CloseButton: { defaultProps: { size: "xl" } },
   },
 });
 

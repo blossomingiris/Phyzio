@@ -6,8 +6,8 @@ import { Alert, Anchor, Button, PasswordInput, TextInput } from "@mantine/core";
 import { schemaResolver, useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { Link } from "react-router";
-import { useLogin } from "./use-login";
 import { AuthLayout } from "./ui/auth-layout";
+import { useLogin } from "./use-login";
 
 export function LoginPage() {
   const login = useLogin();
@@ -41,7 +41,7 @@ export function LoginPage() {
           <Alert
             color="error"
             variant="light"
-            icon={<IconAlertCircle />}
+            icon={<IconAlertCircle stroke={1.5} />}
             mb="md"
           >
             {getApiErrorMessage(login.error)}

@@ -36,11 +36,11 @@ export function ClientListPage() {
           <Tabs.Tab value="active" leftSection={<IconUserX size={16} />}>
             Active
           </Tabs.Tab>
-          <Tabs.Tab value="all" leftSection={<IconUsers size={16} />}>
-            All
-          </Tabs.Tab>
           <Tabs.Tab value="deleted" leftSection={<IconUserOff size={16} />}>
             Deleted
+          </Tabs.Tab>
+          <Tabs.Tab value="all" leftSection={<IconUsers size={16} />}>
+            All
           </Tabs.Tab>
         </Tabs.List>
 

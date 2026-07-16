@@ -2830,11 +2830,37 @@ export interface paths {
                                     /** @enum {string} */
                                     preferredCommunication: "whats_up" | "phone" | "email";
                                 };
+                                primaryDiagnostic: string;
                                 /** @enum {string} */
                                 status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
                                 /** Format: date-time */
                                 startDate: string;
                                 endDate: string | null;
+                                items: {
+                                    id: number;
+                                    treatment: {
+                                        id: number;
+                                        /** @enum {string} */
+                                        category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
+                                        /** @description Decimal as string */
+                                        pricePerUnit: string;
+                                        quantity: number;
+                                        totalAmount: string | null;
+                                        /** @description Applied VAT rate, e.g. 0.24 for 24% */
+                                        vatRate: number;
+                                        /** @description VAT portion as decimal string */
+                                        vatAmount: string | null;
+                                        /** @description totalAmount + vatAmount as decimal string */
+                                        totalWithVat: string | null;
+                                        durationMinutes: number;
+                                        isActive: boolean;
+                                    };
+                                    quantityCompleted: number;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                }[];
                                 /** Format: date-time */
                                 createdAt: string;
                                 /** Format: date-time */

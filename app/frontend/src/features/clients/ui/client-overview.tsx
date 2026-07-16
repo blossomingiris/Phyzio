@@ -2,11 +2,7 @@ import type { ClientDetail } from "@/shared/domain/client";
 import { useConfirmation } from "@/shared/lib/confirmation/use-confirmation";
 import { ActionIcon, Card, Group, Menu, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  IconDotsVertical,
-  IconPencil,
-  IconTrash,
-} from "@tabler/icons-react";
+import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
 import { useDeleteClient } from "../model/use-delete-client";
 import { ClientEditModal } from "./client-edit-modal";
 import { ClientOverviewDetails } from "./client-overview-details";
@@ -41,7 +37,7 @@ export function ClientOverview({ client }: { client: ClientDetail }) {
 
   return (
     <>
-      <Card withBorder shadow="md" padding="xl" maw={640}>
+      <Card withBorder shadow="md" padding="xl" maw={580}>
         <Card.Section
           withBorder
           inheritPadding
@@ -53,7 +49,11 @@ export function ClientOverview({ client }: { client: ClientDetail }) {
           <Group justify="space-between">
             <Text fw={600}>Client Details</Text>
             {!isDeleted && (
-              <Menu position="right-start" withArrow>
+              <Menu
+                position="right-start"
+                withArrow
+                styles={{ item: { minHeight: 44 } }}
+              >
                 <Menu.Target>
                   <ActionIcon
                     variant="default"

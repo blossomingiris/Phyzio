@@ -54,6 +54,7 @@ export function DataTable<
     manualSorting: true,
     manualFiltering: true,
     enableGlobalFilter,
+    enableTopToolbar: enableGlobalFilter || isError,
     enableColumnActions: false,
     enableColumnFilters: false,
     enableHiding: false,

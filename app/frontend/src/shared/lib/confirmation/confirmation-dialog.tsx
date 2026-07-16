@@ -21,7 +21,7 @@ export function ConfirmationDialog({
       opened
       onClose={onCancel}
       title={
-        <Text fw={700} size="lg">
+        <Text fw={700} size="xl">
           {title}
         </Text>
       }

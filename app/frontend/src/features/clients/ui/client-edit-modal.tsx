@@ -2,7 +2,15 @@ import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { patchClientsById } from "@/shared/api/generated/validation-schemas";
 import type { ClientDetail } from "@/shared/domain/client";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import { Alert, Button, Group, Modal, Stack, Text } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Divider,
+  Group,
+  Modal,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";
 import {
@@ -13,12 +21,6 @@ import {
 import { useUpdateClient } from "../model/use-update-client";
 import { ClientFormFields } from "./client-form-fields";
 
-/**
- * Kept separate from `ClientEditModal` so it only exists inside `Modal`'s
- * children — Mantine unmounts those on close, which gives this component
- * (and its `useForm`) a fresh instance seeded from the latest `client` every
- * time the modal reopens, no manual resync needed.
- */
 function ClientEditForm({
   client,
   onClose,
@@ -34,6 +36,11 @@ function ClientEditForm({
   });
 
   const handleSubmit = form.onSubmit(async (values) => {
+    if (!form.isDirty()) {
+      onClose();
+      return;
+    }
+
     try {
       await updateClient.mutateAsync({
         params: { path: { id: client.id } },
@@ -55,6 +62,8 @@ function ClientEditForm({
         )}
 
         <ClientFormFields form={form} />
+
+        <Divider />
 
         <Group justify="flex-end">
           <Button variant="default" type="button" onClick={onClose}>
@@ -83,7 +92,7 @@ export function ClientEditModal({
       opened={opened}
       onClose={onClose}
       title={
-        <Text fw={700} size="lg">
+        <Text fw={700} size="xl">
           Edit Client
         </Text>
       }

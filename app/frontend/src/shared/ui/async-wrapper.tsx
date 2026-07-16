@@ -25,6 +25,8 @@ export function AsyncWrapper<T, TError = unknown>({
         flexDirection: "column",
         flex: 1,
         minHeight: 0,
+        width: "100%",
+        alignSelf: "stretch",
       }}
     >
       {isPending ? (

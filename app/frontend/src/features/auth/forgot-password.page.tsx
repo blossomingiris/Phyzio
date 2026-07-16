@@ -36,6 +36,7 @@ export function ForgotPasswordPage() {
           <IconExclamationCircle
             size={50}
             color="var(--mantine-color-dimmed)"
+            stroke={1.5}
           />
           <Text ta="center" size="sm" c="dimmed">
             If an account exists for <b>{form.values.email}</b>, you'll receive

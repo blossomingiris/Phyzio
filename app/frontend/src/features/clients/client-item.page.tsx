@@ -3,16 +3,17 @@ import { ROUTES } from "@/shared/model/routes";
 import { AsyncWrapper } from "@/shared/ui/async-wrapper";
 import { BackButton } from "@/shared/ui/back-button";
 import { Tabs } from "@/shared/ui/tabs/tabs";
-import { Badge, Group, Stack, Text, Title } from "@mantine/core";
+import { Badge, Group, Stack, Title } from "@mantine/core";
 import {
   IconCalendar,
   IconClipboardList,
   IconUserCircle,
 } from "@tabler/icons-react";
 import { useParams } from "react-router";
+import { useClientQuery } from "./model/use-client-query";
 import { ClientAppointmentsTable } from "./ui/client-appointments-table";
 import { ClientOverview } from "./ui/client-overview";
-import { useClientQuery } from "./model/use-client-query";
+import { ClientTreatmentPlansTable } from "./ui/client-treatment-plans-table";
 
 export function ClientItemPage() {
   const { id } = useParams<{ id: string }>();
@@ -63,18 +64,16 @@ export function ClientItemPage() {
               </Tabs.Tab>
             </Tabs.List>
 
-            <Tabs.Panel value="overview" pt="md">
+            <Tabs.Panel value="overview" pt="xl">
               <ClientOverview client={client} />
             </Tabs.Panel>
 
-            <Tabs.Panel value="appointments" pt="md">
+            <Tabs.Panel value="appointments" pt="lg">
               <ClientAppointmentsTable clientId={client.id} />
             </Tabs.Panel>
 
-            <Tabs.Panel value="treatment-plans" pt="md">
-              <Text size="sm" c="dimmed">
-                No treatment plans yet.
-              </Text>
+            <Tabs.Panel value="treatment-plans" pt="lg">
+              <ClientTreatmentPlansTable clientId={client.id} />
             </Tabs.Panel>
           </Tabs>
         )}

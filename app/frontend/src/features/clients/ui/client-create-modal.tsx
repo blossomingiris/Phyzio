@@ -1,7 +1,15 @@
 import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { postClients } from "@/shared/api/generated/validation-schemas";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import { Alert, Button, Group, Modal, Stack, Text } from "@mantine/core";
+import {
+  Alert,
+  Button,
+  Divider,
+  Group,
+  Modal,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconAlertCircle } from "@tabler/icons-react";
 import {
@@ -48,7 +56,7 @@ export function ClientCreateModal({
       opened={opened}
       onClose={handleClose}
       title={
-        <Text fw={700} size="lg">
+        <Text fw={700} size="xl">
           New Client
         </Text>
       }
@@ -63,6 +71,8 @@ export function ClientCreateModal({
           )}
 
           <ClientFormFields form={form} />
+
+          <Divider />
 
           <Group justify="flex-end">
             <Button variant="default" type="button" onClick={handleClose}>
