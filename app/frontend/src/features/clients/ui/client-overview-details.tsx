@@ -5,7 +5,7 @@ import {
 } from "@/shared/domain/client";
 import { calculateAge, formatDate } from "@/shared/lib/date/format-date";
 import { ROUTES } from "@/shared/model/routes";
-import { Anchor, Box, Divider, Stack, Text } from "@mantine/core";
+import { Anchor, Box, Divider, Group, Stack, Text } from "@mantine/core";
 import {
   IconCake,
   IconCalendarPlus,
@@ -49,6 +49,7 @@ function Field({
         size="sm"
         c={empty ? "dimmed" : undefined}
         fs={empty ? "italic" : undefined}
+        ta="right"
       >
         {value}
       </Text>
@@ -166,16 +167,26 @@ function ClientDeletedSummary({ client }: { client: ClientDetail }) {
 
       <Divider />
 
-      <Field
-        icon={IconCalendarPlus}
-        label="Created"
-        value={formatDate(client.createdAt)}
-      />
-      <Field
-        icon={IconTrash}
-        label="Deleted"
-        value={formatDate(client.deletedAt)}
-      />
+      <Group gap="xl" justify="space-between">
+        <Group gap="xs">
+          <IconCalendarPlus
+            size={16}
+            stroke={1.5}
+            color="var(--mantine-color-dimmed)"
+          />
+          <Text size="sm" c="dimmed">
+            Created
+          </Text>
+          <Text size="sm">{formatDate(client.createdAt)}</Text>
+        </Group>
+        <Group gap="xs">
+          <IconTrash size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
+          <Text size="sm" c="dimmed">
+            Deleted
+          </Text>
+          <Text size="sm">{formatDate(client.deletedAt)}</Text>
+        </Group>
+      </Group>
     </Stack>
   );
 }
