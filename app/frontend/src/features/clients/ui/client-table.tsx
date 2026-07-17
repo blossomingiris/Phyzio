@@ -19,19 +19,6 @@ const baseColumns: MRT_ColumnDef<Client>[] = [
   {
     accessorKey: "lastName",
     header: "Last Name",
-    Cell: ({ row }) => {
-      const client = row.original;
-      return (
-        <Group gap={6}>
-          <Text size="sm">{client.lastName}</Text>
-          {client.deletedAt && (
-            <Badge color="error" variant="light" size="xs">
-              Deleted
-            </Badge>
-          )}
-        </Group>
-      );
-    },
   },
   {
     accessorKey: "phone",
@@ -100,6 +87,20 @@ const deletedAtColumn: MRT_ColumnDef<Client> = {
   Cell: ({ cell }) => formatDate(cell.getValue<string | null>()),
 };
 
+const statusColumn: MRT_ColumnDef<Client> = {
+  id: "status",
+  header: "Status",
+  enableSorting: false,
+  Cell: ({ row }) => {
+    const isDeleted = !!row.original.deletedAt;
+    return (
+      <Badge color={isDeleted ? "error" : "success"} variant="light">
+        {isDeleted ? "Deleted" : "Active"}
+      </Badge>
+    );
+  },
+};
+
 export function ClientTable({
   table,
   status,
@@ -109,10 +110,11 @@ export function ClientTable({
 }) {
   const navigate = useNavigate();
   const query = useClientsQuery(table, status);
-  const columns = useMemo(
-    () => (status === "deleted" ? [...baseColumns, deletedAtColumn] : baseColumns),
-    [status],
-  );
+  const columns = useMemo(() => {
+    if (status === "deleted") return [...baseColumns, deletedAtColumn];
+    if (status === "all") return [...baseColumns, statusColumn];
+    return baseColumns;
+  }, [status]);
 
   return (
     <DataTable
