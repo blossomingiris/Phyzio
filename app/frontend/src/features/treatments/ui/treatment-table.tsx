@@ -7,13 +7,13 @@ import { formatDate } from "@/shared/lib/date/format-date";
 import { ROUTES } from "@/shared/model/routes";
 import { DataTable } from "@/shared/ui/data-table/data-table";
 import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
-import { Group, Stack, Text } from "@mantine/core";
+import { Badge, Group, Stack, Text } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table-open";
-import type { ReactNode } from "react";
+import { useMemo, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { useTreatmentsQuery } from "../model/use-treatments-query";
 
-const columns: MRT_ColumnDef<Treatment>[] = [
+const baseColumns: MRT_ColumnDef<Treatment>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -65,6 +65,22 @@ const columns: MRT_ColumnDef<Treatment>[] = [
   },
 ];
 
+const statusColumn: MRT_ColumnDef<Treatment> = {
+  accessorKey: "isActive",
+  header: "Status",
+  enableSorting: false,
+  Cell: ({ cell }) =>
+    cell.getValue<boolean>() ? (
+      <Badge color="success" variant="light" size="sm">
+        Active
+      </Badge>
+    ) : (
+      <Badge color="error" variant="light" size="sm">
+        Inactive
+      </Badge>
+    ),
+};
+
 export function TreatmentTable({
   table,
   status,
@@ -78,6 +94,10 @@ export function TreatmentTable({
 }) {
   const navigate = useNavigate();
   const query = useTreatmentsQuery(table, status, category);
+  const columns = useMemo(
+    () => (status === "all" ? [...baseColumns, statusColumn] : baseColumns),
+    [status],
+  );
 
   return (
     <DataTable

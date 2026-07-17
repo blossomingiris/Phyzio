@@ -5,7 +5,7 @@ import {
 } from "@/shared/domain/client";
 import { calculateAge, formatDate } from "@/shared/lib/date/format-date";
 import { ROUTES } from "@/shared/model/routes";
-import { DetailField } from "@/shared/ui/detail-field";
+import { CardDetailField } from "@/shared/ui/card-detail-field";
 import { SectionLabel } from "@/shared/ui/section-label";
 import { Anchor, Divider, Group, Stack, Text } from "@mantine/core";
 import {
@@ -28,19 +28,19 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
     <Stack gap="lg">
       <Stack gap="xs">
         <SectionLabel>Contact</SectionLabel>
-        <DetailField
+        <CardDetailField
           icon={IconPhone}
           label="Phone"
           value={client.phone ?? NOT_PROVIDED}
           empty={!client.phone}
         />
-        <DetailField
+        <CardDetailField
           icon={IconMail}
           label="Email"
           value={client.email ?? NOT_PROVIDED}
           empty={!client.email}
         />
-        <DetailField
+        <CardDetailField
           icon={IconMessageCircle}
           label="Preferred Communication"
           value={
@@ -50,7 +50,7 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
           }
           empty={!client.preferredCommunication}
         />
-        <DetailField
+        <CardDetailField
           icon={IconRoute}
           label="Source"
           value={
@@ -64,7 +64,7 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
 
       <Stack gap="xs">
         <SectionLabel>Personal</SectionLabel>
-        <DetailField
+        <CardDetailField
           icon={IconCake}
           label="Birth Date"
           value={
@@ -74,7 +74,7 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
           }
           empty={!client.birthDate}
         />
-        <DetailField
+        <CardDetailField
           icon={IconStethoscope}
           label="Therapist"
           value={
@@ -136,7 +136,11 @@ function ClientDeletedSummary({ client }: { client: ClientDetail }) {
           <Text size="sm">{formatDate(client.createdAt)}</Text>
         </Group>
         <Group gap="xs">
-          <IconTrash size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
+          <IconTrash
+            size={16}
+            stroke={1.5}
+            color="var(--mantine-color-dimmed)"
+          />
           <Text size="sm" c="dimmed">
             Deleted
           </Text>
@@ -158,7 +162,7 @@ export function ClientOverviewDetails({ client }: { client: ClientDetail }) {
 
       <Divider />
 
-      <DetailField
+      <CardDetailField
         icon={IconCalendarPlus}
         label="Created"
         value={formatDate(client.createdAt)}

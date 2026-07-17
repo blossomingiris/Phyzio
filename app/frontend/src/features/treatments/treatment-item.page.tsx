@@ -35,6 +35,7 @@ export function TreatmentItemPage() {
           <Badge
             color={treatment.isActive ? "success" : "error"}
             variant="light"
+            size="lg"
           >
             {treatment.isActive ? "Active" : "Inactive"}
           </Badge>

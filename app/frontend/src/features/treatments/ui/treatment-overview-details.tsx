@@ -1,6 +1,9 @@
-import { TREATMENT_CATEGORY_LABELS, type TreatmentDetail } from "@/shared/domain/treatment";
+import {
+  TREATMENT_CATEGORY_LABELS,
+  type TreatmentDetail,
+} from "@/shared/domain/treatment";
 import { formatDate } from "@/shared/lib/date/format-date";
-import { DetailField } from "@/shared/ui/detail-field";
+import { CardDetailField } from "@/shared/ui/card-detail-field";
 import { SectionLabel } from "@/shared/ui/section-label";
 import { Divider, Group, Stack, Text } from "@mantine/core";
 import {
@@ -35,17 +38,17 @@ export function TreatmentOverviewDetails({
 
       <Stack gap="xs">
         <SectionLabel>Details</SectionLabel>
-        <DetailField
+        <CardDetailField
           icon={IconRoute}
           label="Category"
           value={TREATMENT_CATEGORY_LABELS[treatment.category]}
         />
-        <DetailField
+        <CardDetailField
           icon={IconClock}
           label="Duration"
           value={`${treatment.durationMinutes} min`}
         />
-        <DetailField
+        <CardDetailField
           icon={IconStack2}
           label="Quantity"
           value={String(treatment.quantity)}
@@ -56,17 +59,17 @@ export function TreatmentOverviewDetails({
 
       <Stack gap="xs">
         <SectionLabel>Pricing</SectionLabel>
-        <DetailField
+        <CardDetailField
           icon={IconCash}
           label="Price per Unit"
           value={treatment.pricePerUnit}
         />
-        <DetailField
+        <CardDetailField
           icon={IconPercentage}
           label="VAT"
           value={`${treatment.vatRate * 100}%`}
         />
-        <DetailField
+        <CardDetailField
           icon={IconReceipt}
           label="Total with VAT"
           value={treatment.totalWithVat ?? "—"}
