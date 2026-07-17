@@ -96,10 +96,13 @@ export function DataTable<
     },
     mantineHighlightProps: { color: "accent.1" },
     mantineTableBodyRowProps: onRowClick
-      ? ({ row }) => ({
-          onClick: () => onRowClick(row.original),
-          style: { cursor: "pointer" },
-        })
+      ? ({ row }) =>
+          row.id === "mrt-row-empty"
+            ? {}
+            : {
+                onClick: () => onRowClick(row.original),
+                style: { cursor: "pointer" },
+              }
       : undefined,
     mantineToolbarAlertBannerProps: isError
       ? { color: "error", children: getApiErrorMessage(error) }

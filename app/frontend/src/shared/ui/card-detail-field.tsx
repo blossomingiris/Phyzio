@@ -17,9 +17,6 @@ export function CardDetailField({
     <Group gap="xl" justify="space-between">
       <Group gap="xs">
         <FieldIcon size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
-        <Text size="sm" c="dimmed">
-          Created
-        </Text>
         <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
           {label}
         </Text>
