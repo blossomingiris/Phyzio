@@ -1,4 +1,3 @@
-import { TREATMENT_CATEGORY_LABELS } from "@/shared/domain/treatment";
 import {
   TREATMENT_PLAN_STATUS_COLORS,
   TREATMENT_PLAN_STATUS_LABELS,
@@ -102,8 +101,7 @@ const columns: MRT_ColumnDef<TreatmentPlan>[] = [
             size="sm"
             underline="always"
           >
-            {TREATMENT_CATEGORY_LABELS[item.treatment.category]} ·{" "}
-            {item.treatment.durationMinutes} min
+            {item.treatment.name}
           </Anchor>
         ))}
       </Group>

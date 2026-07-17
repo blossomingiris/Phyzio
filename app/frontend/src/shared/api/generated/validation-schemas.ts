@@ -69,10 +69,10 @@ export const patchAppointmentsByIdStatus = z.record(z.string(), z.any()).and(z.a
   }));
 
 // POST /treatments/
-export const postTreatments = z.object({ "category": z.enum(["ortho_sports","neuro_vestibular","pediatrics","geriatrics","specialized_pt","general_tech","evaluations"]), "pricePerUnit": z.string().regex(new RegExp("^\\d+(\\.\\d{1,2})?$")).describe("Decimal as string, e.g. '50.00'"), "quantity": z.number().int().gte(1), "durationMinutes": z.number().int().gte(1) }).strict();
+export const postTreatments = z.object({ "name": z.string().min(1).max(255), "description": z.string().optional(), "category": z.enum(["ortho_sports","neuro_vestibular","pediatrics","geriatrics","specialized_pt","general_tech","evaluations"]), "pricePerUnit": z.string().regex(new RegExp("^\\d+(\\.\\d{1,2})?$")).describe("Decimal as string, e.g. '50.00'"), "quantity": z.number().int().gte(1), "durationMinutes": z.number().int().gte(1) }).strict();
 
 // PATCH /treatments/{id}
-export const patchTreatmentsById = z.object({ "category": z.enum(["ortho_sports","neuro_vestibular","pediatrics","geriatrics","specialized_pt","general_tech","evaluations"]).optional(), "pricePerUnit": z.string().regex(new RegExp("^\\d+(\\.\\d{1,2})?$")).describe("Decimal as string, e.g. '50.00'").optional(), "quantity": z.number().int().gte(1).optional(), "durationMinutes": z.number().int().gte(1).optional(), "isActive": z.boolean().optional() }).strict();
+export const patchTreatmentsById = z.object({ "name": z.string().min(1).max(255).optional(), "description": z.union([z.string(), z.null()]).optional(), "category": z.enum(["ortho_sports","neuro_vestibular","pediatrics","geriatrics","specialized_pt","general_tech","evaluations"]).optional(), "pricePerUnit": z.string().regex(new RegExp("^\\d+(\\.\\d{1,2})?$")).describe("Decimal as string, e.g. '50.00'").optional(), "quantity": z.number().int().gte(1).optional(), "durationMinutes": z.number().int().gte(1).optional(), "isActive": z.boolean().optional() }).strict();
 
 // PATCH /treatment-plans/{id}
 export const patchTreatmentPlansById = z.object({ "therapistId": z.number().int().gte(1).optional(), "startDate": z.string().datetime({ offset: true }).optional(), "endDate": z.union([z.string().datetime({ offset: true }), z.null()]).optional() }).strict();

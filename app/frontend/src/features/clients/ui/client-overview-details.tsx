@@ -5,7 +5,9 @@ import {
 } from "@/shared/domain/client";
 import { calculateAge, formatDate } from "@/shared/lib/date/format-date";
 import { ROUTES } from "@/shared/model/routes";
-import { Anchor, Box, Divider, Group, Stack, Text } from "@mantine/core";
+import { DetailField } from "@/shared/ui/detail-field";
+import { SectionLabel } from "@/shared/ui/section-label";
+import { Anchor, Divider, Group, Stack, Text } from "@mantine/core";
 import {
   IconCake,
   IconCalendarPlus,
@@ -16,54 +18,8 @@ import {
   IconStethoscope,
   IconTrash,
   IconUserX,
-  type Icon,
 } from "@tabler/icons-react";
-import type { ReactNode } from "react";
 import { Link } from "react-router";
-
-function Field({
-  icon: FieldIcon,
-  label,
-  value,
-  empty,
-}: {
-  icon: Icon;
-  label: string;
-  value: ReactNode;
-  empty?: boolean;
-}) {
-  return (
-    <Box
-      style={{
-        display: "grid",
-        gridTemplateColumns: "20px 200px max-content",
-        columnGap: "var(--mantine-spacing-xs)",
-        alignItems: "center",
-      }}
-    >
-      <FieldIcon size={16} stroke={1.5} color="var(--mantine-color-dimmed)" />
-      <Text size="sm" c="dimmed" style={{ whiteSpace: "nowrap" }}>
-        {label}
-      </Text>
-      <Text
-        size="sm"
-        c={empty ? "dimmed" : undefined}
-        fs={empty ? "italic" : undefined}
-        ta="right"
-      >
-        {value}
-      </Text>
-    </Box>
-  );
-}
-
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <Text size="xs" fw={600} tt="uppercase" c="dimmed">
-      {children}
-    </Text>
-  );
-}
 
 const NOT_PROVIDED = "Not provided";
 
@@ -72,19 +28,19 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
     <Stack gap="lg">
       <Stack gap="xs">
         <SectionLabel>Contact</SectionLabel>
-        <Field
+        <DetailField
           icon={IconPhone}
           label="Phone"
           value={client.phone ?? NOT_PROVIDED}
           empty={!client.phone}
         />
-        <Field
+        <DetailField
           icon={IconMail}
           label="Email"
           value={client.email ?? NOT_PROVIDED}
           empty={!client.email}
         />
-        <Field
+        <DetailField
           icon={IconMessageCircle}
           label="Preferred Communication"
           value={
@@ -94,7 +50,7 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
           }
           empty={!client.preferredCommunication}
         />
-        <Field
+        <DetailField
           icon={IconRoute}
           label="Source"
           value={
@@ -108,7 +64,7 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
 
       <Stack gap="xs">
         <SectionLabel>Personal</SectionLabel>
-        <Field
+        <DetailField
           icon={IconCake}
           label="Birth Date"
           value={
@@ -118,7 +74,7 @@ function ClientPersonalDetails({ client }: { client: ClientDetail }) {
           }
           empty={!client.birthDate}
         />
-        <Field
+        <DetailField
           icon={IconStethoscope}
           label="Therapist"
           value={
@@ -202,7 +158,7 @@ export function ClientOverviewDetails({ client }: { client: ClientDetail }) {
 
       <Divider />
 
-      <Field
+      <DetailField
         icon={IconCalendarPlus}
         label="Created"
         value={formatDate(client.createdAt)}

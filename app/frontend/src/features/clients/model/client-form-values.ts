@@ -32,19 +32,11 @@ export function clientToFormValues(client: ClientDetail): ClientFormValues {
     email: client.email ?? "",
     birthDate: client.birthDate ?? null,
     origin: client.origin ?? null,
-    // Only null on a deleted (redacted) client, which the edit form never opens for.
     preferredCommunication: client.preferredCommunication ?? "phone",
     therapistId: client.therapist ? String(client.therapist.id) : null,
   };
 }
 
-/**
- * Optional fields are blank as `""`/`null` while editing, but the API
- * schemas treat blank as "provide a valid value" rather than "omit this
- * field" (e.g. `phone` is `min(1).optional()`) — convert blanks to
- * `undefined` so they're dropped from the request instead of failing
- * validation.
- */
 export function normalizeClientFormValues(values: ClientFormValues) {
   return {
     firstName: values.firstName,
@@ -58,14 +50,6 @@ export function normalizeClientFormValues(values: ClientFormValues) {
   };
 }
 
-/**
- * Replaces raw zod messages (e.g. "Too small: expected string to have
- * >=1 characters", "Too big: expected string to have <=255 characters",
- * "Invalid email address") with copy that reads naturally in the form.
- * One message per field, covering every way that field can be invalid —
- * `overrideValidationMessages` only replaces by field name, not by which
- * rule failed.
- */
 const CLIENT_FIELD_MESSAGES = {
   firstName: "First name must be 1–255 characters",
   lastName: "Last name must be 1–255 characters",

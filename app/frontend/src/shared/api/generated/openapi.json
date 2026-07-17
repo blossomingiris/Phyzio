@@ -5606,6 +5606,15 @@
           },
           {
             "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "description": "Search by treatment name"
+          },
+          {
+            "schema": {
               "type": "string",
               "enum": [
                 "ortho_sports",
@@ -5636,7 +5645,8 @@
                 "createdAt",
                 "category",
                 "pricePerUnit",
-                "durationMinutes"
+                "durationMinutes",
+                "quantity"
               ],
               "default": "createdAt"
             },
@@ -5677,6 +5687,8 @@
                         "type": "object",
                         "required": [
                           "id",
+                          "name",
+                          "description",
                           "category",
                           "pricePerUnit",
                           "quantity",
@@ -5692,6 +5704,19 @@
                         "properties": {
                           "id": {
                             "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           },
                           "category": {
                             "type": "string",
@@ -5817,12 +5842,21 @@
               "schema": {
                 "type": "object",
                 "required": [
+                  "name",
                   "category",
                   "pricePerUnit",
                   "quantity",
                   "durationMinutes"
                 ],
                 "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "type": "string"
+                  },
                   "category": {
                     "type": "string",
                     "enum": [
@@ -5863,6 +5897,8 @@
                   "type": "object",
                   "required": [
                     "id",
+                    "name",
+                    "description",
                     "category",
                     "pricePerUnit",
                     "quantity",
@@ -5878,6 +5914,19 @@
                   "properties": {
                     "id": {
                       "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     },
                     "category": {
                       "type": "string",
@@ -6012,6 +6061,8 @@
                   "type": "object",
                   "required": [
                     "id",
+                    "name",
+                    "description",
                     "category",
                     "pricePerUnit",
                     "quantity",
@@ -6027,6 +6078,19 @@
                   "properties": {
                     "id": {
                       "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     },
                     "category": {
                       "type": "string",
@@ -6156,6 +6220,21 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
                   "category": {
                     "type": "string",
                     "enum": [
@@ -6210,6 +6289,8 @@
                   "type": "object",
                   "required": [
                     "id",
+                    "name",
+                    "description",
                     "category",
                     "pricePerUnit",
                     "quantity",
@@ -6225,6 +6306,19 @@
                   "properties": {
                     "id": {
                       "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     },
                     "category": {
                       "type": "string",
@@ -6622,6 +6716,7 @@
                                   "type": "object",
                                   "required": [
                                     "id",
+                                    "name",
                                     "category",
                                     "pricePerUnit",
                                     "quantity",
@@ -6635,6 +6730,9 @@
                                   "properties": {
                                     "id": {
                                       "type": "integer"
+                                    },
+                                    "name": {
+                                      "type": "string"
                                     },
                                     "category": {
                                       "type": "string",
@@ -7005,6 +7103,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -7018,6 +7117,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -7422,6 +7524,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -7435,6 +7538,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -7855,6 +7961,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -7868,6 +7975,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -10848,6 +10958,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -10861,6 +10972,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -11187,6 +11301,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -11200,6 +11315,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -11560,6 +11678,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -11573,6 +11692,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -11988,6 +12110,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -12001,6 +12124,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",
@@ -12347,6 +12473,7 @@
                             "type": "object",
                             "required": [
                               "id",
+                              "name",
                               "category",
                               "pricePerUnit",
                               "quantity",
@@ -12360,6 +12487,9 @@
                             "properties": {
                               "id": {
                                 "type": "integer"
+                              },
+                              "name": {
+                                "type": "string"
                               },
                               "category": {
                                 "type": "string",

@@ -2431,9 +2431,11 @@ export interface paths {
                 query?: {
                     page?: number;
                     limit?: number;
+                    /** @description Search by treatment name */
+                    search?: string;
                     category?: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                     isActive?: boolean;
-                    sortBy?: "createdAt" | "category" | "pricePerUnit" | "durationMinutes";
+                    sortBy?: "createdAt" | "category" | "pricePerUnit" | "durationMinutes" | "quantity";
                     /** @description Sort direction */
                     sortOrder?: "asc" | "desc";
                 };
@@ -2452,6 +2454,8 @@ export interface paths {
                         "application/json": {
                             data: {
                                 id: number;
+                                name: string;
+                                description: string | null;
                                 /** @enum {string} */
                                 category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                 /** @description Decimal as string */
@@ -2516,6 +2520,8 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        name: string;
+                        description?: string;
                         /** @enum {string} */
                         category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                         /** @description Decimal as string, e.g. '50.00' */
@@ -2534,6 +2540,8 @@ export interface paths {
                     content: {
                         "application/json": {
                             id: number;
+                            name: string;
+                            description: string | null;
                             /** @enum {string} */
                             category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                             /** @description Decimal as string */
@@ -2617,6 +2625,8 @@ export interface paths {
                     content: {
                         "application/json": {
                             id: number;
+                            name: string;
+                            description: string | null;
                             /** @enum {string} */
                             category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                             /** @description Decimal as string */
@@ -2694,6 +2704,8 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        name?: string;
+                        description?: string | null;
                         /** @enum {string} */
                         category?: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                         /** @description Decimal as string, e.g. '50.00' */
@@ -2713,6 +2725,8 @@ export interface paths {
                     content: {
                         "application/json": {
                             id: number;
+                            name: string;
+                            description: string | null;
                             /** @enum {string} */
                             category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                             /** @description Decimal as string */
@@ -2840,6 +2854,7 @@ export interface paths {
                                     id: number;
                                     treatment: {
                                         id: number;
+                                        name: string;
                                         /** @enum {string} */
                                         category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                         /** @description Decimal as string */
@@ -2969,6 +2984,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -3104,6 +3120,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -3260,6 +3277,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -4400,6 +4418,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -4523,6 +4542,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -4640,6 +4660,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -4785,6 +4806,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */
@@ -4912,6 +4934,7 @@ export interface paths {
                                 id: number;
                                 treatment: {
                                     id: number;
+                                    name: string;
                                     /** @enum {string} */
                                     category: "ortho_sports" | "neuro_vestibular" | "pediatrics" | "geriatrics" | "specialized_pt" | "general_tech" | "evaluations";
                                     /** @description Decimal as string */

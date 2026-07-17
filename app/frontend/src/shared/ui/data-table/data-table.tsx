@@ -1,12 +1,14 @@
 import { getApiErrorMessage } from "@/shared/api/errors";
 import type { PaginatedData } from "@/shared/api/types";
+import { Group } from "@mantine/core";
 import type { UseQueryResult } from "@tanstack/react-query";
 import {
   MantineReactTable,
+  MRT_GlobalFilterTextInput,
   useMantineReactTable,
   type MRT_ColumnDef,
 } from "mantine-react-table-open";
-import { useMemo, type CSSProperties } from "react";
+import { useMemo, type CSSProperties, type ReactNode } from "react";
 import type { ServerTableState } from "./use-server-table";
 
 const EMPTY_DATA: never[] = [];
@@ -20,6 +22,7 @@ export type DataTableProps<
   table: ServerTableState;
   onRowClick?: (row: TData) => void;
   enableGlobalFilter?: boolean;
+  renderTopToolbarCustomActions?: ReactNode;
 };
 
 export function DataTable<
@@ -31,6 +34,7 @@ export function DataTable<
   table,
   onRowClick,
   enableGlobalFilter = true,
+  renderTopToolbarCustomActions,
 }: DataTableProps<TData, TError>) {
   "use no memo";
 
@@ -54,7 +58,22 @@ export function DataTable<
     manualSorting: true,
     manualFiltering: true,
     enableGlobalFilter,
-    enableTopToolbar: enableGlobalFilter || isError,
+    enableTopToolbar:
+      enableGlobalFilter || isError || !!renderTopToolbarCustomActions,
+    positionGlobalFilter: "none",
+    initialState: { showGlobalFilter: true },
+    mantineSearchTextInputProps: { variant: "default" },
+    renderTopToolbarCustomActions:
+      enableGlobalFilter || renderTopToolbarCustomActions
+        ? ({ table: tableInstance }) => (
+            <Group justify="space-between" wrap="nowrap" style={{ flex: 1 }}>
+              {enableGlobalFilter && (
+                <MRT_GlobalFilterTextInput table={tableInstance} />
+              )}
+              {renderTopToolbarCustomActions}
+            </Group>
+          )
+        : undefined,
     enableColumnActions: false,
     enableColumnFilters: false,
     enableHiding: false,
