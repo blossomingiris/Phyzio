@@ -43,6 +43,7 @@ export function TreatmentItemPage() {
       </Group>
       <AsyncWrapper
         query={query}
+        errorMessage="Treatment not found"
         render={(treatment) => <TreatmentOverview treatment={treatment} />}
       />
     </Stack>

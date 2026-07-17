@@ -37,6 +37,7 @@ export function ClientItemPage() {
       </Group>
       <AsyncWrapper
         query={query}
+        errorMessage="Client not found"
         render={(client) => (
           <Tabs
             defaultValue="overview"
