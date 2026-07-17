@@ -51,7 +51,7 @@ describe("treatment plans lifecycle", () => {
       method: "POST",
       url: "/treatments",
       headers: { authorization: `Bearer ${adminToken}` },
-      payload: { category: "ortho_sports", pricePerUnit: "100.00", quantity: 10, durationMinutes: 60 },
+      payload: { name: "Standard Session", category: "ortho_sports", pricePerUnit: "100.00", quantity: 10, durationMinutes: 60 },
     });
     if (treatmentRes.statusCode !== 201) throw new Error(`treatment setup failed: ${treatmentRes.body}`);
     treatmentId = treatmentRes.json<{ id: number }>().id;
@@ -135,7 +135,7 @@ describe("treatment plans lifecycle", () => {
       method: "POST",
       url: "/treatments",
       headers: adminAuth(),
-      payload: { category: "neuro_vestibular", pricePerUnit: "50.00", quantity: 5, durationMinutes: 30 },
+      payload: { name: "Vestibular Therapy", category: "neuro_vestibular", pricePerUnit: "50.00", quantity: 5, durationMinutes: 30 },
     });
     if (treatment2Res.statusCode !== 201) throw new Error(`treatment2 setup failed: ${treatment2Res.body}`);
     const treatment2Id = treatment2Res.json<{ id: number }>().id;

@@ -4,7 +4,7 @@ import { treatments } from "#app/database/schemas.ts";
 import type { TreatmentCategory } from "#app/database/types.ts";
 import { NotFoundError } from "#app/errors/httpErrors.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
-import { asc, count, desc, eq, and } from "drizzle-orm";
+import { asc, count, desc, eq, ilike, and } from "drizzle-orm";
 import type {
   CreateTreatmentBody,
   TreatmentSortBy,
@@ -15,6 +15,7 @@ type TreatmentFilters = {
   id?: number;
   category?: TreatmentCategory;
   isActive?: boolean;
+  search?: string;
 };
 
 type TreatmentSortParams = {
@@ -27,6 +28,7 @@ const TREATMENT_SORT_COLUMNS = {
   category: treatments.category,
   pricePerUnit: treatments.pricePerUnit,
   durationMinutes: treatments.durationMinutes,
+  quantity: treatments.quantity,
 } satisfies Record<TreatmentSortBy, unknown>;
 
 export class TreatmentsService {
@@ -91,6 +93,8 @@ export class TreatmentsService {
     const [row] = await this.db
       .insert(treatments)
       .values({
+        name: data.name,
+        description: data.description,
         category: data.category,
         pricePerUnit: data.pricePerUnit,
         quantity: data.quantity,
@@ -142,6 +146,9 @@ export class TreatmentsService {
         : undefined,
       filters.isActive !== undefined
         ? eq(treatments.isActive, filters.isActive)
+        : undefined,
+      filters.search !== undefined
+        ? ilike(treatments.name, `%${filters.search}%`)
         : undefined,
     );
   }

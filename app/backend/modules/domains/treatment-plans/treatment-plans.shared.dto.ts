@@ -27,6 +27,7 @@ export const treatmentCategorySchema = Type.Unsafe<TreatmentCategory>({
 
 const treatmentSummarySchema = Type.Object({
   id: Type.Integer(),
+  name: Type.String(),
   category: treatmentCategorySchema,
   pricePerUnit: Type.String({ description: "Decimal as string" }),
   quantity: Type.Integer(),

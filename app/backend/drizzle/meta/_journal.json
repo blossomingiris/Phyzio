@@ -50,6 +50,13 @@
       "when": 1783338792099,
       "tag": "0006_jazzy_darkstar",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1784226509548,
+      "tag": "0007_funny_wither",
+      "breakpoints": true
     }
   ]
 }

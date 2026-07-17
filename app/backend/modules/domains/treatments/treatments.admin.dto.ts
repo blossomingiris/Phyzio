@@ -18,18 +18,21 @@ export type TreatmentSortBy =
   | "createdAt"
   | "category"
   | "pricePerUnit"
-  | "durationMinutes";
+  | "durationMinutes"
+  | "quantity";
 
 const treatmentSortBySchema = Type.Optional(
   Type.Unsafe<TreatmentSortBy>({
     type: "string",
-    enum: ["createdAt", "category", "pricePerUnit", "durationMinutes"],
+    enum: ["createdAt", "category", "pricePerUnit", "durationMinutes", "quantity"],
     default: "createdAt",
   }),
 );
 
 export const treatmentResponse = Type.Object({
   id: Type.Integer(),
+  name: Type.String(),
+  description: Type.Union([Type.String(), Type.Null()]),
   category: treatmentCategorySchema,
   pricePerUnit: Type.String({ description: "Decimal as string" }),
   quantity: Type.Integer(),
@@ -50,6 +53,8 @@ export const treatmentListResponse = Type.Object({
 
 export const createTreatmentBody = Type.Object(
   {
+    name: Type.String({ minLength: 1, maxLength: 255 }),
+    description: Type.Optional(Type.String()),
     category: treatmentCategorySchema,
     pricePerUnit: Type.String({
       pattern: "^\\d+(\\.\\d{1,2})?$",
@@ -64,6 +69,8 @@ export type CreateTreatmentBody = Static<typeof createTreatmentBody>;
 
 export const updateTreatmentBody = Type.Object(
   {
+    name: Type.Optional(Type.String({ minLength: 1, maxLength: 255 })),
+    description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
     category: Type.Optional(treatmentCategorySchema),
     pricePerUnit: Type.Optional(
       Type.String({
@@ -85,6 +92,7 @@ export const listTreatmentsQuery = Type.Object(
     limit: Type.Optional(
       Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
     ),
+    search: Type.Optional(Type.String({ description: "Search by treatment name" })),
     category: Type.Optional(treatmentCategorySchema),
     isActive: Type.Optional(Type.Boolean()),
     sortBy: treatmentSortBySchema,

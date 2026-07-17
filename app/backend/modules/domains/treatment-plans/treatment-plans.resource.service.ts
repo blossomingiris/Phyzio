@@ -71,6 +71,7 @@ type PlanItemRow = {
   itemCreatedAt: Date;
   itemUpdatedAt: Date;
   treatmentId: number;
+  treatmentName: string;
   treatmentCategory: TreatmentCategory;
   treatmentPricePerUnit: string;
   treatmentQuantity: number;
@@ -130,6 +131,7 @@ const planItemSelect = {
   itemCreatedAt: treatmentPlanItems.createdAt,
   itemUpdatedAt: treatmentPlanItems.updatedAt,
   treatmentId: treatments.id,
+  treatmentName: treatments.name,
   treatmentCategory: treatments.category,
   treatmentPricePerUnit: treatments.pricePerUnit,
   treatmentQuantity: treatments.quantity,
@@ -514,6 +516,7 @@ export class TreatmentPlansService {
       itemCreatedAt,
       itemUpdatedAt,
       treatmentId,
+      treatmentName,
       treatmentCategory,
       treatmentPricePerUnit,
       treatmentQuantity,
@@ -539,6 +542,7 @@ export class TreatmentPlansService {
       updatedAt: itemUpdatedAt,
       treatment: {
         id: treatmentId,
+        name: treatmentName,
         category: treatmentCategory,
         pricePerUnit: treatmentPricePerUnit,
         quantity: treatmentQuantity,

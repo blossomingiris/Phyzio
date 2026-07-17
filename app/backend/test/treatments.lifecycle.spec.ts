@@ -19,6 +19,7 @@ describe("treatments lifecycle", () => {
   const auth = () => ({ authorization: `Bearer ${adminToken}` });
 
   const baseTreatment = {
+    name: "Standard Session",
     category: "ortho_sports" as const,
     pricePerUnit: "100.00",
     quantity: 10,

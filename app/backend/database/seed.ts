@@ -211,42 +211,49 @@ async function seed() {
       .insert(treatments)
       .values([
         {
+          name: "Sports Rehab Session",
           category: "ortho_sports",
           pricePerUnit: "80.00",
           quantity: 10,
           durationMinutes: 45,
         },
         {
+          name: "Orthopedic Recovery Package",
           category: "ortho_sports",
           pricePerUnit: "95.00",
           quantity: 6,
           durationMinutes: 60,
         },
         {
+          name: "Vestibular Therapy",
           category: "neuro_vestibular",
           pricePerUnit: "110.00",
           quantity: 8,
           durationMinutes: 50,
         },
         {
+          name: "Pediatric Development Session",
           category: "pediatrics",
           pricePerUnit: "70.00",
           quantity: 12,
           durationMinutes: 40,
         },
         {
+          name: "Senior Mobility Program",
           category: "geriatrics",
           pricePerUnit: "75.00",
           quantity: 10,
           durationMinutes: 45,
         },
         {
+          name: "Initial Evaluation",
           category: "evaluations",
           pricePerUnit: "120.00",
           quantity: 1,
           durationMinutes: 60,
         },
         {
+          name: "General Technique Session",
           category: "general_tech",
           pricePerUnit: "60.00",
           quantity: 15,

@@ -21,8 +21,13 @@ export default async function treatmentsAdminController(app: FastifyInstance) {
     "/",
     { schema: listTreatmentsSchema },
     async (req) => {
-      const { page, limit, category, isActive, sortBy, sortOrder } = req.query;
-      return service.all({ category, isActive }, { page, limit }, { sortBy, sortOrder });
+      const { page, limit, search, category, isActive, sortBy, sortOrder } =
+        req.query;
+      return service.all(
+        { search, category, isActive },
+        { page, limit },
+        { sortBy, sortOrder },
+      );
     },
   );
 

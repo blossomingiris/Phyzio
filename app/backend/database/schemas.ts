@@ -160,6 +160,8 @@ export const treatments = pgTable(
   "treatments",
   {
     id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: text("description"),
     category: categoryEnum("category").notNull(),
     pricePerUnit: numeric("price_per_unit", {
       precision: 10,
