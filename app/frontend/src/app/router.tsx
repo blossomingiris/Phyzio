@@ -4,10 +4,12 @@ import { createBrowserRouter } from "react-router";
 import { App } from "./app";
 import { AppShell } from "./app-shell";
 import { RequireAuth, RequireGuest, RequireRole } from "./route-guards";
+import { RouteErrorBoundary } from "./route-error-boundary";
 
 export const router = createBrowserRouter([
   {
     element: <App />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         element: <RequireGuest />,
