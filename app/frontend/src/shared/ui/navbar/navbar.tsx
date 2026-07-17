@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components -- compound component (Navbar.Header, Navbar.Section, Navbar.Link, Navbar.Footer) */
+import type { UserRole } from "@/shared/domain/user";
 import {
   ActionIcon,
   AppShell,
@@ -15,7 +16,6 @@ import {
   IconChevronRight,
   type Icon,
 } from "@tabler/icons-react";
-import type { UserRole } from "@/shared/domain/user";
 import { createContext, useContext, type ReactNode } from "react";
 import { Link, useLocation } from "react-router";
 import classes from "./navbar.module.css";
@@ -121,7 +121,12 @@ function NavbarHeader({ children }: { children: ReactNode }) {
       justify={collapsed ? "center" : "space-between"}
       wrap="nowrap"
     >
-      {!collapsed && <Title order={3}>{children}</Title>}
+      {!collapsed && (
+        <Group gap="xs" wrap="nowrap">
+          <img src="/logo.png" alt="" width={48} height={48} />
+          <Title order={3}>{children}</Title>
+        </Group>
+      )}
       <NavbarToggle />
     </Group>
   );
