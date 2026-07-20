@@ -12,14 +12,14 @@ import type {
   UpdateTherapistBody,
 } from "#app/modules/domains/users/therapists.admin.dto.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, ilike, isNull, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNull, not, or } from "drizzle-orm";
 
 type TherapistFilters = {
   id?: number;
   speciality?: Speciality;
   search?: string;
   isActive?: boolean;
-  deleted?: boolean;
+  status?: "active" | "all" | "deleted";
 };
 
 const THERAPIST_SORT_COLUMNS = {
@@ -160,7 +160,11 @@ export class TherapistsService {
 
   private buildWhere(filters: TherapistFilters) {
     return and(
-      filters.deleted ? undefined : isNull(therapists.deletedAt),
+      filters.status === "deleted"
+        ? not(isNull(therapists.deletedAt))
+        : filters.status === "all"
+          ? undefined
+          : isNull(therapists.deletedAt),
       filters.id !== undefined ? eq(therapists.userId, filters.id) : undefined,
       filters.speciality !== undefined
         ? eq(therapists.speciality, filters.speciality)

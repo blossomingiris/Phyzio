@@ -114,9 +114,42 @@ describe("therapists lifecycle", () => {
 
     const listedAll = await h.inject({
       method: "GET",
-      url: "/therapists?deleted=true",
+      url: "/therapists?deleted=all",
       headers: auth(),
     });
     expect(listedAll.json<{ data: { id: number }[] }>().data.some((t) => t.id === id)).toBe(true);
+  });
+
+  it("filters the therapist list by deleted status: active / all / deleted", async () => {
+    const { id: activeId } = await createTherapist();
+    const { id: deletedId } = await createTherapist();
+    await h.inject({ method: "DELETE", url: `/therapists/${deletedId}`, headers: auth() });
+
+    const active = await h.inject({
+      method: "GET",
+      url: "/therapists?deleted=active&limit=100",
+      headers: auth(),
+    });
+    const activeIds = active.json<{ data: { id: number }[] }>().data.map((t) => t.id);
+    expect(activeIds).toContain(activeId);
+    expect(activeIds).not.toContain(deletedId);
+
+    const all = await h.inject({
+      method: "GET",
+      url: "/therapists?deleted=all&limit=100",
+      headers: auth(),
+    });
+    const allIds = all.json<{ data: { id: number }[] }>().data.map((t) => t.id);
+    expect(allIds).toContain(activeId);
+    expect(allIds).toContain(deletedId);
+
+    const deletedOnly = await h.inject({
+      method: "GET",
+      url: "/therapists?deleted=deleted&limit=100",
+      headers: auth(),
+    });
+    const deletedIds = deletedOnly.json<{ data: { id: number }[] }>().data.map((t) => t.id);
+    expect(deletedIds).toContain(deletedId);
+    expect(deletedIds).not.toContain(activeId);
   });
 });

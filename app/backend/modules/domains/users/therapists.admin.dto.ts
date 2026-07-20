@@ -100,9 +100,12 @@ export const listTherapistsQuery = Type.Object(
     speciality: Type.Optional(specialitySchema),
     isActive: Type.Optional(Type.Boolean()),
     deleted: Type.Optional(
-      Type.Boolean({
-        default: false,
-        description: "Include soft-deleted therapists",
+      Type.Unsafe<"active" | "all" | "deleted">({
+        type: "string",
+        enum: ["active", "all", "deleted"],
+        default: "active",
+        description:
+          "active: exclude soft-deleted therapists; all: include both; deleted: soft-deleted therapists only",
       }),
     ),
     sortBy: therapistSortBySchema,

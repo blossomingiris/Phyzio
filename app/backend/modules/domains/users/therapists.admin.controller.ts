@@ -34,7 +34,7 @@ export default async function therapistsAdminController(app: FastifyInstance) {
         sortOrder,
       } = req.query;
       return service.all(
-        { search, speciality, isActive, deleted },
+        { search, speciality, isActive, status: deleted },
         { page, limit },
         { sortBy, sortOrder },
       );
@@ -45,7 +45,9 @@ export default async function therapistsAdminController(app: FastifyInstance) {
     "/:id",
     { schema: findTherapistSchema },
     async (req) => {
-      return service.findOrFail(req.params.id, { deleted: req.query.deleted });
+      return service.findOrFail(req.params.id, {
+        status: req.query.deleted ? "all" : "active",
+      });
     },
   );
 
