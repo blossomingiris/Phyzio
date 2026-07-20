@@ -67,7 +67,7 @@ const baseColumns: MRT_ColumnDef<Client>[] = [
             </Text>
             {!therapist.isActive && (
               <Badge color="accent" size="xs">
-                Inactive
+                Unavailable
               </Badge>
             )}
           </Group>

@@ -1012,13 +1012,18 @@
           },
           {
             "schema": {
-              "type": "boolean",
-              "default": false
+              "type": "string",
+              "enum": [
+                "active",
+                "all",
+                "deleted"
+              ],
+              "default": "active"
             },
             "in": "query",
             "name": "deleted",
             "required": false,
-            "description": "Include soft-deleted therapists"
+            "description": "active: exclude soft-deleted therapists; all: include both; deleted: soft-deleted therapists only"
           },
           {
             "schema": {

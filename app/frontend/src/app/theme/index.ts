@@ -127,6 +127,8 @@ export const theme = createTheme({
       classNames: { input: classes.input },
     },
     Checkbox: { defaultProps: { color: "accent", size: "md" } },
+    Radio: { defaultProps: { size: "md" } },
+    Switch: { defaultProps: { size: "md", withThumbIndicator: false } },
     Button: { defaultProps: { radius: "xs", size: "md" } },
     Tooltip: { defaultProps: { radius: "xs" } },
     CloseButton: { defaultProps: { size: "xl" } },

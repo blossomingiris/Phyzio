@@ -608,8 +608,8 @@ export interface paths {
                     search?: string;
                     speciality?: "orthopedic" | "sports" | "neurology" | "pediatric" | "geriatric" | "cardio_pulmonary" | "pelvic_floor" | "oncology" | "vestibular";
                     isActive?: boolean;
-                    /** @description Include soft-deleted therapists */
-                    deleted?: boolean;
+                    /** @description active: exclude soft-deleted therapists; all: include both; deleted: soft-deleted therapists only */
+                    deleted?: "active" | "all" | "deleted";
                     sortBy?: "createdAt" | "lastName" | "email";
                     /** @description Sort direction */
                     sortOrder?: "asc" | "desc";

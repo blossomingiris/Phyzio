@@ -35,7 +35,7 @@ export function ClientFormFields({
     value: String(therapist.id),
     label: therapist.isActive
       ? `${therapist.firstName} ${therapist.lastName}`
-      : `${therapist.firstName} ${therapist.lastName} (Inactive)`,
+      : `${therapist.firstName} ${therapist.lastName} (Unavailable)`,
     disabled: !therapist.isActive,
   }));
 
