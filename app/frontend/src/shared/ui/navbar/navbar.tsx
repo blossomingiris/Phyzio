@@ -282,7 +282,11 @@ function NavbarCollapsedLink({
 function NavbarLink({ item }: { item: NavItem }) {
   const { collapsed } = useContext(NavbarContext);
   const { pathname } = useLocation();
-  const active = pathname === item.path;
+  const active =
+    pathname === item.path ||
+    (!!item.path &&
+      item.path !== "/" &&
+      pathname.startsWith(`${item.path}/`));
 
   return collapsed ? (
     <NavbarCollapsedLink item={item} active={active} />
