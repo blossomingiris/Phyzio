@@ -129,9 +129,10 @@ export const theme = createTheme({
     Checkbox: { defaultProps: { color: "accent", size: "md" } },
     Radio: { defaultProps: { size: "md" } },
     Switch: { defaultProps: { size: "md", withThumbIndicator: false } },
-    Button: { defaultProps: { radius: "xs", size: "md" } },
-    Tooltip: { defaultProps: { radius: "xs" } },
+    Button: { defaultProps: { radius: "sm", size: "md" } },
+    Tooltip: { defaultProps: { radius: "sm" } },
     CloseButton: { defaultProps: { size: "xl" } },
+    Alert: { defaultProps: { radius: "sm" } },
   },
 });
 

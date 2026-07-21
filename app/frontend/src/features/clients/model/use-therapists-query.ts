@@ -1,13 +1,5 @@
-import { rqClient } from "@/shared/api/http-client";
+import { useActiveTherapistsQuery } from "@/shared/model/use-active-therapists-query";
 
 export function useTherapistsQuery() {
-  return rqClient.useQuery("get", "/therapists/", {
-    params: {
-      query: {
-        limit: 100,
-        sortBy: "lastName",
-        sortOrder: "asc",
-      },
-    },
-  });
+  return useActiveTherapistsQuery();
 }
