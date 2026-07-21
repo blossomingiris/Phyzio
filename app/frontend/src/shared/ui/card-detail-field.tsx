@@ -23,6 +23,7 @@ export function CardDetailField({
       </Group>
       <Group>
         <Text
+          component="div"
           size="sm"
           c={empty ? "dimmed" : undefined}
           fs={empty ? "italic" : undefined}

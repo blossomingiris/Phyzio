@@ -2,7 +2,7 @@ import { SPECIALITY_LABELS, type Therapist } from "@/shared/domain/therapist";
 import { formatDate } from "@/shared/lib/date/format-date";
 import { CardDetailField } from "@/shared/ui/card-detail-field";
 import { SectionLabel } from "@/shared/ui/section-label";
-import { Divider, Group, Stack, Text } from "@mantine/core";
+import { Badge, Divider, Group, Stack, Text } from "@mantine/core";
 import {
   IconCalendarPlus,
   IconClock,
@@ -91,15 +91,9 @@ function TherapistPersonalDetails({ therapist }: { therapist: Therapist }) {
           icon={IconUserCheck}
           label="Availability"
           value={
-            <Text
-              span
-              size="sm"
-              fw={600}
-              c={therapist.isActive ? "success" : "accent"}
-              tt="uppercase"
-            >
+            <Badge color={therapist.isActive ? "success" : "accent"} variant="light">
               {therapist.isActive ? "Available" : "Unavailable"}
-            </Text>
+            </Badge>
           }
         />
       </Stack>

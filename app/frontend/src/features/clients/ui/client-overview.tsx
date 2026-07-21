@@ -1,8 +1,9 @@
 import type { ClientDetail } from "@/shared/domain/client";
 import { useConfirmation } from "@/shared/lib/confirmation/use-confirmation";
-import { ActionIcon, Card, Group, Menu, Text } from "@mantine/core";
+import { CardActionsMenu } from "@/shared/ui/card-actions-menu";
+import { Card, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { useDeleteClient } from "../model/use-delete-client";
 import { ClientEditModal } from "./client-edit-modal";
 import { ClientOverviewDetails } from "./client-overview-details";
@@ -51,37 +52,18 @@ export function ClientOverview({ client }: { client: ClientDetail }) {
               Client Details
             </Text>
             {!isDeleted && (
-              <Menu
-                position="right-start"
-                withArrow
-                styles={{ item: { minHeight: 44 } }}
-              >
-                <Menu.Target>
-                  <ActionIcon
-                    variant="default"
-                    radius="md"
-                    size={44}
-                    aria-label="Client actions"
-                  >
-                    <IconDotsVertical size={20} />
-                  </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<IconPencil size={16} />}
-                    onClick={openEdit}
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Item
-                    color="error"
-                    leftSection={<IconTrash size={16} />}
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+              <CardActionsMenu
+                label="Client actions"
+                actions={[
+                  { label: "Edit", icon: IconPencil, onClick: openEdit },
+                  {
+                    label: "Delete",
+                    icon: IconTrash,
+                    onClick: handleDelete,
+                    color: "error",
+                  },
+                ]}
+              />
             )}
           </Group>
         </Card.Section>

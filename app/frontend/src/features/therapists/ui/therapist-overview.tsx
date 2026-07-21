@@ -1,7 +1,8 @@
 import type { Therapist } from "@/shared/domain/therapist";
-import { ActionIcon, Card, Group, Menu, Text } from "@mantine/core";
+import { CardActionsMenu } from "@/shared/ui/card-actions-menu";
+import { Card, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconDotsVertical, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { TherapistDeleteModal } from "./therapist-delete-modal";
 import { TherapistEditModal } from "./therapist-edit-modal";
 import { TherapistOverviewDetails } from "./therapist-overview-details";
@@ -29,37 +30,18 @@ export function TherapistOverview({ therapist }: { therapist: Therapist }) {
               Therapist Details
             </Text>
             {!isDeleted && (
-              <Menu
-                position="right-start"
-                withArrow
-                styles={{ item: { minHeight: 44 } }}
-              >
-                <Menu.Target>
-                  <ActionIcon
-                    variant="default"
-                    radius="md"
-                    size={44}
-                    aria-label="Therapist actions"
-                  >
-                    <IconDotsVertical size={20} />
-                  </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<IconPencil size={16} />}
-                    onClick={openEdit}
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Item
-                    color="error"
-                    leftSection={<IconTrash size={16} />}
-                    onClick={openDelete}
-                  >
-                    Delete
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+              <CardActionsMenu
+                label="Therapist actions"
+                actions={[
+                  { label: "Edit", icon: IconPencil, onClick: openEdit },
+                  {
+                    label: "Delete",
+                    icon: IconTrash,
+                    onClick: openDelete,
+                    color: "error",
+                  },
+                ]}
+              />
             )}
           </Group>
         </Card.Section>
