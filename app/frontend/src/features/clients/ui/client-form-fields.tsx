@@ -39,6 +39,8 @@ export function ClientFormFields({
     disabled: !therapist.isActive,
   }));
 
+  console.log(data);
+
   return (
     <>
       <SimpleGrid cols={2} spacing="lg">

@@ -47,7 +47,9 @@ export function ClientOverview({ client }: { client: ClientDetail }) {
           bg="var(--surface-subtle)"
         >
           <Group justify="space-between">
-            <Text fw={600}>Client Details</Text>
+            <Text fw={600} tt="uppercase">
+              Client Details
+            </Text>
             {!isDeleted && (
               <Menu
                 position="right-start"

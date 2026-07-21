@@ -15,7 +15,7 @@ export function TreatmentOverview({
 
   return (
     <>
-      <Card withBorder shadow="md" padding="xl" maw={580}>
+      <Card withBorder shadow="md" padding="xl" maw={580} mt="10">
         <Card.Section
           withBorder
           inheritPadding
@@ -25,7 +25,9 @@ export function TreatmentOverview({
           bg="var(--surface-subtle)"
         >
           <Group justify="space-between">
-            <Text fw={600}>Treatment Details</Text>
+            <Text fw={600} tt="uppercase">
+              Treatment
+            </Text>
             <Button
               variant="default"
               leftSection={<IconPencil size={16} />}

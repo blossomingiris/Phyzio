@@ -47,7 +47,9 @@ export function TherapistOverview({ therapist }: { therapist: Therapist }) {
           bg="var(--surface-subtle)"
         >
           <Group justify="space-between">
-            <Text fw={600}>Therapist Details</Text>
+            <Text fw={600} tt="uppercase">
+              Therapist Details
+            </Text>
             {!isDeleted && (
               <Menu
                 position="right-start"
