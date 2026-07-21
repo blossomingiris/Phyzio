@@ -18,13 +18,14 @@ export function SwitchField({
   onChange,
   ...switchProps
 }: SwitchFieldProps) {
+  const toggle = () => onChange(!checked);
+
   return (
     <Group
       gap="xs"
       align={description ? "flex-start" : "center"}
       wrap="nowrap"
-      style={{ cursor: "pointer", minHeight: 44 }}
-      onClick={() => onChange(!checked)}
+      style={{ minHeight: 44 }}
     >
       <Switch
         aria-label={label}
@@ -33,7 +34,7 @@ export function SwitchField({
         {...switchProps}
       />
       {description ? (
-        <Stack gap={2}>
+        <Stack gap={2} style={{ cursor: "pointer" }} onClick={toggle}>
           <Text size="sm" fw={500}>
             {label}
           </Text>
