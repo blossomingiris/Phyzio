@@ -39,9 +39,7 @@ const baseColumns: MRT_ColumnDef<Client>[] = [
     header: "Birth Date",
     enableSorting: false,
     Cell: ({ cell, row }) =>
-      row.original.deletedAt
-        ? "—"
-        : formatDate(cell.getValue<string | null>()),
+      row.original.deletedAt ? "—" : formatDate(cell.getValue<string | null>()),
   },
   {
     accessorKey: "createdAt",
@@ -66,7 +64,7 @@ const baseColumns: MRT_ColumnDef<Client>[] = [
               {therapist.firstName} {therapist.lastName}
             </Text>
             {!therapist.isActive && (
-              <Badge color="accent" size="xs">
+              <Badge color="accent" variant="light" size="xs">
                 Unavailable
               </Badge>
             )}

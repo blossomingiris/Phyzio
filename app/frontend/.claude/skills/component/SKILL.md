@@ -53,6 +53,11 @@ large desktop monitors.
   required information.
 - Don't build a mobile-drawer / off-canvas-hide breakpoint unless a phone
   breakpoint is actually in scope.
+- **`Switch`'s own track is well under 44px** (theme sets it to `size="md"`,
+  ~24px tall) even though the app defaults `Input`/`Button`/`Checkbox` to
+  `md` for touch-target reasons. Always use `shared/ui/switch-field.tsx`'s
+  `SwitchField` rather than a bare `Switch` — it wraps the track and its
+  label in one `min-height: 44px` click target (see §5).
 
 ---
 
@@ -68,5 +73,7 @@ Only the basics Mantine doesn't already give us for free.
 - **Icon-only controls.** An `ActionIcon`/icon-only button with no visible
   text needs `aria-label` describing the action — icons carry no semantics on
   their own (see `NavbarToggle` in `navbar.tsx` for the pattern: `ActionIcon`
-  + `aria-label` + `Tooltip`). Icons paired with visible text, or passed into
-  a component prop (e.g. `Alert`'s `icon`), need nothing extra.
+  - `aria-label` + `Tooltip`). Icons paired with visible text, or passed into
+    a component prop (e.g. `Alert`'s `icon`), need nothing extra.
+
+---

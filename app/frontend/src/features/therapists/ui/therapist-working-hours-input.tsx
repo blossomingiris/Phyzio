@@ -1,5 +1,6 @@
 import { SectionLabel } from "@/shared/ui/section-label";
-import { Group, Radio, Select, Stack, Switch, Text } from "@mantine/core";
+import { SwitchField } from "@/shared/ui/switch-field";
+import { Group, Radio, Select, Stack, Text } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { Fragment, useState } from "react";
 import {
@@ -70,9 +71,6 @@ export function TherapistWorkingHoursInput({
     detectApplyScope(form.values.workingHours),
   );
 
-  // Deselect the preset radio during render if manual edits made the
-  // schedule no longer match it (see react.dev "adjusting state on prop
-  // change" pattern — a guarded setState call here, not inside an effect).
   if (applyScope && detectApplyScope(form.values.workingHours) !== applyScope) {
     setApplyScope(null);
   }
@@ -108,6 +106,7 @@ export function TherapistWorkingHoursInput({
               key={option.value}
               value={option.value}
               label={option.label}
+              color="accent"
             />
           ))}
         </Group>
@@ -126,8 +125,9 @@ export function TherapistWorkingHoursInput({
           const enabled = form.values.workingHours[day].enabled;
           return (
             <Fragment key={day}>
-              <Switch
+              <SwitchField
                 label={DAY_LABELS[day]}
+                color="accent"
                 {...form.getInputProps(`workingHours.${day}.enabled`, {
                   type: "checkbox",
                 })}

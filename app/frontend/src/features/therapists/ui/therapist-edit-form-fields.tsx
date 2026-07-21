@@ -1,5 +1,6 @@
 import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
-import { Divider, Select, SimpleGrid, Switch, TextInput } from "@mantine/core";
+import { SwitchField } from "@/shared/ui/switch-field";
+import { Divider, Select, SimpleGrid, TextInput } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { IconPhone, IconStethoscope, IconUser } from "@tabler/icons-react";
 import type { TherapistFormValues } from "../model/therapist-form-values";
@@ -49,9 +50,9 @@ export function TherapistEditFormFields({
         />
       </SimpleGrid>
 
-      <Switch
+      <SwitchField
         label="Accepting new appointments"
-        color="accent"
+        color="success"
         {...form.getInputProps("isActive", { type: "checkbox" })}
       />
 

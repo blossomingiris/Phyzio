@@ -1,9 +1,9 @@
 import { TREATMENT_CATEGORY_LABELS } from "@/shared/domain/treatment";
+import { SwitchField } from "@/shared/ui/switch-field";
 import {
   NumberInput,
   Select,
   SimpleGrid,
-  Switch,
   Textarea,
   TextInput,
 } from "@mantine/core";
@@ -89,15 +89,11 @@ export function TreatmentFormFields({
       />
 
       {showActiveToggle && (
-        <Switch
+        <SwitchField
           label="Active"
           description="Inactive treatments can't be added to new treatment plans."
-          {...form.getInputProps("isActive", { type: "checkbox" })}
           size="lg"
-          styles={{
-            body: { alignItems: "center" },
-            labelWrapper: { pointerEvents: "none" },
-          }}
+          {...form.getInputProps("isActive", { type: "checkbox" })}
         />
       )}
     </>

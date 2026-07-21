@@ -9,7 +9,7 @@ import { DataTable } from "@/shared/ui/data-table/data-table";
 import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
 import { Badge, Group } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table-open";
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 import { useNavigate } from "react-router";
 import { useTherapistsListQuery } from "../model/use-therapists-list-query";
 
@@ -104,12 +104,18 @@ const statusColumn: MRT_ColumnDef<Therapist> = {
 export function TherapistTable({
   table,
   status,
+  speciality,
+  isActive,
+  toolbarActions,
 }: {
   table: ServerTableState;
   status: "active" | "all" | "deleted";
+  speciality?: Therapist["speciality"];
+  isActive?: boolean;
+  toolbarActions?: ReactNode;
 }) {
   const navigate = useNavigate();
-  const query = useTherapistsListQuery(table, status);
+  const query = useTherapistsListQuery(table, status, speciality, isActive);
   const columns = useMemo(() => {
     if (status === "deleted") return [...baseColumns, deletedAtColumn];
     if (status === "all") return [...baseColumns, statusColumn];
@@ -122,6 +128,7 @@ export function TherapistTable({
       query={query}
       table={table}
       onRowClick={(therapist) => navigate(`${ROUTES.THERAPISTS}/${therapist.id}`)}
+      renderTopToolbarCustomActions={toolbarActions}
     />
   );
 }
