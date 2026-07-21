@@ -1,7 +1,9 @@
+import { rqClient } from "@/shared/api/http-client";
 import { SPECIALITY_LABELS, type Therapist } from "@/shared/domain/therapist";
 import { useHeaderActions } from "@/shared/lib/react/use-header-actions";
 import { AddButton } from "@/shared/ui/add-button";
 import { useServerTable } from "@/shared/ui/data-table/use-server-table";
+import { TabCountBadge } from "@/shared/ui/tabs/tab-count-badge";
 import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Group, Select, Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -23,9 +25,9 @@ export function TherapistListPage() {
   const table = useServerTable();
   const [createOpened, { open: openCreate, close: closeCreate }] =
     useDisclosure(false);
-  const [speciality, setSpeciality] = useState<
-    Therapist["speciality"] | null
-  >(null);
+  const [speciality, setSpeciality] = useState<Therapist["speciality"] | null>(
+    null,
+  );
   const [isActive, setIsActive] = useState<string | null>(null);
 
   useHeaderActions(<AddButton label="New Therapist" onClick={openCreate} />);
@@ -44,6 +46,16 @@ export function TherapistListPage() {
   };
 
   const isActiveFilter = isActive === null ? undefined : isActive === "true";
+
+  const activeCount = rqClient.useQuery("get", "/therapists/", {
+    params: { query: { limit: 1, deleted: "active" } },
+  });
+  const deletedCount = rqClient.useQuery("get", "/therapists/", {
+    params: { query: { limit: 1, deleted: "deleted" } },
+  });
+  const allCount = rqClient.useQuery("get", "/therapists/", {
+    params: { query: { limit: 1, deleted: "all" } },
+  });
 
   const toolbarActions = (
     <Group gap="sm" wrap="nowrap">
@@ -81,13 +93,31 @@ export function TherapistListPage() {
         }}
       >
         <Tabs.List>
-          <Tabs.Tab value="active" leftSection={<IconUserX size={16} />}>
+          <Tabs.Tab
+            value="active"
+            leftSection={<IconUserX size={16} />}
+            rightSection={
+              <TabCountBadge count={activeCount.data?.pagination.total} />
+            }
+          >
             Active
           </Tabs.Tab>
-          <Tabs.Tab value="deleted" leftSection={<IconUserOff size={16} />}>
+          <Tabs.Tab
+            value="deleted"
+            leftSection={<IconUserOff size={16} />}
+            rightSection={
+              <TabCountBadge count={deletedCount.data?.pagination.total} />
+            }
+          >
             Deleted
           </Tabs.Tab>
-          <Tabs.Tab value="all" leftSection={<IconUsers size={16} />}>
+          <Tabs.Tab
+            value="all"
+            leftSection={<IconUsers size={16} />}
+            rightSection={
+              <TabCountBadge count={allCount.data?.pagination.total} />
+            }
+          >
             All
           </Tabs.Tab>
         </Tabs.List>

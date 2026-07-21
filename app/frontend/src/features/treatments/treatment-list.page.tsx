@@ -1,7 +1,12 @@
-import { TREATMENT_CATEGORY_LABELS, type Treatment } from "@/shared/domain/treatment";
+import { rqClient } from "@/shared/api/http-client";
+import {
+  TREATMENT_CATEGORY_LABELS,
+  type Treatment,
+} from "@/shared/domain/treatment";
 import { useHeaderActions } from "@/shared/lib/react/use-header-actions";
 import { AddButton } from "@/shared/ui/add-button";
 import { useServerTable } from "@/shared/ui/data-table/use-server-table";
+import { TabCountBadge } from "@/shared/ui/tabs/tab-count-badge";
 import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Select, Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -18,9 +23,7 @@ export function TreatmentListPage() {
   const table = useServerTable();
   const [createOpened, { open: openCreate, close: closeCreate }] =
     useDisclosure(false);
-  const [category, setCategory] = useState<Treatment["category"] | null>(
-    null,
-  );
+  const [category, setCategory] = useState<Treatment["category"] | null>(null);
 
   useHeaderActions(<AddButton label="New Treatment" onClick={openCreate} />);
 
@@ -31,6 +34,16 @@ export function TreatmentListPage() {
     setCategory(value as Treatment["category"] | null);
     resetPage();
   };
+
+  const activeCount = rqClient.useQuery("get", "/treatments/", {
+    params: { query: { limit: 1, isActive: true } },
+  });
+  const inactiveCount = rqClient.useQuery("get", "/treatments/", {
+    params: { query: { limit: 1, isActive: false } },
+  });
+  const allCount = rqClient.useQuery("get", "/treatments/", {
+    params: { query: { limit: 1 } },
+  });
 
   const categorySelect = (
     <Select
@@ -58,13 +71,31 @@ export function TreatmentListPage() {
         }}
       >
         <Tabs.List>
-          <Tabs.Tab value="active" leftSection={<IconStethoscope size={16} />}>
+          <Tabs.Tab
+            value="active"
+            leftSection={<IconStethoscope size={16} />}
+            rightSection={
+              <TabCountBadge count={activeCount.data?.pagination.total} />
+            }
+          >
             Active
           </Tabs.Tab>
-          <Tabs.Tab value="inactive" leftSection={<IconX size={16} />}>
+          <Tabs.Tab
+            value="inactive"
+            leftSection={<IconX size={16} />}
+            rightSection={
+              <TabCountBadge count={inactiveCount.data?.pagination.total} />
+            }
+          >
             Inactive
           </Tabs.Tab>
-          <Tabs.Tab value="all" leftSection={<IconListCheck size={16} />}>
+          <Tabs.Tab
+            value="all"
+            leftSection={<IconListCheck size={16} />}
+            rightSection={
+              <TabCountBadge count={allCount.data?.pagination.total} />
+            }
+          >
             All
           </Tabs.Tab>
         </Tabs.List>
