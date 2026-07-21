@@ -1,3 +1,4 @@
+import type { UserRole } from "@/shared/domain/user";
 import {
   BreadcrumbProvider,
   useBreadcrumbLabel,
@@ -12,16 +13,29 @@ import {
   Navbar,
   NavbarProvider,
   useNavbarState,
+  type NavItem,
 } from "@/shared/ui/navbar/navbar";
 import {
+  adminNavigationConfig,
   footerNavigationConfig,
   navigationConfig,
 } from "@/shared/ui/navbar/navigation.config";
+import { SectionLabel } from "@/shared/ui/section-label";
 
-import { Group, AppShell as MantineAppShell, Paper } from "@mantine/core";
+import { Divider, Group, AppShell as MantineAppShell, Paper } from "@mantine/core";
 import { Outlet, useLocation } from "react-router";
 
-const navItems = [...navigationConfig, ...footerNavigationConfig];
+const navItems = [
+  ...navigationConfig,
+  ...adminNavigationConfig,
+  ...footerNavigationConfig,
+];
+
+function filterVisibleNavItems(items: NavItem[], role: UserRole | undefined) {
+  return items.filter(
+    (item) => !item.roles || (!!role && item.roles.includes(role)),
+  );
+}
 
 export function AppShell() {
   return (
@@ -45,9 +59,13 @@ function AppShellLayout() {
   const currentUser = useSessionStore((state) => state.user);
   const logout = useLogout();
 
-  const visibleNavItems = navigationConfig.filter(
-    (item) =>
-      !item.roles || (!!currentUser && item.roles.includes(currentUser.role)),
+  const visibleNavItems = filterVisibleNavItems(
+    navigationConfig,
+    currentUser?.role,
+  );
+  const visibleAdminNavItems = filterVisibleNavItems(
+    adminNavigationConfig,
+    currentUser?.role,
   );
   const footerItems = footerNavigationConfig.map((item) =>
     item.key === "logout" ? { ...item, onClick: () => void logout() } : item,
@@ -98,6 +116,15 @@ function AppShellLayout() {
             {visibleNavItems.map((item) => (
               <Navbar.Link key={item.key} item={item} />
             ))}
+            {visibleAdminNavItems.length > 0 && (
+              <>
+                <Divider my="xs" style={{ width: "100%" }} />
+                {opened && <SectionLabel>Admin</SectionLabel>}
+                {visibleAdminNavItems.map((item) => (
+                  <Navbar.Link key={item.key} item={item} />
+                ))}
+              </>
+            )}
           </Navbar.Section>
           <Navbar.Footer>
             {footerItems.map((item) => (

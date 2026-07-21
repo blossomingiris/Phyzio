@@ -20,10 +20,10 @@ export const navigationConfig: NavItem[] = [
     path: ROUTES.HOME,
   },
   {
-    key: "users",
-    title: "Users",
-    icon: IconUsers,
-    path: ROUTES.USERS,
+    key: "clients",
+    title: "Clients",
+    icon: IconUserCircle,
+    path: ROUTES.CLIENTS,
     roles: [USER_ROLES.ADMIN],
   },
   {
@@ -34,10 +34,10 @@ export const navigationConfig: NavItem[] = [
     roles: [USER_ROLES.ADMIN],
   },
   {
-    key: "clients",
-    title: "Clients",
-    icon: IconUserCircle,
-    path: ROUTES.CLIENTS,
+    key: "treatment-plans",
+    title: "Treatment Plans",
+    icon: IconClipboardList,
+    path: ROUTES.TREATMENT_PLANS,
     roles: [USER_ROLES.ADMIN],
   },
   {
@@ -47,11 +47,14 @@ export const navigationConfig: NavItem[] = [
     path: ROUTES.TREATMENTS,
     roles: [USER_ROLES.ADMIN],
   },
+];
+
+export const adminNavigationConfig: NavItem[] = [
   {
-    key: "treatment-plans",
-    title: "Treatment Plans",
-    icon: IconClipboardList,
-    path: ROUTES.TREATMENT_PLANS,
+    key: "users",
+    title: "Users",
+    icon: IconUsers,
+    path: ROUTES.USERS,
     roles: [USER_ROLES.ADMIN],
   },
 ];
