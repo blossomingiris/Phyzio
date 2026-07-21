@@ -1,4 +1,3 @@
-import { rqClient } from "@/shared/api/http-client";
 import { useHeaderActions } from "@/shared/lib/react/use-header-actions";
 import { AddButton } from "@/shared/ui/add-button";
 import { useServerTable } from "@/shared/ui/data-table/use-server-table";
@@ -7,6 +6,7 @@ import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconUserOff, IconUsers, IconUserX } from "@tabler/icons-react";
+import { useClientListStatusCounts } from "./model/use-client-list-status-counts";
 import { ClientCreateModal } from "./ui/client-create-modal";
 import { ClientTable } from "./ui/client-table";
 
@@ -20,15 +20,7 @@ export function ClientListPage() {
   const resetPage = () =>
     table.onPaginationChange((prev) => ({ ...prev, pageIndex: 0 }));
 
-  const activeCount = rqClient.useQuery("get", "/clients/", {
-    params: { query: { limit: 1, deleted: "active" } },
-  });
-  const deletedCount = rqClient.useQuery("get", "/clients/", {
-    params: { query: { limit: 1, deleted: "deleted" } },
-  });
-  const allCount = rqClient.useQuery("get", "/clients/", {
-    params: { query: { limit: 1, deleted: "all" } },
-  });
+  const counts = useClientListStatusCounts();
 
   return (
     <Stack style={{ flex: 1, minHeight: 0 }}>
@@ -48,27 +40,21 @@ export function ClientListPage() {
           <Tabs.Tab
             value="active"
             leftSection={<IconUserX size={16} />}
-            rightSection={
-              <TabCountBadge count={activeCount.data?.pagination.total} />
-            }
+            rightSection={<TabCountBadge count={counts.active} />}
           >
             Active
           </Tabs.Tab>
           <Tabs.Tab
             value="deleted"
             leftSection={<IconUserOff size={16} />}
-            rightSection={
-              <TabCountBadge count={deletedCount.data?.pagination.total} />
-            }
+            rightSection={<TabCountBadge count={counts.deleted} />}
           >
             Deleted
           </Tabs.Tab>
           <Tabs.Tab
             value="all"
             leftSection={<IconUsers size={16} />}
-            rightSection={
-              <TabCountBadge count={allCount.data?.pagination.total} />
-            }
+            rightSection={<TabCountBadge count={counts.all} />}
           >
             All
           </Tabs.Tab>

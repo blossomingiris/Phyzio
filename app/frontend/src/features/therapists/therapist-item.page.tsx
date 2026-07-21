@@ -3,6 +3,7 @@ import { useBreadcrumb } from "@/shared/lib/react/use-breadcrumb";
 import { ROUTES } from "@/shared/model/routes";
 import { AsyncWrapper } from "@/shared/ui/async-wrapper";
 import { BackButton } from "@/shared/ui/back-button";
+import { TabCountBadge } from "@/shared/ui/tabs/tab-count-badge";
 import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Badge, Group, Stack, Title } from "@mantine/core";
 import {
@@ -13,6 +14,7 @@ import {
 } from "@tabler/icons-react";
 import { useParams } from "react-router";
 import { useTherapistQuery } from "./model/use-therapist-query";
+import { useTherapistItemCounts } from "./model/use-therapist-item-counts";
 import { TherapistAppointmentsTable } from "./ui/therapist-appointments-table";
 import { TherapistClientsTable } from "./ui/therapist-clients-table";
 import { TherapistOverview } from "./ui/therapist-overview";
@@ -26,6 +28,8 @@ export function TherapistItemPage() {
   useBreadcrumb(
     therapist ? `${therapist.firstName} ${therapist.lastName}` : "Therapist",
   );
+
+  const counts = useTherapistItemCounts(Number(id));
 
   const SpecialityIcon = therapist
     ? SPECIALITY_ICONS[therapist.speciality]
@@ -69,18 +73,24 @@ export function TherapistItemPage() {
               >
                 Overview
               </Tabs.Tab>
-              <Tabs.Tab value="clients" leftSection={<IconUsers size={16} />}>
+              <Tabs.Tab
+                value="clients"
+                leftSection={<IconUsers size={16} />}
+                rightSection={<TabCountBadge count={counts.clients} />}
+              >
                 Clients
               </Tabs.Tab>
               <Tabs.Tab
                 value="appointments"
                 leftSection={<IconCalendar size={16} />}
+                rightSection={<TabCountBadge count={counts.appointments} />}
               >
                 Appointments
               </Tabs.Tab>
               <Tabs.Tab
                 value="treatment-plans"
                 leftSection={<IconClipboardList size={16} />}
+                rightSection={<TabCountBadge count={counts.treatmentPlans} />}
               >
                 Treatment Plans
               </Tabs.Tab>

@@ -2,6 +2,7 @@ import { useBreadcrumb } from "@/shared/lib/react/use-breadcrumb";
 import { ROUTES } from "@/shared/model/routes";
 import { AsyncWrapper } from "@/shared/ui/async-wrapper";
 import { BackButton } from "@/shared/ui/back-button";
+import { TabCountBadge } from "@/shared/ui/tabs/tab-count-badge";
 import { Tabs } from "@/shared/ui/tabs/tabs";
 import { Badge, Group, Stack, Title } from "@mantine/core";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { useParams } from "react-router";
 import { useClientQuery } from "./model/use-client-query";
+import { useClientItemCounts } from "./model/use-client-item-counts";
 import { ClientAppointmentsTable } from "./ui/client-appointments-table";
 import { ClientOverview } from "./ui/client-overview";
 import { ClientTreatmentPlansTable } from "./ui/client-treatment-plans-table";
@@ -21,6 +23,8 @@ export function ClientItemPage() {
   const client = query.data;
 
   useBreadcrumb(client ? `${client.firstName} ${client.lastName}` : "Client");
+
+  const counts = useClientItemCounts(Number(id));
 
   return (
     <Stack gap="sm" align="flex-start" style={{ width: "100%" }}>
@@ -54,12 +58,14 @@ export function ClientItemPage() {
               <Tabs.Tab
                 value="appointments"
                 leftSection={<IconCalendar size={16} />}
+                rightSection={<TabCountBadge count={counts.appointments} />}
               >
                 Appointments
               </Tabs.Tab>
               <Tabs.Tab
                 value="treatment-plans"
                 leftSection={<IconClipboardList size={16} />}
+                rightSection={<TabCountBadge count={counts.treatmentPlans} />}
               >
                 Treatment Plans
               </Tabs.Tab>

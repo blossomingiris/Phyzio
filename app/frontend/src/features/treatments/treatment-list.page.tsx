@@ -1,4 +1,3 @@
-import { rqClient } from "@/shared/api/http-client";
 import {
   TREATMENT_CATEGORY_LABELS,
   type Treatment,
@@ -12,6 +11,7 @@ import { Select, Stack, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconListCheck, IconStethoscope, IconX } from "@tabler/icons-react";
 import { useState } from "react";
+import { useTreatmentListStatusCounts } from "./model/use-treatment-list-status-counts";
 import { TreatmentCreateModal } from "./ui/treatment-create-modal";
 import { TreatmentTable } from "./ui/treatment-table";
 
@@ -35,15 +35,7 @@ export function TreatmentListPage() {
     resetPage();
   };
 
-  const activeCount = rqClient.useQuery("get", "/treatments/", {
-    params: { query: { limit: 1, isActive: true } },
-  });
-  const inactiveCount = rqClient.useQuery("get", "/treatments/", {
-    params: { query: { limit: 1, isActive: false } },
-  });
-  const allCount = rqClient.useQuery("get", "/treatments/", {
-    params: { query: { limit: 1 } },
-  });
+  const counts = useTreatmentListStatusCounts();
 
   const categorySelect = (
     <Select
@@ -74,27 +66,21 @@ export function TreatmentListPage() {
           <Tabs.Tab
             value="active"
             leftSection={<IconStethoscope size={16} />}
-            rightSection={
-              <TabCountBadge count={activeCount.data?.pagination.total} />
-            }
+            rightSection={<TabCountBadge count={counts.active} />}
           >
             Active
           </Tabs.Tab>
           <Tabs.Tab
             value="inactive"
             leftSection={<IconX size={16} />}
-            rightSection={
-              <TabCountBadge count={inactiveCount.data?.pagination.total} />
-            }
+            rightSection={<TabCountBadge count={counts.inactive} />}
           >
             Inactive
           </Tabs.Tab>
           <Tabs.Tab
             value="all"
             leftSection={<IconListCheck size={16} />}
-            rightSection={
-              <TabCountBadge count={allCount.data?.pagination.total} />
-            }
+            rightSection={<TabCountBadge count={counts.all} />}
           >
             All
           </Tabs.Tab>
