@@ -1,24 +1,13 @@
 import type { Therapist } from "@/shared/domain/therapist";
 import { overrideValidationMessages } from "@/shared/lib/mantine/override-validation-messages";
+import {
+  emptyWorkingHours,
+  normalizeWorkingHours,
+  workingHoursToFormValues,
+  type Weekday,
+  type WorkingHoursFormValues,
+} from "@/services/working-hours";
 import type { StandardSchemaV1 } from "@standard-schema/spec";
-
-export const WEEKDAYS = [
-  "mon",
-  "tue",
-  "wed",
-  "thu",
-  "fri",
-  "sat",
-  "sun",
-] as const;
-export type Weekday = (typeof WEEKDAYS)[number];
-
-export type DayHoursFormValues = {
-  enabled: boolean;
-  start: string;
-  end: string;
-};
-type WorkingHoursFormValues = Record<Weekday, DayHoursFormValues>;
 
 export type TherapistFormValues = {
   firstName: string;
@@ -30,19 +19,6 @@ export type TherapistFormValues = {
   workingHours: WorkingHoursFormValues;
   isActive: boolean;
 };
-
-const EMPTY_DAY_HOURS: DayHoursFormValues = {
-  enabled: false,
-  start: "09:00",
-  end: "17:00",
-};
-
-function emptyWorkingHours(): WorkingHoursFormValues {
-  return WEEKDAYS.reduce((acc, day) => {
-    acc[day] = { ...EMPTY_DAY_HOURS };
-    return acc;
-  }, {} as WorkingHoursFormValues);
-}
 
 const CREATE_DEFAULT_WEEKDAYS: Weekday[] = ["mon", "tue", "wed", "thu", "fri"];
 
@@ -68,13 +44,6 @@ export const EMPTY_THERAPIST_FORM_VALUES: TherapistFormValues = {
 export function therapistToFormValues(
   therapist: Therapist,
 ): TherapistFormValues {
-  const workingHours = emptyWorkingHours();
-  for (const day of WEEKDAYS) {
-    const slot = therapist.workingHours[day]?.[0];
-    if (slot)
-      workingHours[day] = { enabled: true, start: slot.start, end: slot.end };
-  }
-
   return {
     firstName: therapist.firstName,
     lastName: therapist.lastName,
@@ -82,18 +51,9 @@ export function therapistToFormValues(
     password: "",
     speciality: therapist.speciality,
     phone: therapist.phone,
-    workingHours,
+    workingHours: workingHoursToFormValues(therapist.workingHours),
     isActive: therapist.isActive,
   };
-}
-
-function normalizeWorkingHours(workingHours: WorkingHoursFormValues) {
-  const result: Partial<Record<Weekday, { start: string; end: string }[]>> = {};
-  for (const day of WEEKDAYS) {
-    const { enabled, start, end } = workingHours[day];
-    if (enabled) result[day] = [{ start, end }];
-  }
-  return result;
 }
 
 export function normalizeCreateTherapistFormValues(

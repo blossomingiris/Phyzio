@@ -1,6 +1,14 @@
 import { generatePassword } from "@/shared/lib/generate-password";
 import { ROUTES } from "@/shared/model/routes";
-import { Anchor, Button, PasswordInput, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
+import {
+  Anchor,
+  Button,
+  PasswordInput,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { IconLock, IconMail, IconUser, IconWand } from "@tabler/icons-react";
 import { Link } from "react-router";

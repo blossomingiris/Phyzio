@@ -1,15 +1,15 @@
-import {
-  WEEKDAYS,
-  type DayHoursFormValues,
-  type Weekday,
-} from "@/services/working-hours";
 import { SectionLabel } from "@/shared/ui/section-label";
 import { SwitchField } from "@/shared/ui/switch-field";
 import { Button, Group, Radio, Select, Stack, Text } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { IconCalendarWeek, IconCopy } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
-import type { TherapistFormValues } from "../model/therapist-form-values";
+import {
+  WEEKDAYS,
+  type DayHoursFormValues,
+  type Weekday,
+  type WorkingHoursFormValues,
+} from "./working-hours-form-values";
 
 const DAY_LABELS: Record<Weekday, string> = {
   mon: "Monday",
@@ -45,7 +45,7 @@ const TIME_OPTIONS = Array.from(
 );
 
 const APPLY_OPTIONS: { value: string; label: string; days: Weekday[] }[] = [
-  { value: "all", label: "All days", days: [...WEEKEND_DAYS] },
+  { value: "all", label: "All days", days: [...WEEKDAYS] },
   { value: "weekdays", label: "Weekdays only", days: WEEKDAY_DAYS },
   { value: "weekend", label: "Weekend only", days: WEEKEND_DAYS },
 ];
@@ -78,10 +78,12 @@ function detectUniformHours(
     : null;
 }
 
-export function TherapistWorkingHoursInput({
+export function WorkingHoursInput({
   form,
+  sectionLabel,
 }: {
-  form: UseFormReturnType<TherapistFormValues>;
+  form: UseFormReturnType<{ workingHours: WorkingHoursFormValues }>;
+  sectionLabel?: string;
 }) {
   const workingHours = form.values.workingHours;
   const applyScope = detectApplyScope(workingHours);
@@ -137,9 +139,11 @@ export function TherapistWorkingHoursInput({
 
   return (
     <Stack gap="md">
-      <Stack gap="xs">
-        <SectionLabel>Working Hours</SectionLabel>
-      </Stack>
+      {sectionLabel && (
+        <Stack gap="xs">
+          <SectionLabel>{sectionLabel}</SectionLabel>
+        </Stack>
+      )}
       <Radio.Group value={applyScope} onChange={handleApply}>
         <Group gap="lg" wrap="wrap">
           {APPLY_OPTIONS.map((option) => (

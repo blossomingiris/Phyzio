@@ -18,6 +18,7 @@ type SessionState = {
   check: () => Promise<void>;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
+  setUser: (user: User) => void;
 };
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -68,5 +69,9 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       set({ authenticated: false, user: null });
       window.location.assign(ROUTES.LOGIN);
     }
+  },
+
+  setUser(user) {
+    set({ user });
   },
 }));

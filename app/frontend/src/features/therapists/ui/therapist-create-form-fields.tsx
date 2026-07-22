@@ -1,3 +1,4 @@
+import { WorkingHoursInput } from "@/services/working-hours";
 import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
 import { generatePassword } from "@/shared/lib/generate-password";
 import {
@@ -18,7 +19,6 @@ import {
   IconWand,
 } from "@tabler/icons-react";
 import type { TherapistFormValues } from "../model/therapist-form-values";
-import { TherapistWorkingHoursInput } from "./therapist-working-hours-input";
 
 const SPECIALITY_OPTIONS = Object.entries(SPECIALITY_LABELS).map(
   ([value, label]) => ({ value, label }),
@@ -94,7 +94,7 @@ export function TherapistCreateFormFields({
           </Button>
         </Stack>
       </SimpleGrid>
-      <TherapistWorkingHoursInput form={form} />
+      <WorkingHoursInput form={form} sectionLabel="Working Hours" />
     </>
   );
 }

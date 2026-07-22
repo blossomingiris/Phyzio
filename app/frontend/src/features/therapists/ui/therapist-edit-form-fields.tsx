@@ -1,10 +1,10 @@
+import { WorkingHoursInput } from "@/services/working-hours";
 import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
 import { SwitchField } from "@/shared/ui/switch-field";
 import { Divider, Select, SimpleGrid, TextInput } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
 import { IconPhone, IconStethoscope, IconUser } from "@tabler/icons-react";
 import type { TherapistFormValues } from "../model/therapist-form-values";
-import { TherapistWorkingHoursInput } from "./therapist-working-hours-input";
 
 const SPECIALITY_OPTIONS = Object.entries(SPECIALITY_LABELS).map(
   ([value, label]) => ({ value, label }),
@@ -58,7 +58,7 @@ export function TherapistEditFormFields({
 
       <Divider />
 
-      <TherapistWorkingHoursInput form={form} />
+      <WorkingHoursInput form={form} sectionLabel="Working Hours" />
     </>
   );
 }

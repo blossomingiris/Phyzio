@@ -13,7 +13,7 @@ import {
   IconUserCheck,
   IconUserX,
 } from "@tabler/icons-react";
-import { WEEKDAYS } from "../model/therapist-form-values";
+import { WEEKDAYS } from "@/services/working-hours";
 
 const DAY_SHORT_LABELS: Record<(typeof WEEKDAYS)[number], string> = {
   mon: "Mon",
