@@ -20,6 +20,7 @@ export function FormModal({
   isPending,
   error,
   children,
+  size = "xl",
 }: {
   opened: boolean;
   onClose: () => void;
@@ -29,12 +30,13 @@ export function FormModal({
   isPending?: boolean;
   error?: unknown;
   children: ReactNode;
+  size?: string;
 }) {
   return (
     <Modal
       opened={opened}
       onClose={onClose}
-      size="xl"
+      size={size}
       title={
         <Text fw={700} size="xl">
           {title}

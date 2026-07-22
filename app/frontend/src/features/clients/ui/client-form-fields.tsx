@@ -44,8 +44,10 @@ function FieldGroup({
 
 export function ClientFormFields({
   form,
+  showTherapist = true,
 }: {
   form: UseFormReturnType<ClientFormValues>;
+  showTherapist?: boolean;
 }) {
   const { data } = useTherapistsQuery();
   const therapistOptions = (data?.data ?? []).map((therapist) => ({
@@ -116,17 +118,19 @@ export function ClientFormFields({
 
       {/* Two columns for a single field so it takes half the width and lines
           up with the first column of the groups above. */}
-      <FieldGroup cols={2}>
-        <Select
-          label="Therapist"
-          placeholder="Assign a therapist"
-          leftSection={<IconStethoscope size={16} />}
-          data={therapistOptions}
-          searchable
-          clearable
-          {...form.getInputProps("therapistId")}
-        />
-      </FieldGroup>
+      {showTherapist && (
+        <FieldGroup cols={2}>
+          <Select
+            label="Therapist"
+            placeholder="Assign a therapist"
+            leftSection={<IconStethoscope size={16} />}
+            data={therapistOptions}
+            searchable
+            clearable
+            {...form.getInputProps("therapistId")}
+          />
+        </FieldGroup>
+      )}
     </>
   );
 }

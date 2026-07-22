@@ -3,13 +3,16 @@ import { useConfirmation } from "@/shared/lib/confirmation/use-confirmation";
 import { CardActionsMenu } from "@/shared/ui/card-actions-menu";
 import { Card, Group, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconStethoscope, IconTrash } from "@tabler/icons-react";
 import { useDeleteClient } from "../model/use-delete-client";
 import { ClientEditModal } from "./client-edit-modal";
 import { ClientOverviewDetails } from "./client-overview-details";
+import { ClientTherapistModal } from "./client-therapist-modal";
 
 export function ClientOverview({ client }: { client: ClientDetail }) {
   const [editOpened, { open: openEdit, close: closeEdit }] =
+    useDisclosure(false);
+  const [therapistOpened, { open: openTherapist, close: closeTherapist }] =
     useDisclosure(false);
   const isDeleted = !!client.deletedAt;
 
@@ -57,6 +60,11 @@ export function ClientOverview({ client }: { client: ClientDetail }) {
                 actions={[
                   { label: "Edit", icon: IconPencil, onClick: openEdit },
                   {
+                    label: "Reassign Therapist",
+                    icon: IconStethoscope,
+                    onClick: openTherapist,
+                  },
+                  {
                     label: "Delete",
                     icon: IconTrash,
                     onClick: handleDelete,
@@ -75,6 +83,12 @@ export function ClientOverview({ client }: { client: ClientDetail }) {
         client={client}
         opened={editOpened}
         onClose={closeEdit}
+      />
+
+      <ClientTherapistModal
+        client={client}
+        opened={therapistOpened}
+        onClose={closeTherapist}
       />
     </>
   );

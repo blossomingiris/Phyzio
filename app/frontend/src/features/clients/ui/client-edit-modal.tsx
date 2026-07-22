@@ -5,8 +5,8 @@ import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
 import {
   clientToFormValues,
-  normalizeClientFormValues,
-  validateClientForm,
+  normalizeUpdateClientFormValues,
+  validateUpdateClientForm,
 } from "../model/client-form-values";
 import { useUpdateClient } from "../model/use-update-client";
 import { ClientFormFields } from "./client-form-fields";
@@ -24,7 +24,7 @@ export function ClientEditModal({
 
   const form = useForm({
     initialValues: clientToFormValues(client),
-    validate: validateClientForm(patchClientsById),
+    validate: validateUpdateClientForm(patchClientsById),
   });
 
   const handleSubmit = form.onSubmit(async (values) => {
@@ -36,7 +36,7 @@ export function ClientEditModal({
     try {
       await updateClient.mutateAsync({
         params: { path: { id: client.id } },
-        body: normalizeClientFormValues(values),
+        body: normalizeUpdateClientFormValues(values),
       });
       onClose();
     } catch (error) {
@@ -54,7 +54,7 @@ export function ClientEditModal({
       isPending={updateClient.isPending}
       error={updateClient.error}
     >
-      <ClientFormFields form={form} />
+      <ClientFormFields form={form} showTherapist={false} />
     </FormModal>
   );
 }

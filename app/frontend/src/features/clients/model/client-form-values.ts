@@ -50,6 +50,18 @@ export function normalizeClientFormValues(values: ClientFormValues) {
   };
 }
 
+export function normalizeUpdateClientFormValues(values: ClientFormValues) {
+  return {
+    firstName: values.firstName,
+    lastName: values.lastName,
+    phone: values.phone || undefined,
+    email: values.email || undefined,
+    birthDate: values.birthDate || undefined,
+    origin: values.origin || undefined,
+    preferredCommunication: values.preferredCommunication,
+  };
+}
+
 const CLIENT_FIELD_MESSAGES = {
   firstName: "First name must be 1–255 characters",
   lastName: "Last name must be 1–255 characters",
@@ -66,4 +78,15 @@ export function validateClientForm<Values extends Record<string, unknown>>(
   );
   return (values: ClientFormValues) =>
     validate(normalizeClientFormValues(values) as unknown as Values);
+}
+
+export function validateUpdateClientForm<
+  Values extends Record<string, unknown>,
+>(schema: StandardSchemaV1<Values>) {
+  const validate = overrideValidationMessages(
+    schema,
+    CLIENT_FIELD_MESSAGES as Partial<Record<keyof Values, string>>,
+  );
+  return (values: ClientFormValues) =>
+    validate(normalizeUpdateClientFormValues(values) as unknown as Values);
 }
