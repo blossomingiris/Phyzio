@@ -31,6 +31,7 @@ export const userResponse = Type.Object({
   lastName: Type.String(),
   email: Type.String({ format: "email" }),
   role: userRoleSchema,
+  deletedAt: Type.Optional(Type.String({ format: "date-time" })),
   createdAt: Type.String({ format: "date-time" }),
   updatedAt: Type.String({ format: "date-time" }),
 });
@@ -74,8 +75,29 @@ export const listUsersQuery = Type.Object(
       Type.String({ description: "Partial match on first or last name" }),
     ),
     role: Type.Optional(userRoleSchema),
+    deleted: Type.Optional(
+      Type.Unsafe<"active" | "all" | "deleted">({
+        type: "string",
+        enum: ["active", "all", "deleted"],
+        default: "active",
+        description:
+          "active: exclude soft-deleted users; all: include both; deleted: soft-deleted users only",
+      }),
+    ),
     sortBy: userSortBySchema,
     sortOrder: sortOrderSchema,
+  },
+  { additionalProperties: false },
+);
+
+export const findUserQuery = Type.Object(
+  {
+    deleted: Type.Optional(
+      Type.Boolean({
+        default: false,
+        description: "Allow fetching a soft-deleted user",
+      }),
+    ),
   },
   { additionalProperties: false },
 );
@@ -98,6 +120,7 @@ export const findUserSchema = {
   ...tag,
   summary: "Get a user by ID",
   params: paramId,
+  querystring: findUserQuery,
   response: {
     200: userResponse,
     400: fieldErrorResponse,
@@ -149,7 +172,21 @@ export const updateRoleSchema = {
   },
 };
 
+export const deleteUserSchema = {
+  ...tag,
+  summary: "Delete a user",
+  params: paramId,
+  response: {
+    200: Type.Object({ success: Type.Boolean() }),
+    400: fieldErrorResponse,
+    401: errorResponse,
+    403: errorResponse,
+    404: errorResponse,
+  },
+};
+
 export type ListUsersQuery = Static<typeof listUsersQuery>;
+export type FindUserQuery = Static<typeof findUserQuery>;
 export type CreateUserBody = Static<typeof createUserBody>;
 export type UpdateUserBody = Static<typeof updateUserBody>;
 export type UpdateRoleBody = Static<typeof updateRoleBody>;

@@ -1,6 +1,6 @@
 import { AUTH_BCRYPT_ROUNDS } from "#app/config/auth.ts";
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
-import { users } from "#app/database/schemas.ts";
+import { therapists, users } from "#app/database/schemas.ts";
 import type { User, UserRole } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
@@ -10,7 +10,7 @@ import type {
   UserSortParams,
 } from "#app/modules/domains/users/users.admin.dto.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, ilike, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, isNull, not, or } from "drizzle-orm";
 
 type UpdateUser = Partial<Pick<User, "firstName" | "lastName" | "email">>;
 type CreateUser = Pick<
@@ -22,6 +22,7 @@ type UserFilters = {
   email?: string;
   role?: UserRole;
   search?: string;
+  status?: "active" | "all" | "deleted";
 };
 
 const USER_SORT_COLUMNS = {
@@ -82,8 +83,8 @@ export class UsersService {
     return user ?? null;
   }
 
-  async findOrFail(id: number) {
-    const user = await this.one({ id });
+  async findOrFail(id: number, filters: Omit<UserFilters, "id"> = {}) {
+    const user = await this.one({ id, ...filters });
 
     if (!user) {
       throw new NotFoundError("User not found");
@@ -141,8 +142,30 @@ export class UsersService {
     return user ?? null;
   }
 
+  async destroy(id: number) {
+    await this.db.transaction(async (tx) => {
+      const [user] = await tx
+        .update(users)
+        .set({ deletedAt: new Date() })
+        .where(eq(users.id, id))
+        .returning({ role: users.role });
+
+      if (user?.role === "therapist") {
+        await tx
+          .update(therapists)
+          .set({ deletedAt: new Date() })
+          .where(eq(therapists.userId, id));
+      }
+    });
+  }
+
   private buildWhere(filters: UserFilters) {
     return and(
+      filters.status === "deleted"
+        ? not(isNull(users.deletedAt))
+        : filters.status === "all"
+          ? undefined
+          : isNull(users.deletedAt),
       filters.id !== undefined ? eq(users.id, filters.id) : undefined,
       filters.email !== undefined ? eq(users.email, filters.email) : undefined,
       filters.role !== undefined ? eq(users.role, filters.role) : undefined,

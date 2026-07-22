@@ -68,6 +68,7 @@ treatments  (service catalog)
 | email      | varchar(255)   | NOT NULL, UNIQUE (case-insensitive) |                  |
 | password   | varchar(255)   | NOT NULL (hashed)                   |                  |
 | role       | user_role enum | NOT NULL                            | admin, therapist |
+| deleted_at | timestamptz    | NULL (soft-delete; NULL = active)   |                  |
 | created_at | timestamptz    | NOT NULL DEFAULT now()              |                  |
 | updated_at | timestamptz    | NOT NULL DEFAULT now()              |                  |
 
@@ -215,7 +216,7 @@ Rule of thumb: **CASCADE toward an owner parent, RESTRICT/SET NULL toward a shar
 
 ## Best practices
 
-- **Soft-delete**: `deleted_at timestamptz` on `clients` and `therapists` (NULL = active). Pairs with the RESTRICT foreign keys — retire records instead of hard-deleting rows that have history. Filter `WHERE deleted_at IS NULL` in normal reads.
+- **Soft-delete**: `deleted_at timestamptz` on `clients`, `therapists`, and `users` (NULL = active). Pairs with the RESTRICT foreign keys — retire records instead of hard-deleting rows that have history. Filter `WHERE deleted_at IS NULL` in normal reads. Soft-deleting a `users` row with `role = 'therapist'` also soft-deletes its linked `therapists` row.
 - **Auto-update `updated_at`**: keep it fresh on every UPDATE — via a DB trigger, or by setting it in the repository layer — so it never silently goes stale.
 - **Case-insensitive email**: normalise to lowercase on write (or use the `citext` type) for `users.email` and `clients.email`, so `A@x.com` and `a@x.com` collide on the UNIQUE constraint.
 

@@ -12,7 +12,7 @@ User — you cannot have a Therapist without a User.
 |---|---|
 | Identity | Therapist shares the same ID as its User — there is no separate therapist ID |
 | Creation | Always atomic — both the user account and therapist profile are created together |
-| Removal | Removing a User also removes their therapist profile |
+| Removal | Soft-deleting a User also soft-deletes their therapist profile — see [user.md](user.md) |
 | Reverse | Soft-deleting the Therapist leaves the User intact |
 
 ## Soft Delete

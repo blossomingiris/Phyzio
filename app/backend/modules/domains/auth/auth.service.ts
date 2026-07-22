@@ -8,7 +8,7 @@ import { refreshTokens, users } from "#app/database/schemas.ts";
 import { UnauthorizedError } from "#app/errors/httpErrors.ts";
 import { type JwtPayload } from "#app/modules/general/auth/auth.types.ts";
 import bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { createHmac } from "node:crypto";
 
 const TIMING_GUARD_HASH = bcrypt.hashSync(
@@ -36,7 +36,7 @@ export class AuthService {
     const [user] = await this.db
       .select()
       .from(users)
-      .where(eq(users.email, email));
+      .where(and(eq(users.email, email), isNull(users.deletedAt)));
 
     const passwordMatches = await bcrypt.compare(
       password,
@@ -81,7 +81,7 @@ export class AuthService {
     const [user] = await this.db
       .select({ id: users.id, role: users.role })
       .from(users)
-      .where(eq(users.id, row.userId));
+      .where(and(eq(users.id, row.userId), isNull(users.deletedAt)));
 
     if (!user) {
       throw new UnauthorizedError("Invalid or expired refresh token");

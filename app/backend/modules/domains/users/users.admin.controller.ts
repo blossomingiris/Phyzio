@@ -1,11 +1,13 @@
 import { UsersService } from "#app/modules/domains/users/users.admin.service.ts";
 import {
   createUserSchema,
+  deleteUserSchema,
   findUserSchema,
   listUsersSchema,
   updateRoleSchema,
   updateUserSchema,
   type CreateUserBody,
+  type FindUserQuery,
   type ListUsersQuery,
   type UpdateRoleBody,
   type UpdateUserBody,
@@ -23,20 +25,23 @@ export default async function usersAdminController(app: FastifyInstance) {
     "/",
     { schema: listUsersSchema },
     async (req) => {
-      const { page, limit, search, role, sortBy, sortOrder } = req.query;
+      const { page, limit, search, role, deleted, sortBy, sortOrder } =
+        req.query;
       return service.all(
-        { search, role },
+        { search, role, status: deleted },
         { page, limit },
         { sortBy, sortOrder },
       );
     },
   );
 
-  app.get<{ Params: ParamId }>(
+  app.get<{ Params: ParamId; Querystring: FindUserQuery }>(
     "/:id",
     { schema: findUserSchema },
     async (req) => {
-      return service.findOrFail(req.params.id);
+      return service.findOrFail(req.params.id, {
+        status: req.query.deleted ? "all" : "active",
+      });
     },
   );
 
@@ -64,6 +69,16 @@ export default async function usersAdminController(app: FastifyInstance) {
     async (req) => {
       await service.findOrFail(req.params.id);
       return service.updateRole(req.params.id, req.body.role);
+    },
+  );
+
+  app.delete<{ Params: ParamId }>(
+    "/:id",
+    { schema: deleteUserSchema },
+    async (req) => {
+      await service.findOrFail(req.params.id);
+      await service.destroy(req.params.id);
+      return { success: true };
     },
   );
 }
