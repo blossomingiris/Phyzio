@@ -68,6 +68,11 @@ export const listTreatmentPlansQuery = Type.Object(
     limit: Type.Optional(
       Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
     ),
+    search: Type.Optional(
+      Type.String({
+        description: "Match on plan ID, client name, or therapist name",
+      }),
+    ),
     status: Type.Optional(planStatusSchema),
     clientId: Type.Optional(Type.Integer({ minimum: 1 })),
     therapistId: Type.Optional(Type.Integer({ minimum: 1 })),

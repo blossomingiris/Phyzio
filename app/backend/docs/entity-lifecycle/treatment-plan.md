@@ -63,9 +63,26 @@ note — the same discriminated union pattern as appointments.
 | `client_unreachable` | Client stopped responding or attending |
 | `therapist_referral` | Client referred to an external specialist |
 | `other` | Anything else — a note is required |
+| `client_deleted` | System-only — set automatically when the client is soft-deleted, see Cascades below |
 
 `cancellation_reason` and `cancellation_note` are null on all non-cancelled plans
-and must be set when transitioning to `cancelled`.
+and must be set when transitioning to `cancelled`. `client_deleted` cannot be
+chosen manually through either the admin or therapist cancel endpoints — it is
+rejected by request validation.
+
+## Cascades
+
+Two entity-lifecycle events on other domains automatically affect treatment plans:
+
+| Trigger | Effect |
+|---|---|
+| Client is soft-deleted (`DELETE /clients/:id`) | Every non-terminal plan (`open`, `in_progress`, `paused`) for that client is force-cancelled: `status` → `cancelled`, `cancellationReason` → `client_deleted`, `endDate` → the deletion timestamp. The plan record itself is never deleted. |
+| Therapist is marked unavailable (`PATCH /therapists/:id` with `isActive: false`) | Every `in_progress` plan owned by that therapist is auto-paused: `status` → `paused`. `open` and already-`paused` plans are untouched. |
+
+Both cascades run in the same database transaction as the triggering update, so
+they cannot partially apply. Neither cascade auto-reverses: reactivating a
+therapist (`isActive: true`) does **not** auto-resume their paused plans —
+resuming is a manual action.
 
 ## Plan Items
 
@@ -151,7 +168,7 @@ modify clinical content — that belongs to the treating therapist.
 
 | Method | Path | Description |
 |---|---|---|
-| `GET` | `/treatment-plans` | List all plans (paginated, filterable by status, client, therapist) |
+| `GET` | `/treatment-plans` | List all plans (paginated, filterable by status, client, therapist; searchable by plan ID, client name, or therapist name) |
 | `GET` | `/treatment-plans/:id` | Get any plan by ID (includes items) |
 | `PATCH` | `/treatment-plans/:id` | Update therapist, dates, or force-cancel |
 

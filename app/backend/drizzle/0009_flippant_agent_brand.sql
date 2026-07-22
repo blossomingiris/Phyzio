@@ -1,0 +1,1 @@
+ALTER TYPE "public"."plan_cancellation_reason" ADD VALUE 'client_deleted';

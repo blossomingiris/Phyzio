@@ -368,7 +368,8 @@ async function seed() {
       ])
       .returning();
 
-    const [emily, david, olivia, , mia] = insertedClients;
+    const [emily, david, olivia, , mia, , ethan, , harold, nora, sophia] =
+      insertedClients;
 
     console.log("💊 Seeding treatments...");
     const insertedTreatments = await db
@@ -427,7 +428,7 @@ async function seed() {
       ])
       .returning();
 
-    const [orthoBasic, orthoAdv, neuro, pediatric, , evaluation] =
+    const [orthoBasic, orthoAdv, neuro, pediatric, seniorMobility, evaluation] =
       insertedTreatments;
 
     console.log("📋 Seeding treatment plans...");
@@ -468,10 +469,52 @@ async function seed() {
           status: "paused",
           startDate: at(-14, 12),
         },
+        {
+          therapistId: robertU!.id,
+          clientId: ethan!.id,
+          primaryDiagnostic: "Post-stroke rehabilitation, left-side weakness",
+          clinicalGoals: "Regain functional use of the left arm and leg.",
+          contraindications: "Monitor blood pressure before exertion.",
+          status: "in_progress",
+          startDate: at(-30, 9),
+        },
+        {
+          therapistId: aishaU!.id,
+          clientId: harold!.id,
+          primaryDiagnostic: "Balance deficit after hip replacement",
+          clinicalGoals: "Restore safe independent ambulation.",
+          status: "in_progress",
+          startDate: at(-25, 10),
+        },
+        {
+          therapistId: lucasU!.id,
+          clientId: nora!.id,
+          primaryDiagnostic: "Post-cardiac surgery pulmonary rehabilitation",
+          clinicalGoals: "Improve exercise tolerance and lung capacity.",
+          status: "in_progress",
+          startDate: at(-18, 9),
+        },
+        {
+          therapistId: graceU!.id,
+          clientId: sophia!.id,
+          primaryDiagnostic: "Pelvic floor dysfunction",
+          clinicalGoals: "Reduce pain and restore normal muscle function.",
+          status: "in_progress",
+          startDate: at(-10, 13),
+        },
       ])
       .returning();
 
-    const [emilyPlan, davidPlan, oliviaPlan, miaPlan] = insertedPlans;
+    const [
+      emilyPlan,
+      davidPlan,
+      oliviaPlan,
+      miaPlan,
+      ethanPlan,
+      haroldPlan,
+      noraPlan,
+      sophiaPlan,
+    ] = insertedPlans;
 
     console.log("🧾 Seeding treatment plan items...");
     await db.insert(treatmentPlanItems).values([
@@ -504,6 +547,36 @@ async function seed() {
         treatmentPlanId: miaPlan!.id,
         treatmentId: neuro!.id,
         quantityCompleted: 1,
+      },
+      {
+        treatmentPlanId: ethanPlan!.id,
+        treatmentId: neuro!.id,
+        quantityCompleted: 3,
+      },
+      {
+        treatmentPlanId: ethanPlan!.id,
+        treatmentId: evaluation!.id,
+        quantityCompleted: 1,
+      },
+      {
+        treatmentPlanId: haroldPlan!.id,
+        treatmentId: seniorMobility!.id,
+        quantityCompleted: 5,
+      },
+      {
+        treatmentPlanId: noraPlan!.id,
+        treatmentId: seniorMobility!.id,
+        quantityCompleted: 4,
+      },
+      {
+        treatmentPlanId: noraPlan!.id,
+        treatmentId: orthoBasic!.id,
+        quantityCompleted: 2,
+      },
+      {
+        treatmentPlanId: sophiaPlan!.id,
+        treatmentId: orthoAdv!.id,
+        quantityCompleted: 2,
       },
     ]);
 
@@ -566,6 +639,50 @@ async function seed() {
         startedAt: at(5, 11),
         endedAt: at(5, 11, 45),
         status: "requested",
+      },
+      {
+        therapistId: robertU!.id,
+        clientId: ethan!.id,
+        treatmentPlanId: ethanPlan!.id,
+        startedAt: at(-30, 9),
+        endedAt: at(-30, 9, 45),
+        status: "completed",
+        notes: "Initial neuro assessment.",
+      },
+      {
+        therapistId: robertU!.id,
+        clientId: ethan!.id,
+        treatmentPlanId: ethanPlan!.id,
+        startedAt: at(4, 9),
+        endedAt: at(4, 9, 45),
+        status: "confirmed",
+      },
+      {
+        therapistId: aishaU!.id,
+        clientId: harold!.id,
+        treatmentPlanId: haroldPlan!.id,
+        startedAt: at(-25, 10),
+        endedAt: at(-25, 10, 45),
+        status: "completed",
+        notes: "Baseline balance and gait assessment.",
+      },
+      {
+        therapistId: lucasU!.id,
+        clientId: nora!.id,
+        treatmentPlanId: noraPlan!.id,
+        startedAt: at(-18, 9),
+        endedAt: at(-18, 9, 45),
+        status: "completed",
+        notes: "Baseline cardiopulmonary function assessment.",
+      },
+      {
+        therapistId: graceU!.id,
+        clientId: sophia!.id,
+        treatmentPlanId: sophiaPlan!.id,
+        startedAt: at(-10, 13),
+        endedAt: at(-10, 13, 45),
+        status: "completed",
+        notes: "Initial pelvic floor assessment.",
       },
     ]);
 

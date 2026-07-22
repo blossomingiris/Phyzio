@@ -20,6 +20,21 @@ export const planCancellationReasonSchema = Type.Unsafe<TreatmentPlanCancellatio
   enum: planCancellationReasonEnum.enumValues,
 });
 
+const MANUAL_CANCELLATION_REASONS = [
+  "client_request",
+  "client_unreachable",
+  "therapist_referral",
+  "other",
+] as const;
+
+export const manualPlanCancellationReasonSchema = Type.Unsafe<
+  Exclude<TreatmentPlanCancellationReason, "client_deleted">
+>({
+  type: "string",
+  enum: MANUAL_CANCELLATION_REASONS,
+  description: "'client_deleted' is set automatically by the system and cannot be chosen manually",
+});
+
 export const treatmentCategorySchema = Type.Unsafe<TreatmentCategory>({
   type: "string",
   enum: categoryEnum.enumValues,
@@ -50,7 +65,7 @@ export const treatmentPlanItemResponse = Type.Object({
 export const planCancelledStatusSchema = Type.Object(
   {
     status: Type.Literal("cancelled"),
-    cancellationReason: planCancellationReasonSchema,
+    cancellationReason: manualPlanCancellationReasonSchema,
     cancellationNote: Type.Optional(
       Type.String({ description: "Required when reason is 'other'" }),
     ),

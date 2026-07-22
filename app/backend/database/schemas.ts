@@ -80,6 +80,7 @@ export const planCancellationReasonEnum = pgEnum("plan_cancellation_reason", [
   "client_unreachable",
   "therapist_referral",
   "other",
+  "client_deleted",
 ]);
 
 export const appointmentStatusEnum = pgEnum("appointment_status", [

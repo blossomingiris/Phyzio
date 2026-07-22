@@ -32,6 +32,11 @@ Intended flow before removing a therapist:
 | `isActive: false` | Therapist is not taking new appointments (still visible, still logs in) |
 | `deletedAt` set | Therapist is considered removed — used for filtering |
 
+Marking a therapist `isActive: false` also auto-pauses every `in_progress`
+treatment plan they own (`status` → `paused`). This does not reverse when the
+therapist becomes active again — resuming a paused plan is a manual action.
+See [treatment-plan.md](treatment-plan.md) → Cascades.
+
 ## Permissions
 
 | Action | Who can do it |

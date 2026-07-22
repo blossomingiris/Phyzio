@@ -152,4 +152,112 @@ describe("therapists lifecycle", () => {
     expect(deletedIds).toContain(deletedId);
     expect(deletedIds).not.toContain(activeId);
   });
+
+  it("auto-pauses in_progress treatment plans when marked unavailable, leaving open plans untouched", async () => {
+    const { id: therapistId } = await createTherapist({ email: "cascade-avail@therapists.test" });
+    const { token: therapistToken } = await h.login("cascade-avail@therapists.test");
+
+    const clientRes = await h.inject({
+      method: "POST",
+      url: "/clients",
+      headers: auth(),
+      payload: {
+        firstName: "Cascade",
+        lastName: "Client",
+        preferredCommunication: "email",
+        therapistId,
+      },
+    });
+    expect(clientRes.statusCode).toBe(201);
+    const clientId = clientRes.json<{ id: number }>().id;
+
+    const treatmentRes = await h.inject({
+      method: "POST",
+      url: "/treatments",
+      headers: auth(),
+      payload: {
+        name: "Avail Session",
+        category: "ortho_sports",
+        pricePerUnit: "90.00",
+        quantity: 5,
+        durationMinutes: 45,
+      },
+    });
+    expect(treatmentRes.statusCode).toBe(201);
+    const treatmentId = treatmentRes.json<{ id: number }>().id;
+
+    async function createPlan() {
+      const res = await h.inject({
+        method: "POST",
+        url: "/me/treatment-plans",
+        headers: { authorization: `Bearer ${therapistToken}` },
+        payload: {
+          clientId,
+          primaryDiagnostic: "Avail diagnostic",
+          clinicalGoals: "Avail goal",
+          startDate: new Date().toISOString(),
+          items: [{ treatmentId }],
+        },
+      });
+      if (res.statusCode !== 201) throw new Error(`createPlan failed: ${res.body}`);
+      return res.json<{ id: number }>();
+    }
+
+    const { id: openPlanId } = await createPlan();
+    const { id: inProgressPlanId } = await createPlan();
+
+    const apptRes = await h.inject({
+      method: "POST",
+      url: "/appointments",
+      headers: auth(),
+      payload: {
+        clientId,
+        therapistId,
+        treatmentPlanId: inProgressPlanId,
+        startedAt: "2026-09-01T08:00:00.000Z",
+        endedAt: "2026-09-01T09:00:00.000Z",
+      },
+    });
+    if (apptRes.statusCode !== 201) throw new Error(`createAppointment failed: ${apptRes.body}`);
+    const apptId = apptRes.json<{ id: number }>().id;
+
+    for (const status of ["scheduled", "confirmed", "completed"]) {
+      const res = await h.inject({
+        method: "PATCH",
+        url: `/appointments/${apptId}/status`,
+        headers: auth(),
+        payload: { status },
+      });
+      if (res.statusCode !== 200) throw new Error(`advance appointment to ${status} failed: ${res.body}`);
+    }
+
+    const inProgressBefore = await h.inject({
+      method: "GET",
+      url: `/treatment-plans/${inProgressPlanId}`,
+      headers: auth(),
+    });
+    expect(inProgressBefore.json<{ status: string }>().status).toBe("in_progress");
+
+    const patchRes = await h.inject({
+      method: "PATCH",
+      url: `/therapists/${therapistId}`,
+      headers: auth(),
+      payload: { isActive: false },
+    });
+    expect(patchRes.statusCode).toBe(200);
+
+    const openPlan = await h.inject({
+      method: "GET",
+      url: `/treatment-plans/${openPlanId}`,
+      headers: auth(),
+    });
+    expect(openPlan.json<{ status: string }>().status).toBe("open");
+
+    const inProgressAfter = await h.inject({
+      method: "GET",
+      url: `/treatment-plans/${inProgressPlanId}`,
+      headers: auth(),
+    });
+    expect(inProgressAfter.json<{ status: string }>().status).toBe("paused");
+  });
 });

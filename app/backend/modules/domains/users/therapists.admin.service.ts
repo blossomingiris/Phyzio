@@ -1,6 +1,6 @@
 import { AUTH_BCRYPT_ROUNDS } from "#app/config/auth.ts";
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
-import { therapists, users } from "#app/database/schemas.ts";
+import { therapists, treatmentPlans, users } from "#app/database/schemas.ts";
 import { type Speciality } from "#app/database/types.ts";
 import { ConflictError, NotFoundError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
@@ -143,10 +143,24 @@ export class TherapistsService {
   }
 
   async update(id: number, data: UpdateTherapistBody) {
-    await this.db
-      .update(therapists)
-      .set({ ...data, updatedAt: new Date() })
-      .where(eq(therapists.userId, id));
+    await this.db.transaction(async (tx) => {
+      await tx
+        .update(therapists)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(therapists.userId, id));
+
+      if (data.isActive === false) {
+        await tx
+          .update(treatmentPlans)
+          .set({ status: "paused", updatedAt: new Date() })
+          .where(
+            and(
+              eq(treatmentPlans.therapistId, id),
+              eq(treatmentPlans.status, "in_progress"),
+            ),
+          );
+      }
+    });
 
     return this.one({ id });
   }

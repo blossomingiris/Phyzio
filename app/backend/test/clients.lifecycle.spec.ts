@@ -263,4 +263,81 @@ describe("clients lifecycle", () => {
     expect(body.therapist).not.toBeNull();
     expect(body.therapist?.id).toBe(therapistId);
   });
+
+  it("force-cancels the client's non-terminal treatment plans on soft-delete, with cancellationReason client_deleted", async () => {
+    const therapistRes = await h.inject({
+      method: "POST",
+      url: "/therapists",
+      headers: auth(),
+      payload: {
+        firstName: "Cascade",
+        lastName: "Therapist",
+        email: "cascade-therapist@clients.test",
+        password: ADMIN_PASSWORD,
+        speciality: "orthopedic",
+        phone: "+1234567890",
+        workingHours: {},
+      },
+    });
+    expect(therapistRes.statusCode).toBe(201);
+    const therapistId = therapistRes.json<{ id: number }>().id;
+    const { token: therapistToken } = await h.login("cascade-therapist@clients.test");
+
+    const { id: clientId } = await createClient({
+      email: "cascade-client@clients.test",
+      therapistId,
+    });
+
+    const treatmentRes = await h.inject({
+      method: "POST",
+      url: "/treatments",
+      headers: auth(),
+      payload: {
+        name: "Cascade Session",
+        category: "ortho_sports",
+        pricePerUnit: "80.00",
+        quantity: 5,
+        durationMinutes: 45,
+      },
+    });
+    expect(treatmentRes.statusCode).toBe(201);
+    const treatmentId = treatmentRes.json<{ id: number }>().id;
+
+    const planRes = await h.inject({
+      method: "POST",
+      url: "/me/treatment-plans",
+      headers: { authorization: `Bearer ${therapistToken}` },
+      payload: {
+        clientId,
+        primaryDiagnostic: "Cascade diagnostic",
+        clinicalGoals: "Cascade goal",
+        startDate: new Date().toISOString(),
+        items: [{ treatmentId }],
+      },
+    });
+    expect(planRes.statusCode).toBe(201);
+    const planId = planRes.json<{ id: number }>().id;
+
+    const del = await h.inject({
+      method: "DELETE",
+      url: `/clients/${clientId}`,
+      headers: auth(),
+    });
+    expect(del.statusCode).toBe(200);
+
+    const plan = await h.inject({
+      method: "GET",
+      url: `/treatment-plans/${planId}`,
+      headers: auth(),
+    });
+    expect(plan.statusCode).toBe(200);
+    const body = plan.json<{
+      status: string;
+      cancellationReason: string | null;
+      endDate: string | null;
+    }>();
+    expect(body.status).toBe("cancelled");
+    expect(body.cancellationReason).toBe("client_deleted");
+    expect(body.endDate).not.toBeNull();
+  });
 });

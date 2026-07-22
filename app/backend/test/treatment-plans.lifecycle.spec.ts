@@ -264,6 +264,46 @@ describe("treatment plans lifecycle", () => {
     });
   });
 
+  it("admin searches plans by ID, client name, and therapist name", async () => {
+    const { id: planId } = await createPlan();
+
+    const byId = await h.inject({
+      method: "GET",
+      url: `/treatment-plans?search=${planId}`,
+      headers: adminAuth(),
+    });
+    expect(byId.statusCode).toBe(200);
+    expect(byId.json<{ data: { id: number }[] }>().data.map((p) => p.id)).toContain(planId);
+
+    const byClientName = await h.inject({
+      method: "GET",
+      url: `/treatment-plans?search=${encodeURIComponent("Plan Client")}&limit=100`,
+      headers: adminAuth(),
+    });
+    expect(byClientName.statusCode).toBe(200);
+    expect(
+      byClientName.json<{ data: { id: number }[] }>().data.map((p) => p.id),
+    ).toContain(planId);
+
+    const byTherapistName = await h.inject({
+      method: "GET",
+      url: `/treatment-plans?search=${encodeURIComponent("Plan Therapist")}&limit=100`,
+      headers: adminAuth(),
+    });
+    expect(byTherapistName.statusCode).toBe(200);
+    expect(
+      byTherapistName.json<{ data: { id: number }[] }>().data.map((p) => p.id),
+    ).toContain(planId);
+
+    const noMatch = await h.inject({
+      method: "GET",
+      url: "/treatment-plans?search=NoSuchPersonXYZ",
+      headers: adminAuth(),
+    });
+    expect(noMatch.statusCode).toBe(200);
+    expect(noMatch.json<{ data: unknown[] }>().data).toHaveLength(0);
+  });
+
   it("therapist cannot see another therapist's plan", async () => {
     const { id } = await createPlan();
     await h.inject({

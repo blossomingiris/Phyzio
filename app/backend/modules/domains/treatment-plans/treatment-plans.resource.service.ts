@@ -18,7 +18,7 @@ import type {
 import { BadRequestError, ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
 import type { Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import type {
   AddTreatmentPlanItemBody,
   CreateTreatmentPlanBody,
@@ -31,6 +31,7 @@ type TreatmentPlanFilters = {
   therapistId?: number;
   clientId?: number;
   status?: TreatmentPlanStatus;
+  search?: string;
 };
 
 type PlanSortBy = "createdAt" | "startDate" | "status";
@@ -161,6 +162,9 @@ export class TreatmentPlansService {
     const [{ total }] = await this.db
       .select({ total: count() })
       .from(treatmentPlans)
+      .innerJoin(clients, eq(treatmentPlans.clientId, clients.id))
+      .innerJoin(therapists, eq(treatmentPlans.therapistId, therapists.userId))
+      .innerJoin(users, eq(therapists.userId, users.id))
       .where(where);
 
     const rows = await this.db
@@ -592,6 +596,19 @@ export class TreatmentPlansService {
         ? eq(treatmentPlans.clientId, filters.clientId)
         : undefined,
       filters.status !== undefined ? eq(treatmentPlans.status, filters.status) : undefined,
+      filters.search !== undefined ? this.buildSearchCondition(filters.search) : undefined,
+    );
+  }
+
+  private buildSearchCondition(search: string) {
+    const trimmed = search.trim();
+    const pattern = `%${trimmed}%`;
+    const asId = Number(trimmed);
+
+    return or(
+      Number.isInteger(asId) && asId > 0 ? eq(treatmentPlans.id, asId) : undefined,
+      ilike(sql`${clients.firstName} || ' ' || ${clients.lastName}`, pattern),
+      ilike(sql`${users.firstName} || ' ' || ${users.lastName}`, pattern),
     );
   }
 }

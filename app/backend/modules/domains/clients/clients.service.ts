@@ -1,15 +1,17 @@
 import type { DrizzleClient } from "#app/database/drizzle-client.ts";
-import { clients, therapists, users } from "#app/database/schemas.ts";
+import { clients, therapists, treatmentPlans, users } from "#app/database/schemas.ts";
 import type { Speciality } from "#app/database/types.ts";
 import { ConflictError, NotFoundError, UnprocessableEntityError } from "#app/errors/httpErrors.ts";
 import { getDbError } from "#app/errors/translateDbError.ts";
 import { type Pagination } from "#app/modules/general/dto/index.ts";
-import { and, asc, count, desc, eq, ilike, isNull, not, or } from "drizzle-orm";
+import { and, asc, count, desc, eq, ilike, inArray, isNull, not, or } from "drizzle-orm";
 import type {
   CreateClientBody,
   UpdateClientBody,
 } from "./clients.admin.dto.ts";
 import type { ClientSortBy, ClientSortParams } from "./clients.shared.dto.ts";
+
+const NON_TERMINAL_PLAN_STATUSES = ["open", "in_progress", "paused"] as const;
 
 type ClientFilters = {
   id?: number;
@@ -176,10 +178,29 @@ export class ClientsService {
   }
 
   async destroy(id: number) {
-    await this.db
-      .update(clients)
-      .set({ deletedAt: new Date() })
-      .where(eq(clients.id, id));
+    await this.db.transaction(async (tx) => {
+      await tx
+        .update(clients)
+        .set({ deletedAt: new Date() })
+        .where(eq(clients.id, id));
+
+      const now = new Date();
+      await tx
+        .update(treatmentPlans)
+        .set({
+          status: "cancelled",
+          cancellationReason: "client_deleted",
+          cancellationNote: null,
+          endDate: now,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(treatmentPlans.clientId, id),
+            inArray(treatmentPlans.status, NON_TERMINAL_PLAN_STATUSES),
+          ),
+        );
+    });
   }
 
   private mapRow(row: ClientQueryRow) {

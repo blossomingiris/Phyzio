@@ -15,6 +15,14 @@ to admins. Therapists can only see clients assigned to them.
 When a therapist is removed, the client loses their assignment and becomes visible
 to admins only until reassigned.
 
+## Deletion Cascade
+
+Soft-deleting a client (`DELETE /clients/:id`) also force-cancels every
+non-terminal treatment plan (`open`, `in_progress`, `paused`) belonging to that
+client — `cancellationReason` is set to `client_deleted` and `endDate` to the
+deletion timestamp. Plan records are never deleted, only cancelled. See
+[treatment-plan.md](treatment-plan.md) → Cascades.
+
 ## Permissions
 
 | Action | Who can do it |
