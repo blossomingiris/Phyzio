@@ -172,6 +172,8 @@ export interface paths {
                     /** @description Partial match on first or last name */
                     search?: string;
                     role?: "admin" | "therapist";
+                    /** @description active: exclude soft-deleted users; all: include both; deleted: soft-deleted users only */
+                    deleted?: "active" | "all" | "deleted";
                     sortBy?: "createdAt" | "lastName" | "email";
                     /** @description Sort direction */
                     sortOrder?: "asc" | "desc";
@@ -197,6 +199,8 @@ export interface paths {
                                 email: string;
                                 /** @enum {string} */
                                 role: "admin" | "therapist";
+                                /** Format: date-time */
+                                deletedAt?: string;
                                 /** Format: date-time */
                                 createdAt: string;
                                 /** Format: date-time */
@@ -274,6 +278,8 @@ export interface paths {
                             /** @enum {string} */
                             role: "admin" | "therapist";
                             /** Format: date-time */
+                            deletedAt?: string;
+                            /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
@@ -334,7 +340,10 @@ export interface paths {
         /** Get a user by ID */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    /** @description Allow fetching a soft-deleted user */
+                    deleted?: boolean;
+                };
                 header?: never;
                 path: {
                     id: number;
@@ -357,6 +366,8 @@ export interface paths {
                             email: string;
                             /** @enum {string} */
                             role: "admin" | "therapist";
+                            /** Format: date-time */
+                            deletedAt?: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
@@ -404,7 +415,67 @@ export interface paths {
         };
         put?: never;
         post?: never;
-        delete?: never;
+        /** Delete a user */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Default Response */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            success: boolean;
+                        };
+                    };
+                };
+                /** @description Default Response */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiFieldError"];
+                    };
+                };
+                /** @description Default Response */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+                /** @description Default Response */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ApiError"];
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         /** Update user profile */
@@ -442,6 +513,8 @@ export interface paths {
                             email: string;
                             /** @enum {string} */
                             role: "admin" | "therapist";
+                            /** Format: date-time */
+                            deletedAt?: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
@@ -544,6 +617,8 @@ export interface paths {
                             email: string;
                             /** @enum {string} */
                             role: "admin" | "therapist";
+                            /** Format: date-time */
+                            deletedAt?: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */

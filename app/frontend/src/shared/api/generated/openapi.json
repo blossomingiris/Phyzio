@@ -290,6 +290,21 @@
             "schema": {
               "type": "string",
               "enum": [
+                "active",
+                "all",
+                "deleted"
+              ],
+              "default": "active"
+            },
+            "in": "query",
+            "name": "deleted",
+            "required": false,
+            "description": "active: exclude soft-deleted users; all: include both; deleted: soft-deleted users only"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
                 "createdAt",
                 "lastName",
                 "email"
@@ -360,6 +375,10 @@
                               "admin",
                               "therapist"
                             ]
+                          },
+                          "deletedAt": {
+                            "type": "string",
+                            "format": "date-time"
                           },
                           "createdAt": {
                             "type": "string",
@@ -502,6 +521,10 @@
                         "therapist"
                       ]
                     },
+                    "deletedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -567,6 +590,16 @@
         "parameters": [
           {
             "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "in": "query",
+            "name": "deleted",
+            "required": false,
+            "description": "Allow fetching a soft-deleted user"
+          },
+          {
+            "schema": {
               "type": "integer",
               "minimum": 1
             },
@@ -611,6 +644,10 @@
                         "admin",
                         "therapist"
                       ]
+                    },
+                    "deletedAt": {
+                      "type": "string",
+                      "format": "date-time"
                     },
                     "createdAt": {
                       "type": "string",
@@ -747,6 +784,10 @@
                         "therapist"
                       ]
                     },
+                    "deletedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -801,6 +842,83 @@
             }
           },
           "409": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a user",
+        "tags": [
+          "Admin / Users"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "success"
+                  ],
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiFieldError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
             "description": "Default Response",
             "content": {
               "application/json": {
@@ -889,6 +1007,10 @@
                         "admin",
                         "therapist"
                       ]
+                    },
+                    "deletedAt": {
+                      "type": "string",
+                      "format": "date-time"
                     },
                     "createdAt": {
                       "type": "string",

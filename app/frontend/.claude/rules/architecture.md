@@ -2,6 +2,13 @@
 
 Feature-sliced layering: `app` → `features` → `services` → `shared`.
 
+| Layer | Responsibility |
+| --- | --- |
+| `app` | Composition root — entry point, providers, theme, router, authenticated shell. Wires everything else together. |
+| `features` | Independent chunks of functionality — pages, components, and local logic for one area of the product. |
+| `services` | Reusable business modules (logic *and* presentation) shared by two or more features. |
+| `shared` | Code with no feature ownership — API client, generic UI, global config/routes, cross-cutting helpers. |
+
 ## `app`
 
 The composition root. Holds the app's most frequently-changing logic: entry point,
@@ -30,12 +37,11 @@ flows downward: `app` → `features` → `services` → `shared`.
 - **`app`** may import `shared` freely, and `features` only through a feature's
   public API (`index.ts`/`index.tsx` or `*.page.tsx`). No deep imports into a
   feature's internals.
-- **`features`** may import `shared` and their own internals only. **No
+- **`features`** may import `shared`, `services` (only through a service's
+  public API — `index.ts`/`index.tsx`), and their own internals. **No
   cross-feature imports**, even through a public API — move shared code to
-  `shared` (or, once it exists, to `services`) instead.
-- **`services`** (once introduced) may import `shared` only — never `app` or
-  `features`. This isn't enforced by ESLint yet since the layer doesn't exist in
-  the tree; add its boundary rule at the same time you create the folder.
+  `shared` or to `services` instead.
+- **`services`** may import `shared` only — never `app` or `features`.
 - **`shared`** may only import other `shared` code. All other layers may import
   from it — it's the base of the dependency graph.
 

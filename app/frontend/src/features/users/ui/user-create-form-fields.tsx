@@ -1,33 +1,15 @@
-import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
 import { generatePassword } from "@/shared/lib/generate-password";
-import {
-  Button,
-  PasswordInput,
-  Select,
-  SimpleGrid,
-  Stack,
-  TextInput,
-} from "@mantine/core";
+import { ROUTES } from "@/shared/model/routes";
+import { Anchor, Button, PasswordInput, SimpleGrid, Stack, Text, TextInput } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
-import {
-  IconLock,
-  IconMail,
-  IconPhone,
-  IconStethoscope,
-  IconUser,
-  IconWand,
-} from "@tabler/icons-react";
-import type { TherapistFormValues } from "../model/therapist-form-values";
-import { TherapistWorkingHoursInput } from "./therapist-working-hours-input";
+import { IconLock, IconMail, IconUser, IconWand } from "@tabler/icons-react";
+import { Link } from "react-router";
+import type { UserFormValues } from "../model/user-form-values";
 
-const SPECIALITY_OPTIONS = Object.entries(SPECIALITY_LABELS).map(
-  ([value, label]) => ({ value, label }),
-);
-
-export function TherapistCreateFormFields({
+export function UserCreateFormFields({
   form,
 }: {
-  form: UseFormReturnType<TherapistFormValues>;
+  form: UseFormReturnType<UserFormValues>;
 }) {
   return (
     <>
@@ -45,22 +27,6 @@ export function TherapistCreateFormFields({
           leftSection={<IconUser size={16} />}
           withAsterisk
           {...form.getInputProps("lastName")}
-        />
-        <Select
-          label="Speciality"
-          placeholder="Select a speciality"
-          leftSection={<IconStethoscope size={16} />}
-          data={SPECIALITY_OPTIONS}
-          allowDeselect={false}
-          withAsterisk
-          {...form.getInputProps("speciality")}
-        />
-        <TextInput
-          label="Phone"
-          placeholder="+1 234 567 8900"
-          leftSection={<IconPhone size={16} />}
-          withAsterisk
-          {...form.getInputProps("phone")}
         />
         <TextInput
           label="Email"
@@ -94,7 +60,14 @@ export function TherapistCreateFormFields({
           </Button>
         </Stack>
       </SimpleGrid>
-      <TherapistWorkingHoursInput form={form} />
+
+      <Text size="sm" c="dimmed">
+        Need to add a therapist? Create one from the{" "}
+        <Anchor component={Link} to={ROUTES.THERAPISTS} size="sm">
+          Therapists
+        </Anchor>{" "}
+        page.
+      </Text>
     </>
   );
 }
