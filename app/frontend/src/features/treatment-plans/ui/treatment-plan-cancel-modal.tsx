@@ -80,6 +80,9 @@ export function TreatmentPlanCancelModal({
           <Textarea
             label="Cancellation Note"
             placeholder="Explain the reason for cancelling"
+            leftSectionProps={{
+              style: { alignItems: "flex-start", paddingTop: 11 },
+            }}
             leftSection={<IconNotes size={16} />}
             withAsterisk
             autosize

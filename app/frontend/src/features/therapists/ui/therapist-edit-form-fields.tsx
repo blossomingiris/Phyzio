@@ -1,9 +1,20 @@
-import { WorkingHoursInput } from "@/services/working-hours";
 import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
 import { SwitchField } from "@/shared/ui/switch-field";
-import { Divider, Select, SimpleGrid, TextInput } from "@mantine/core";
+import {
+  Alert,
+  Paper,
+  Select,
+  SimpleGrid,
+  Stack,
+  TextInput,
+} from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
-import { IconPhone, IconStethoscope, IconUser } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconPhone,
+  IconStethoscope,
+  IconUser,
+} from "@tabler/icons-react";
 import type { TherapistFormValues } from "../model/therapist-form-values";
 
 const SPECIALITY_OPTIONS = Object.entries(SPECIALITY_LABELS).map(
@@ -50,15 +61,23 @@ export function TherapistEditFormFields({
         />
       </SimpleGrid>
 
-      <SwitchField
-        label="Accepting new appointments"
-        color="success"
-        {...form.getInputProps("isActive", { type: "checkbox" })}
-      />
+      <Paper withBorder radius="md" p="md">
+        <Stack gap="md">
+          <SwitchField
+            label="Accepting new appointments"
+            size="lg"
+            {...form.getInputProps("isActive", { type: "checkbox" })}
+          />
 
-      <Divider />
-
-      <WorkingHoursInput form={form} sectionLabel="Working Hours" />
+          {form.values.isActive && (
+            <Alert color="error" icon={<IconAlertCircle />}>
+              Turning this off marks the therapist unavailable: their
+              in-progress treatment plans are automatically paused, and their
+              clients may need to be reassigned.
+            </Alert>
+          )}
+        </Stack>
+      </Paper>
     </>
   );
 }

@@ -76,7 +76,6 @@ export function normalizeUpdateTherapistFormValues(
   return {
     speciality: values.speciality,
     phone: values.phone,
-    workingHours: normalizeWorkingHours(values.workingHours),
     isActive: values.isActive,
   };
 }

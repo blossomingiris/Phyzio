@@ -6,6 +6,8 @@ import type { Therapist } from "@/shared/domain/therapist";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
 import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { IconAlertCircle } from "@tabler/icons-react";
 import {
   normalizeTherapistNameFormValues,
   normalizeUpdateTherapistFormValues,
@@ -16,12 +18,7 @@ import { useUpdateTherapist } from "../model/use-update-therapist";
 import { useUpdateTherapistName } from "../model/use-update-therapist-name";
 import { TherapistEditFormFields } from "./therapist-edit-form-fields";
 
-const THERAPIST_FIELD_NAMES = [
-  "speciality",
-  "phone",
-  "workingHours",
-  "isActive",
-] as const;
+const THERAPIST_FIELD_NAMES = ["speciality", "phone", "isActive"] as const;
 
 export function TherapistEditModal({
   therapist,
@@ -59,6 +56,14 @@ export function TherapistEditModal({
           params: { path: { id: therapist.id } },
           body: normalizeUpdateTherapistFormValues(values),
         });
+
+        if (form.isDirty("isActive") && therapist.isActive && !values.isActive) {
+          notifications.show({
+            color: "accent",
+            icon: <IconAlertCircle size={18} />,
+            message: `${values.firstName} ${values.lastName}'s in-progress treatment plans have been paused.`,
+          });
+        }
       }
 
       onClose();

@@ -20,7 +20,7 @@ export function CardActionsMenu({
     <Menu
       position="right-start"
       withArrow
-      width={150}
+      width={200}
       styles={{ item: { minHeight: 44 } }}
     >
       <Menu.Target>
