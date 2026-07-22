@@ -1,17 +1,7 @@
-import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { postTreatments } from "@/shared/api/generated/validation-schemas";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import {
-  Alert,
-  Button,
-  Divider,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
 import {
   EMPTY_TREATMENT_FORM_VALUES,
   normalizeTreatmentFormValues,
@@ -52,38 +42,16 @@ export function TreatmentCreateModal({
   });
 
   return (
-    <Modal
+    <FormModal
       opened={opened}
       onClose={handleClose}
-      title={
-        <Text fw={700} size="xl">
-          New Treatment
-        </Text>
-      }
-      size="xl"
+      title="New Treatment"
+      submitLabel="Create Treatment"
+      onSubmit={handleSubmit}
+      isPending={createTreatment.isPending}
+      error={createTreatment.error}
     >
-      <form onSubmit={handleSubmit}>
-        <Stack gap="xl">
-          {isGeneralError(createTreatment.error) && (
-            <Alert color="error" variant="light" icon={<IconAlertCircle />}>
-              {getApiErrorMessage(createTreatment.error)}
-            </Alert>
-          )}
-
-          <TreatmentFormFields form={form} />
-
-          <Divider />
-
-          <Group justify="flex-end">
-            <Button variant="default" type="button" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit" loading={createTreatment.isPending}>
-              Create Treatment
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Modal>
+      <TreatmentFormFields form={form} />
+    </FormModal>
   );
 }

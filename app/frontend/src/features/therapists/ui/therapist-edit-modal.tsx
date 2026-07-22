@@ -1,21 +1,11 @@
-import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import {
   patchTherapistsById,
   patchUsersById,
 } from "@/shared/api/generated/validation-schemas";
 import type { Therapist } from "@/shared/domain/therapist";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import {
-  Alert,
-  Button,
-  Divider,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
 import {
   normalizeTherapistNameFormValues,
   normalizeUpdateTherapistFormValues,
@@ -33,11 +23,13 @@ const THERAPIST_FIELD_NAMES = [
   "isActive",
 ] as const;
 
-function TherapistEditForm({
+export function TherapistEditModal({
   therapist,
+  opened,
   onClose,
 }: {
   therapist: Therapist;
+  opened: boolean;
   onClose: () => void;
 }) {
   const updateTherapist = useUpdateTherapist();
@@ -75,56 +67,17 @@ function TherapistEditForm({
     }
   });
 
-  const isPending = updateTherapist.isPending || updateTherapistName.isPending;
-  const error = updateTherapist.error ?? updateTherapistName.error;
-
   return (
-    <form onSubmit={handleSubmit}>
-      <Stack gap="lg">
-        {isGeneralError(error) && (
-          <Alert color="error" variant="light" icon={<IconAlertCircle />}>
-            {getApiErrorMessage(error)}
-          </Alert>
-        )}
-
-        <TherapistEditFormFields form={form} />
-
-        <Divider />
-
-        <Group justify="flex-end">
-          <Button variant="default" type="button" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" loading={isPending}>
-            Save Changes
-          </Button>
-        </Group>
-      </Stack>
-    </form>
-  );
-}
-
-export function TherapistEditModal({
-  therapist,
-  opened,
-  onClose,
-}: {
-  therapist: Therapist;
-  opened: boolean;
-  onClose: () => void;
-}) {
-  return (
-    <Modal
+    <FormModal
       opened={opened}
       onClose={onClose}
-      title={
-        <Text fw={700} size="xl">
-          Edit Therapist
-        </Text>
-      }
-      size="xl"
+      title="Edit Therapist"
+      submitLabel="Save Changes"
+      onSubmit={handleSubmit}
+      isPending={updateTherapist.isPending || updateTherapistName.isPending}
+      error={updateTherapist.error ?? updateTherapistName.error}
     >
-      <TherapistEditForm therapist={therapist} onClose={onClose} />
-    </Modal>
+      <TherapistEditFormFields form={form} />
+    </FormModal>
   );
 }

@@ -1,7 +1,8 @@
 import { SectionLabel } from "@/shared/ui/section-label";
 import { SwitchField } from "@/shared/ui/switch-field";
-import { Group, Radio, Select, Stack, Text } from "@mantine/core";
+import { Button, Group, Radio, Select, Stack, Text } from "@mantine/core";
 import type { UseFormReturnType } from "@mantine/form";
+import { IconCalendarWeek, IconCopy } from "@tabler/icons-react";
 import { Fragment, useState } from "react";
 import {
   WEEKDAYS,
@@ -62,21 +63,35 @@ function detectApplyScope(
   return null;
 }
 
+function detectUniformHours(
+  workingHours: Record<Weekday, DayHoursFormValues>,
+): { start: string; end: string } | null {
+  const enabledDays = WEEKDAYS.filter((day) => workingHours[day].enabled);
+  const firstDay = enabledDays[0];
+  if (!firstDay) return null;
+
+  const { start, end } = workingHours[firstDay];
+  return enabledDays.every(
+    (day) => workingHours[day].start === start && workingHours[day].end === end,
+  )
+    ? { start, end }
+    : null;
+}
+
 export function TherapistWorkingHoursInput({
   form,
 }: {
   form: UseFormReturnType<TherapistFormValues>;
 }) {
-  const [applyScope, setApplyScope] = useState<string | null>(() =>
-    detectApplyScope(form.values.workingHours),
-  );
+  const workingHours = form.values.workingHours;
+  const applyScope = detectApplyScope(workingHours);
+  const uniformHours = detectUniformHours(workingHours);
 
-  if (applyScope && detectApplyScope(form.values.workingHours) !== applyScope) {
-    setApplyScope(null);
-  }
+  const canSummarize = applyScope !== null && uniformHours !== null;
+  const [perDay, setPerDay] = useState(!canSummarize);
+  if (!canSummarize && !perDay) setPerDay(true);
 
   const handleApply = (value: string) => {
-    setApplyScope(value);
     const option = APPLY_OPTIONS.find((o) => o.value === value);
     if (!option) return;
 
@@ -95,10 +110,36 @@ export function TherapistWorkingHoursInput({
     }
   };
 
+  const handleUniformTime = (field: "start" | "end", value: string | null) => {
+    if (!value) return;
+    for (const day of WEEKDAYS) {
+      if (workingHours[day].enabled) {
+        form.setFieldValue(`workingHours.${day}.${field}`, value);
+      }
+    }
+  };
+
+  const handleCollapse = () => {
+    const enabledDays = WEEKDAYS.filter((day) => workingHours[day].enabled);
+    const firstDay = enabledDays[0];
+    if (firstDay) {
+      const { start, end } = workingHours[firstDay];
+      for (const day of enabledDays) {
+        form.setFieldValue(`workingHours.${day}`, {
+          enabled: true,
+          start,
+          end,
+        });
+      }
+    }
+    setPerDay(false);
+  };
+
   return (
     <Stack gap="md">
-      <SectionLabel>Working Hours</SectionLabel>
-
+      <Stack gap="xs">
+        <SectionLabel>Working Hours</SectionLabel>
+      </Stack>
       <Radio.Group value={applyScope} onChange={handleApply}>
         <Group gap="lg" wrap="wrap">
           {APPLY_OPTIONS.map((option) => (
@@ -112,51 +153,99 @@ export function TherapistWorkingHoursInput({
         </Group>
       </Radio.Group>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(300px, auto) auto 30px auto",
-          rowGap: "var(--mantine-spacing-xs)",
-          columnGap: "var(--mantine-spacing-md)",
-          alignItems: "center",
-        }}
-      >
-        {WEEKDAYS.map((day) => {
-          const enabled = form.values.workingHours[day].enabled;
-          return (
-            <Fragment key={day}>
-              <SwitchField
-                label={DAY_LABELS[day]}
-                color="accent"
-                {...form.getInputProps(`workingHours.${day}.enabled`, {
-                  type: "checkbox",
-                })}
-              />
-              <Select
-                w={130}
-                data={TIME_OPTIONS}
-                searchable
-                allowDeselect={false}
-                aria-label={`${DAY_LABELS[day]} start time`}
-                disabled={!enabled}
-                {...form.getInputProps(`workingHours.${day}.start`)}
-              />
-              <Text c="dimmed" size="md">
-                to
-              </Text>
-              <Select
-                w={130}
-                data={TIME_OPTIONS}
-                searchable
-                allowDeselect={false}
-                aria-label={`${DAY_LABELS[day]} end time`}
-                disabled={!enabled}
-                {...form.getInputProps(`workingHours.${day}.end`)}
-              />
-            </Fragment>
-          );
-        })}
-      </div>
+      {!perDay && uniformHours && (
+        <Group gap="md" align="center">
+          <Select
+            w={130}
+            data={TIME_OPTIONS}
+            searchable
+            allowDeselect={false}
+            aria-label="Start time for every selected day"
+            value={uniformHours.start}
+            onChange={(value) => handleUniformTime("start", value)}
+          />
+          <Text c="dimmed" size="md">
+            to
+          </Text>
+          <Select
+            w={130}
+            data={TIME_OPTIONS}
+            searchable
+            allowDeselect={false}
+            aria-label="End time for every selected day"
+            value={uniformHours.end}
+            onChange={(value) => handleUniformTime("end", value)}
+          />
+          <Button
+            variant="subtle"
+            leftSection={<IconCalendarWeek size={16} />}
+            onClick={() => setPerDay(true)}
+          >
+            Set hours per day
+          </Button>
+        </Group>
+      )}
+
+      {perDay && (
+        <>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(300px, auto) auto 30px auto",
+              rowGap: "var(--mantine-spacing-xs)",
+              columnGap: "var(--mantine-spacing-md)",
+              alignItems: "center",
+            }}
+          >
+            {WEEKDAYS.map((day) => {
+              const enabled = workingHours[day].enabled;
+              return (
+                <Fragment key={day}>
+                  <SwitchField
+                    label={DAY_LABELS[day]}
+                    color="accent"
+                    {...form.getInputProps(`workingHours.${day}.enabled`, {
+                      type: "checkbox",
+                    })}
+                  />
+                  <Select
+                    w={130}
+                    data={TIME_OPTIONS}
+                    searchable
+                    allowDeselect={false}
+                    aria-label={`${DAY_LABELS[day]} start time`}
+                    disabled={!enabled}
+                    {...form.getInputProps(`workingHours.${day}.start`)}
+                  />
+                  <Text c="dimmed" size="md">
+                    to
+                  </Text>
+                  <Select
+                    w={130}
+                    data={TIME_OPTIONS}
+                    searchable
+                    allowDeselect={false}
+                    aria-label={`${DAY_LABELS[day]} end time`}
+                    disabled={!enabled}
+                    {...form.getInputProps(`workingHours.${day}.end`)}
+                  />
+                </Fragment>
+              );
+            })}
+          </div>
+
+          {applyScope && (
+            <Button
+              variant="subtle"
+              leftSection={<IconCopy size={16} />}
+              onClick={handleCollapse}
+              style={{ alignSelf: "flex-start" }}
+            >
+              Use the same hours every day
+            </Button>
+          )}
+        </>
+      )}
     </Stack>
   );
 }

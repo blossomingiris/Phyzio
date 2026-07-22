@@ -1,18 +1,8 @@
-import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { patchTreatmentsById } from "@/shared/api/generated/validation-schemas";
 import type { TreatmentDetail } from "@/shared/domain/treatment";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import {
-  Alert,
-  Button,
-  Divider,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
 import {
   treatmentToFormValues,
   normalizeTreatmentUpdateValues,
@@ -21,11 +11,13 @@ import {
 import { useUpdateTreatment } from "../model/use-update-treatment";
 import { TreatmentFormFields } from "./treatment-form-fields";
 
-function TreatmentEditForm({
+export function TreatmentEditModal({
   treatment,
+  opened,
   onClose,
 }: {
   treatment: TreatmentDetail;
+  opened: boolean;
   onClose: () => void;
 }) {
   const updateTreatment = useUpdateTreatment();
@@ -56,52 +48,16 @@ function TreatmentEditForm({
   });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Stack gap="xl">
-        {isGeneralError(updateTreatment.error) && (
-          <Alert color="error" variant="light" icon={<IconAlertCircle />}>
-            {getApiErrorMessage(updateTreatment.error)}
-          </Alert>
-        )}
-
-        <TreatmentFormFields form={form} showActiveToggle />
-
-        <Divider />
-
-        <Group justify="flex-end">
-          <Button variant="default" type="button" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" loading={updateTreatment.isPending}>
-            Save Changes
-          </Button>
-        </Group>
-      </Stack>
-    </form>
-  );
-}
-
-export function TreatmentEditModal({
-  treatment,
-  opened,
-  onClose,
-}: {
-  treatment: TreatmentDetail;
-  opened: boolean;
-  onClose: () => void;
-}) {
-  return (
-    <Modal
+    <FormModal
       opened={opened}
       onClose={onClose}
-      title={
-        <Text fw={700} size="xl">
-          Edit Treatment
-        </Text>
-      }
-      size="xl"
+      title="Edit Treatment"
+      submitLabel="Save Changes"
+      onSubmit={handleSubmit}
+      isPending={updateTreatment.isPending}
+      error={updateTreatment.error}
     >
-      <TreatmentEditForm treatment={treatment} onClose={onClose} />
-    </Modal>
+      <TreatmentFormFields form={form} showActiveToggle />
+    </FormModal>
   );
 }

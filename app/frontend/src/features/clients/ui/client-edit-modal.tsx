@@ -1,18 +1,8 @@
-import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { patchClientsById } from "@/shared/api/generated/validation-schemas";
 import type { ClientDetail } from "@/shared/domain/client";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import {
-  Alert,
-  Button,
-  Divider,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
 import {
   clientToFormValues,
   normalizeClientFormValues,
@@ -21,11 +11,13 @@ import {
 import { useUpdateClient } from "../model/use-update-client";
 import { ClientFormFields } from "./client-form-fields";
 
-function ClientEditForm({
+export function ClientEditModal({
   client,
+  opened,
   onClose,
 }: {
   client: ClientDetail;
+  opened: boolean;
   onClose: () => void;
 }) {
   const updateClient = useUpdateClient();
@@ -53,52 +45,16 @@ function ClientEditForm({
   });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Stack gap="lg">
-        {isGeneralError(updateClient.error) && (
-          <Alert color="error" variant="light" icon={<IconAlertCircle />}>
-            {getApiErrorMessage(updateClient.error)}
-          </Alert>
-        )}
-
-        <ClientFormFields form={form} />
-
-        <Divider />
-
-        <Group justify="flex-end">
-          <Button variant="default" type="button" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" loading={updateClient.isPending}>
-            Save Changes
-          </Button>
-        </Group>
-      </Stack>
-    </form>
-  );
-}
-
-export function ClientEditModal({
-  client,
-  opened,
-  onClose,
-}: {
-  client: ClientDetail;
-  opened: boolean;
-  onClose: () => void;
-}) {
-  return (
-    <Modal
+    <FormModal
       opened={opened}
       onClose={onClose}
-      title={
-        <Text fw={700} size="xl">
-          Edit Client
-        </Text>
-      }
-      size="xl"
+      title="Edit Client"
+      submitLabel="Save Changes"
+      onSubmit={handleSubmit}
+      isPending={updateClient.isPending}
+      error={updateClient.error}
     >
-      <ClientEditForm client={client} onClose={onClose} />
-    </Modal>
+      <ClientFormFields form={form} />
+    </FormModal>
   );
 }

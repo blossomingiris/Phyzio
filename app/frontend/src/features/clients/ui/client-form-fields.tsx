@@ -2,7 +2,7 @@ import {
   CLIENT_ORIGIN_LABELS,
   PREFERRED_COMMUNICATION_LABELS,
 } from "@/shared/domain/client";
-import { Select, SimpleGrid, TextInput } from "@mantine/core";
+import { Select, SimpleGrid, Stack, TextInput } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import type { UseFormReturnType } from "@mantine/form";
 import {
@@ -14,6 +14,7 @@ import {
   IconStethoscope,
   IconUser,
 } from "@tabler/icons-react";
+import type { ReactNode } from "react";
 import type { ClientFormValues } from "../model/client-form-values";
 import { useTherapistsQuery } from "../model/use-therapists-query";
 
@@ -24,6 +25,22 @@ const PREFERRED_COMMUNICATION_OPTIONS = Object.entries(
 const CLIENT_ORIGIN_OPTIONS = Object.entries(CLIENT_ORIGIN_LABELS).map(
   ([value, label]) => ({ value, label }),
 );
+
+function FieldGroup({
+  cols,
+  children,
+}: {
+  cols: 1 | 2 | 3;
+  children: ReactNode;
+}) {
+  return (
+    <Stack gap="xs">
+      <SimpleGrid cols={cols} spacing="lg">
+        {children}
+      </SimpleGrid>
+    </Stack>
+  );
+}
 
 export function ClientFormFields({
   form,
@@ -41,7 +58,7 @@ export function ClientFormFields({
 
   return (
     <>
-      <SimpleGrid cols={2} spacing="lg">
+      <FieldGroup cols={2}>
         <TextInput
           label="First Name"
           placeholder="Jane"
@@ -56,9 +73,9 @@ export function ClientFormFields({
           withAsterisk
           {...form.getInputProps("lastName")}
         />
-      </SimpleGrid>
+      </FieldGroup>
 
-      <SimpleGrid cols={2} spacing="lg">
+      <FieldGroup cols={2}>
         <TextInput
           label="Phone"
           placeholder="+1 234 567 8900"
@@ -71,6 +88,22 @@ export function ClientFormFields({
           leftSection={<IconMail size={16} />}
           {...form.getInputProps("email")}
         />
+      </FieldGroup>
+
+      <FieldGroup cols={3}>
+        <DateInput
+          label="Birth Date"
+          placeholder="Select a date"
+          leftSection={<IconCake size={16} />}
+          {...form.getInputProps("birthDate")}
+        />
+        <Select
+          label="How they find us"
+          placeholder="Select a source"
+          leftSection={<IconRoute size={16} />}
+          data={CLIENT_ORIGIN_OPTIONS}
+          {...form.getInputProps("origin")}
+        />
         <Select
           label="Preferred Communication"
           placeholder="Select a communication channel"
@@ -79,22 +112,11 @@ export function ClientFormFields({
           allowDeselect={false}
           {...form.getInputProps("preferredCommunication")}
         />
-        <Select
-          label="Source"
-          placeholder="How did they find us?"
-          leftSection={<IconRoute size={16} />}
-          data={CLIENT_ORIGIN_OPTIONS}
-          {...form.getInputProps("origin")}
-        />
-      </SimpleGrid>
+      </FieldGroup>
 
-      <SimpleGrid cols={2} spacing="lg">
-        <DateInput
-          label="Birth Date"
-          placeholder="Select a date"
-          leftSection={<IconCake size={16} />}
-          {...form.getInputProps("birthDate")}
-        />
+      {/* Two columns for a single field so it takes half the width and lines
+          up with the first column of the groups above. */}
+      <FieldGroup cols={2}>
         <Select
           label="Therapist"
           placeholder="Assign a therapist"
@@ -104,7 +126,7 @@ export function ClientFormFields({
           clearable
           {...form.getInputProps("therapistId")}
         />
-      </SimpleGrid>
+      </FieldGroup>
     </>
   );
 }

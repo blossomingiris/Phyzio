@@ -1,7 +1,6 @@
 import { SPECIALITY_LABELS } from "@/shared/domain/therapist";
 import {
   Button,
-  Divider,
   PasswordInput,
   Select,
   SimpleGrid,
@@ -109,7 +108,7 @@ export function TherapistCreateFormFields({
             {...form.getInputProps("password")}
           />
           <Button
-            variant="white"
+            variant="subtle"
             leftSection={<IconWand size={16} />}
             onClick={() => form.setFieldValue("password", generatePassword())}
             style={{ alignSelf: "flex-end" }}
@@ -118,9 +117,6 @@ export function TherapistCreateFormFields({
           </Button>
         </Stack>
       </SimpleGrid>
-
-      <Divider />
-
       <TherapistWorkingHoursInput form={form} />
     </>
   );

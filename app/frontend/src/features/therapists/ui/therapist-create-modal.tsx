@@ -1,17 +1,7 @@
-import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { postTherapists } from "@/shared/api/generated/validation-schemas";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import {
-  Alert,
-  Button,
-  Divider,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
 import {
   EMPTY_THERAPIST_FORM_VALUES,
   normalizeCreateTherapistFormValues,
@@ -52,38 +42,16 @@ export function TherapistCreateModal({
   });
 
   return (
-    <Modal
+    <FormModal
       opened={opened}
       onClose={handleClose}
-      title={
-        <Text fw={700} size="xl">
-          New Therapist
-        </Text>
-      }
-      size="xl"
+      title="New Therapist"
+      submitLabel="Create Therapist"
+      onSubmit={handleSubmit}
+      isPending={createTherapist.isPending}
+      error={createTherapist.error}
     >
-      <form onSubmit={handleSubmit}>
-        <Stack gap="lg">
-          {isGeneralError(createTherapist.error) && (
-            <Alert color="error" variant="light" icon={<IconAlertCircle />}>
-              {getApiErrorMessage(createTherapist.error)}
-            </Alert>
-          )}
-
-          <TherapistCreateFormFields form={form} />
-
-          <Divider />
-
-          <Group justify="flex-end">
-            <Button variant="default" type="button" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit" loading={createTherapist.isPending}>
-              Create Therapist
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Modal>
+      <TherapistCreateFormFields form={form} />
+    </FormModal>
   );
 }

@@ -157,7 +157,7 @@ export function TherapistDeleteModal({
         </Text>
       }
     >
-      <Stack gap="xl">
+      <Stack gap="lg">
         {isLoading && <Loader size="sm" />}
 
         {!isLoading && !hasAffectedClients && (
@@ -286,7 +286,7 @@ export function TherapistDeleteModal({
           </Alert>
         )}
 
-        <Group justify="flex-end">
+        <Group justify="flex-end" gap="xl">
           <Button variant="default" onClick={handleClose}>
             Cancel
           </Button>

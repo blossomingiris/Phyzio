@@ -1,17 +1,7 @@
-import { getApiErrorMessage, isGeneralError } from "@/shared/api/errors";
 import { postClients } from "@/shared/api/generated/validation-schemas";
 import { applyApiFieldErrors } from "@/shared/lib/mantine/apply-api-field-errors";
-import {
-  Alert,
-  Button,
-  Divider,
-  Group,
-  Modal,
-  Stack,
-  Text,
-} from "@mantine/core";
+import { FormModal } from "@/shared/ui/form-modal";
 import { useForm } from "@mantine/form";
-import { IconAlertCircle } from "@tabler/icons-react";
 import {
   EMPTY_CLIENT_FORM_VALUES,
   normalizeClientFormValues,
@@ -52,38 +42,16 @@ export function ClientCreateModal({
   });
 
   return (
-    <Modal
+    <FormModal
       opened={opened}
       onClose={handleClose}
-      title={
-        <Text fw={700} size="xl">
-          New Client
-        </Text>
-      }
-      size="xl"
+      title="New Client"
+      submitLabel="Create Client"
+      onSubmit={handleSubmit}
+      isPending={createClient.isPending}
+      error={createClient.error}
     >
-      <form onSubmit={handleSubmit}>
-        <Stack gap="lg">
-          {isGeneralError(createClient.error) && (
-            <Alert color="error" variant="light" icon={<IconAlertCircle />}>
-              {getApiErrorMessage(createClient.error)}
-            </Alert>
-          )}
-
-          <ClientFormFields form={form} />
-
-          <Divider />
-
-          <Group justify="flex-end">
-            <Button variant="default" type="button" onClick={handleClose}>
-              Cancel
-            </Button>
-            <Button type="submit" loading={createClient.isPending}>
-              Create Client
-            </Button>
-          </Group>
-        </Stack>
-      </form>
-    </Modal>
+      <ClientFormFields form={form} />
+    </FormModal>
   );
 }
