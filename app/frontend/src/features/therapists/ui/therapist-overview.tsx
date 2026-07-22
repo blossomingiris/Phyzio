@@ -11,15 +11,17 @@ import { TherapistWorkingHoursModal } from "./therapist-working-hours-modal";
 export function TherapistOverview({ therapist }: { therapist: Therapist }) {
   const [editOpened, { open: openEdit, close: closeEdit }] =
     useDisclosure(false);
-  const [workingHoursOpened, { open: openWorkingHours, close: closeWorkingHours }] =
-    useDisclosure(false);
+  const [
+    workingHoursOpened,
+    { open: openWorkingHours, close: closeWorkingHours },
+  ] = useDisclosure(false);
   const [deleteOpened, { open: openDelete, close: closeDelete }] =
     useDisclosure(false);
   const isDeleted = !!therapist.deletedAt;
 
   return (
     <>
-      <Card withBorder shadow="md" padding="xl" maw={580}>
+      <Card withBorder shadow="md" padding="xl" maw={640}>
         <Card.Section
           withBorder
           inheritPadding

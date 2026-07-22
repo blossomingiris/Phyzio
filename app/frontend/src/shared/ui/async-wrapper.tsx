@@ -57,7 +57,7 @@ export function AsyncWrapper<T, TError = unknown>({
 
 function defaultLoaderRender(): ReactNode {
   return (
-    <Center mih={200} style={{ flex: 1 }}>
+    <Center style={{ position: "fixed", inset: 0 }}>
       <Loader type="bars" />
     </Center>
   );
