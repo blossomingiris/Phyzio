@@ -5,7 +5,14 @@ import type { ConfirmationDialogParams, ConfirmationParams } from "./types";
 import { ConfirmationContext } from "./use-confirmation";
 
 export function ConfirmationProvider({ children }: { children: ReactNode }) {
-  const [dialogParams, setDialogParams] = useState<ConfirmationDialogParams>();
+  const [dialogParams, setDialogParams] = useState<ConfirmationDialogParams>(
+    () => ({
+      ...DEFAULT_CONFIRMATION_PARAMS,
+      onConfirm: () => {},
+      onCancel: () => {},
+    }),
+  );
+  const [opened, setOpened] = useState(false);
 
   const confirm = (params: ConfirmationParams) => {
     return new Promise<boolean>((resolve) => {
@@ -13,21 +20,22 @@ export function ConfirmationProvider({ children }: { children: ReactNode }) {
         ...DEFAULT_CONFIRMATION_PARAMS,
         ...params,
         onConfirm: () => {
-          setDialogParams(undefined);
+          setOpened(false);
           resolve(true);
         },
         onCancel: () => {
-          setDialogParams(undefined);
+          setOpened(false);
           resolve(false);
         },
       });
+      setOpened(true);
     });
   };
 
   return (
     <ConfirmationContext.Provider value={{ confirm }}>
       {children}
-      {dialogParams && <ConfirmationDialog params={dialogParams} />}
+      <ConfirmationDialog params={dialogParams} opened={opened} />
     </ConfirmationContext.Provider>
   );
 }

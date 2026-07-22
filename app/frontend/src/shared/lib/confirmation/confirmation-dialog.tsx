@@ -3,8 +3,10 @@ import type { ConfirmationDialogParams } from "./types";
 
 export function ConfirmationDialog({
   params,
+  opened,
 }: {
   params: ConfirmationDialogParams;
+  opened: boolean;
 }) {
   const {
     title,
@@ -18,7 +20,7 @@ export function ConfirmationDialog({
 
   return (
     <Modal
-      opened
+      opened={opened}
       onClose={onCancel}
       title={
         <Text fw={700} size="xl">
