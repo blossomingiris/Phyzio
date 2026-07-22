@@ -6594,6 +6594,15 @@
           },
           {
             "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "description": "Match on plan ID, client name, or therapist name"
+          },
+          {
+            "schema": {
               "type": "string",
               "enum": [
                 "open",
@@ -7178,7 +7187,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -7599,7 +7609,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -7842,7 +7853,8 @@
                       "client_unreachable",
                       "therapist_referral",
                       "other"
-                    ]
+                    ],
+                    "description": "'client_deleted' is set automatically by the system and cannot be chosen manually"
                   },
                   "cancellationNote": {
                     "type": "string",
@@ -8036,7 +8048,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -11033,7 +11046,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -11376,7 +11390,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -11753,7 +11768,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -11992,7 +12008,8 @@
                           "client_unreachable",
                           "therapist_referral",
                           "other"
-                        ]
+                        ],
+                        "description": "'client_deleted' is set automatically by the system and cannot be chosen manually"
                       },
                       "cancellationNote": {
                         "type": "string",
@@ -12185,7 +12202,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {
@@ -12548,7 +12566,8 @@
                             "client_request",
                             "client_unreachable",
                             "therapist_referral",
-                            "other"
+                            "other",
+                            "client_deleted"
                           ]
                         },
                         {

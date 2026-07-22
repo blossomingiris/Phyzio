@@ -1,27 +1,30 @@
 import {
   TREATMENT_PLAN_STATUS_COLORS,
   TREATMENT_PLAN_STATUS_LABELS,
-  getTreatmentPlanProgress,
   type TreatmentPlan,
 } from "@/shared/domain/treatment-plan";
 import { formatDate } from "@/shared/lib/date/format-date";
 import { ROUTES } from "@/shared/model/routes";
 import { DataTable } from "@/shared/ui/data-table/data-table";
 import { useServerTable } from "@/shared/ui/data-table/use-server-table";
-import { Anchor, Badge, Group, Progress, Stack, Text } from "@mantine/core";
+import { TreatmentPlanProgressCell } from "@/shared/ui/treatment-plan-progress-cell";
+import { Anchor, Badge, Group, Select } from "@mantine/core";
 import type { MRT_ColumnDef } from "mantine-react-table-open";
-import { Link } from "react-router";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
 import { useClientTreatmentPlansQuery } from "../model/use-client-treatment-plans-query";
 
-function getTreatmentPlanProgressColor(percent: number): string {
-  if (percent <= 0) return "gray";
-  if (percent >= 100) return "success";
-  if (percent >= 66) return "blue";
-  if (percent >= 33) return "yellow";
-  return "accent";
-}
+const STATUS_FILTER_OPTIONS = Object.entries(TREATMENT_PLAN_STATUS_LABELS).map(
+  ([value, label]) => ({ value, label }),
+);
 
 const columns: MRT_ColumnDef<TreatmentPlan>[] = [
+  {
+    accessorKey: "id",
+    header: "ID",
+    enableSorting: false,
+    Cell: ({ cell }) => `#${cell.getValue<number>()}`,
+  },
   {
     accessorKey: "status",
     header: "Status",
@@ -63,36 +66,14 @@ const columns: MRT_ColumnDef<TreatmentPlan>[] = [
     id: "progress",
     header: "Progress",
     enableSorting: false,
-    Cell: ({ row }) => {
-      const { total, completed, left } = getTreatmentPlanProgress(row.original);
-      if (total === 0) {
-        return (
-          <Text size="xs" c="dimmed">
-            No items
-          </Text>
-        );
-      }
-      const percent = (completed / total) * 100;
-      return (
-        <Stack gap={4} miw={140}>
-          <Progress
-            value={percent}
-            color={getTreatmentPlanProgressColor(percent)}
-            size="sm"
-          />
-          <Text size="xs" c="dimmed">
-            {completed}/{total} sessions · {left} left
-          </Text>
-        </Stack>
-      );
-    },
+    Cell: ({ row }) => <TreatmentPlanProgressCell plan={row.original} />,
   },
   {
     id: "treatments",
     header: "Treatments",
     enableSorting: false,
     Cell: ({ row }) => (
-      <Group gap="xs">
+      <Group gap="xs" onClick={(e) => e.stopPropagation()}>
         {row.original.items.map((item) => (
           <Anchor
             key={item.id}
@@ -110,15 +91,37 @@ const columns: MRT_ColumnDef<TreatmentPlan>[] = [
 ];
 
 export function ClientTreatmentPlansTable({ clientId }: { clientId: number }) {
+  const navigate = useNavigate();
   const table = useServerTable();
-  const query = useClientTreatmentPlansQuery(clientId, table);
+  const [status, setStatus] = useState<TreatmentPlan["status"] | null>(null);
+
+  const query = useClientTreatmentPlansQuery(
+    clientId,
+    table,
+    status ?? undefined,
+  );
+
+  const handleStatusChange = (value: string | null) => {
+    setStatus(value as TreatmentPlan["status"] | null);
+    table.onPaginationChange((prev) => ({ ...prev, pageIndex: 0 }));
+  };
 
   return (
     <DataTable
       columns={columns}
       query={query}
       table={table}
-      enableGlobalFilter={false}
+      onRowClick={(plan) => navigate(`${ROUTES.TREATMENT_PLANS}/${plan.id}`)}
+      renderTopToolbarCustomActions={
+        <Select
+          placeholder="All Statuses"
+          data={STATUS_FILTER_OPTIONS}
+          value={status}
+          onChange={handleStatusChange}
+          clearable
+          w={180}
+        />
+      }
     />
   );
 }

@@ -1,3 +1,4 @@
+import { useLogout, useSessionStore } from "@/services/session";
 import type { UserRole } from "@/shared/domain/user";
 import {
   BreadcrumbProvider,
@@ -8,7 +9,6 @@ import {
   HeaderActionsSlot,
 } from "@/shared/lib/react/use-header-actions";
 import { Breadcrumbs } from "@/shared/ui/breadcrumbs";
-import { useLogout, useSessionStore } from "@/services/session";
 import {
   Navbar,
   NavbarProvider,
@@ -22,7 +22,12 @@ import {
 } from "@/shared/ui/navbar/navigation.config";
 import { SectionLabel } from "@/shared/ui/section-label";
 
-import { Divider, Group, AppShell as MantineAppShell, Paper } from "@mantine/core";
+import {
+  Divider,
+  Group,
+  AppShell as MantineAppShell,
+  Paper,
+} from "@mantine/core";
 import { Outlet, useLocation } from "react-router";
 
 const navItems = [
@@ -138,7 +143,8 @@ function AppShellLayout() {
           style={{ display: "flex" }}
         >
           <Paper
-            p="md"
+            py="md"
+            px="lg"
             style={{
               flex: 1,
               display: "flex",

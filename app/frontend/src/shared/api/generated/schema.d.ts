@@ -2876,6 +2876,8 @@ export interface paths {
                 query?: {
                     page?: number;
                     limit?: number;
+                    /** @description Match on plan ID, client name, or therapist name */
+                    search?: string;
                     status?: "open" | "in_progress" | "paused" | "completed" | "cancelled";
                     clientId?: number;
                     therapistId?: number;
@@ -3050,7 +3052,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -3186,7 +3188,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -3301,7 +3303,10 @@ export interface paths {
                     "application/json": {
                         /** @enum {string} */
                         status: "cancelled";
-                        /** @enum {string} */
+                        /**
+                         * @description 'client_deleted' is set automatically by the system and cannot be chosen manually
+                         * @enum {string}
+                         */
                         cancellationReason: "client_request" | "client_unreachable" | "therapist_referral" | "other";
                         /** @description Required when reason is 'other' */
                         cancellationNote?: string;
@@ -3343,7 +3348,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -4484,7 +4489,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -4608,7 +4613,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -4726,7 +4731,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -4832,7 +4837,10 @@ export interface paths {
                     "application/json": {
                         /** @enum {string} */
                         status: "cancelled";
-                        /** @enum {string} */
+                        /**
+                         * @description 'client_deleted' is set automatically by the system and cannot be chosen manually
+                         * @enum {string}
+                         */
                         cancellationReason: "client_request" | "client_unreachable" | "therapist_referral" | "other";
                         /** @description Required when reason is 'other' */
                         cancellationNote?: string;
@@ -4872,7 +4880,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;
@@ -5000,7 +5008,7 @@ export interface paths {
                             contraindications: string | null;
                             /** @enum {string} */
                             status: "open" | "in_progress" | "paused" | "completed" | "cancelled";
-                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other") | null;
+                            cancellationReason: ("client_request" | "client_unreachable" | "therapist_referral" | "other" | "client_deleted") | null;
                             cancellationNote: string | null;
                             /** Format: date-time */
                             startDate: string;

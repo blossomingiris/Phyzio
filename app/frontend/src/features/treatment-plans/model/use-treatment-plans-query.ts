@@ -3,8 +3,7 @@ import { rqClient } from "@/shared/api/http-client";
 import type { ServerTableState } from "@/shared/ui/data-table/use-server-table";
 import { keepPreviousData } from "@tanstack/react-query";
 
-export function useClientTreatmentPlansQuery(
-  clientId: number,
+export function useTreatmentPlansQuery(
   { pagination, sorting, globalFilter }: ServerTableState,
   status?: TreatmentPlan["status"],
 ) {
@@ -16,13 +15,12 @@ export function useClientTreatmentPlansQuery(
     {
       params: {
         query: {
-          clientId,
           page: pagination.pageIndex + 1,
           limit: pagination.pageSize,
           search: globalFilter || undefined,
           status,
           ...(sort && {
-            sortBy: sort.id as "createdAt" | "startDate" | "status",
+            sortBy: sort.id as "createdAt" | "startDate",
             sortOrder: sort.desc ? "desc" : "asc",
           }),
         },

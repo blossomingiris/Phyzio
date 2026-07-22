@@ -9,6 +9,39 @@ type TreatmentPlanListResponse = MethodResponse<
 
 export type TreatmentPlan = TreatmentPlanListResponse["data"][number];
 
+export type TreatmentPlanDetail = MethodResponse<
+  typeof rqClient,
+  "get",
+  "/treatment-plans/{id}"
+>;
+
+export const TREATMENT_PLAN_CANCELLATION_REASON_LABELS: Record<
+  NonNullable<TreatmentPlanDetail["cancellationReason"]>,
+  string
+> = {
+  client_request: "Client Request",
+  client_unreachable: "Client Unreachable",
+  therapist_referral: "Therapist Referral",
+  other: "Other",
+  client_deleted: "Client Deleted",
+};
+
+const MANUALLY_SELECTABLE_CANCELLATION_REASONS = [
+  "client_request",
+  "client_unreachable",
+  "therapist_referral",
+  "other",
+] as const satisfies readonly NonNullable<TreatmentPlanDetail["cancellationReason"]>[];
+
+export type TreatmentPlanManualCancellationReason =
+  (typeof MANUALLY_SELECTABLE_CANCELLATION_REASONS)[number];
+
+export const TREATMENT_PLAN_MANUAL_CANCELLATION_REASON_OPTIONS =
+  MANUALLY_SELECTABLE_CANCELLATION_REASONS.map((value) => ({
+    value,
+    label: TREATMENT_PLAN_CANCELLATION_REASON_LABELS[value],
+  }));
+
 export const TREATMENT_PLAN_STATUS_LABELS: Record<
   TreatmentPlan["status"],
   string
@@ -36,4 +69,10 @@ export function getTreatmentPlanProgress(plan: TreatmentPlan) {
   const completed = plan.items.reduce((sum, item) => sum + item.quantityCompleted, 0);
 
   return { total, completed, left: total - completed };
+}
+
+export function getTreatmentPlanProgressColor(percent: number): string {
+  if (percent <= 0) return "gray";
+  if (percent >= 100) return "success";
+  return "blue";
 }
