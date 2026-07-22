@@ -72,6 +72,7 @@ const surfaceInput = "oklch(0.985 0 0)";
 export const theme = createTheme({
   primaryColor: "primary",
   primaryShade: 6,
+  cursorType: "pointer",
   black: foreground,
   white: "#ffffff",
   colors: {
