@@ -7,6 +7,10 @@
     background-color 100ms ease;
 }
 
+.wrapper[data-variant] {
+  --input-bg: var(--surface-input) !important;
+}
+
 .input:focus,
 .input:focus-within {
   box-shadow:

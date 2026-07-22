@@ -124,7 +124,7 @@ export const theme = createTheme({
     Drawer: { defaultProps: { radius: "lg" } },
     Input: {
       defaultProps: { size: "md" },
-      classNames: { input: classes.input },
+      classNames: { input: classes.input, wrapper: classes.wrapper },
     },
     Checkbox: { defaultProps: { color: "accent", size: "md" } },
     Radio: { defaultProps: { size: "md" } },
